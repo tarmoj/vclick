@@ -4,7 +4,8 @@ QT += qml quick widgets network websockets
 
 SOURCES += main.cpp \
     wsserver.cpp \
-    jackreader.cpp
+    jackreader.cpp \
+    csoundhandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,6 +17,7 @@ include(deployment.pri)
 
 HEADERS += \
     wsserver.h \
-    jackreader.h
+    jackreader.h \
+    csoundhandler.h
 
 unix|win32: LIBS += -ljack -llo

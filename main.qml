@@ -80,7 +80,7 @@ ApplicationWindow {
             CheckBox {
                 id: oscCheckBox
                 text: qsTr("Send osc")
-                checked: false
+                checked: true
                 onCheckedChanged: wsServer.setSendOsc(checked);
 
             }
@@ -110,6 +110,7 @@ ApplicationWindow {
                     id: scoField
                     width: 200
                     placeholderText: qsTr("sco file")
+                    text: "/home/tarmo/tarmo/csound/metronome/scott/scott.sco";
                 }
 
                 Button {
@@ -139,11 +140,13 @@ ApplicationWindow {
                 Button {
                     id: startButton
                     text: qsTr("Star&t")
+                    onClicked: cs.start(scoField.text, startBarSpinBox.value )
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("&Stop")
+                    onClicked: cs.stop()
                 }
             }
 
