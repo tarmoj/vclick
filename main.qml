@@ -111,6 +111,7 @@ ApplicationWindow {
                     width: 200
                     placeholderText: qsTr("sco file")
                     text: "/home/tarmo/tarmo/csound/metronome/scott/scott.sco";
+
                 }
 
                 Button {
@@ -135,6 +136,7 @@ ApplicationWindow {
                     id: startBarSpinBox
                     maximumValue: 1000
                     minimumValue: 1
+//                    onEditingFinished: cs.start(scoField.text, startBarSpinBox.value )
                 }
 
                 Button {

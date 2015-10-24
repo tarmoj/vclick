@@ -23,7 +23,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
     }
 
 	sendOsc = true;  // orig: false
-	oscAddresses<<"127.0.0.1"<<"192.168.11.7"<<"192.168.11.3"<<"192.168.1.160"<<"192.168.1.144";
+	oscAddresses<<"127.0.0.1"<<"192.168.11.7"<<"192.168.11.3"<<"192.168.11.11"<<"192.168.11.4";
 	foreach (QString address, oscAddresses) {
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
 		if (target)

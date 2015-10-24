@@ -27,7 +27,7 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 		float startTime = 0;
 		foreach (QString line, lines) {
 			line = line.simplified();
-			if (line.startsWith("i 1") || line.startsWith("i1") ) {
+			if (line.startsWith("i 1 ") || line.startsWith("i1 ") ) {
 				qDebug()<<"tempo line: "<<line;
 				tempoLines.append(line);
 			}
@@ -43,7 +43,9 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 			}
 
 		}
+
 		if (fromBar>1) {
+			QString tempo = "#TEMPO1#";
 			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
 
 			// find what was the last temo setting (i 1 statement) before startTime and reinsert it
@@ -51,6 +53,7 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 				QStringList fields = tempoLines[i].split(" ");
 				if (fields[2].toFloat() <= startTime) {
 					fields[2] = QString::number(startTime); // replace the time that is jumped over with the time where the bar starts
+					tempo = fields[4] ;
 					QString newTempoLine = fields.join(" ") + "\n\n";
 					replaceString += newTempoLine;
 					break; // no momre searching needed
@@ -58,6 +61,7 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 			}
 			qDebug()<<"replaceString: "<<replaceString;
 			contents.replace(";ADVANCE",replaceString);
+			contents.replace( "#define REPTEMPO #$TEMPO1#", "#define REPTEMPO #" + tempo + "#"); // tempo of count-down
 		}
 
 		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco");
@@ -67,7 +71,7 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 			qDebug()<<"TEmp file: "<<tempFile.fileName();
 			tempFile.close();
 
-			QString command = "csound -odac -+rtaudio=jack /home/tarmo/tarmo/csound/metronome/metro_blank.orc "+ tempFile.fileName() + " &";
+			QString command = "csound -d -g -odac -+rtaudio=jack /home/tarmo/tarmo/csound/metronome/metro_blank.orc "+ tempFile.fileName() + " &";
 			system(command.toLocal8Bit());
 		}
 
