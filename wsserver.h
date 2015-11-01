@@ -40,6 +40,7 @@ private Q_SLOTS:
     void socketDisconnected();
 	void handleBeatBar(int bar, int beat);
 	void handleLed(int ledNumber, float duration);
+	void handleNotification(QString message);
 
 private:
     QWebSocketServer *m_pWebSocketServer;

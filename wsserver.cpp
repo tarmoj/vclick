@@ -23,7 +23,8 @@ WsServer::WsServer(quint16 port, QObject *parent) :
     }
 
 	sendOsc = true;  // orig: false
-	oscAddresses<<"127.0.0.1"<<"192.168.11.7"<<"192.168.11.3"<<"192.168.11.11"<<"192.168.11.4";
+	oscAddresses<<"127.0.0.1"<<"192.168.11.5"<<"192.168.11.6"<<"192.168.11.11"<<"192.168.11.4"<<
+				  "192.168.11.3";
 	foreach (QString address, oscAddresses) {
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
 		if (target)
@@ -91,6 +92,11 @@ void WsServer::processTextMessage(QString message)
 		led = messageParts[messageParts.indexOf("led")+1].toInt();
 	}
 
+	if (messageParts.contains("notification")) { //NB! maybe there should be also a slot and later csound string channel
+		QString notification = message.split("notification")[1]; // get the message
+		handleNotification(notification.simplified());
+	}
+
 
 
 	if (bar>=0 && beat>=0)  // format message shorter for javascript
@@ -147,6 +153,19 @@ void WsServer::handleLed(int ledNumber, float duration) {
 			lo_send(target, "/metronome/led", "if", ledNumber, 0.05);
 
 	}
+}
+
+void WsServer::handleNotification(QString message)
+{
+
+	//joke for ending
+	QStringList endmessages = QStringList()<<"Uhhh..."<<"Hästi tehtud!"<< "Läbi sai" << "OK!" << "Nu-nuu..." << "Tsss!" << "Löpp" << "Pole hullu!";
+	if (message=="end") {
+		message = endmessages[qrand()%(endmessages.length()-1)];
+	}
+	message = "n "+message;
+	qDebug()<<"Notification: "<<message;
+	send2all(message);
 }
 
 
