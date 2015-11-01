@@ -16,6 +16,10 @@ ApplicationWindow {
         Menu {
             title: qsTr("&File")
             MenuItem {
+                text: qsTr("&Server adress")
+                onTriggered: serverAddress.visible = true // messageDialog.show(qsTr("Open action triggered"));
+            }
+            MenuItem {
                 text: qsTr("&Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible // messageDialog.show(qsTr("Open action triggered"));
             }
@@ -26,11 +30,30 @@ ApplicationWindow {
         }
     }
 
+    Timer {
+        id: clearNotification
+        running: false
+        repeat: false
+        triggeredOnStart: false
+        interval: 4000
+        onTriggered: {
+            notificationLabel.text = "";
+            notificationRect.color = "transparent";
+        }
+
+    }
+
+    function notification(message) {
+        notificationLabel.text = message;
+        notificationRect.color = "red";
+        clearNotification.start();
+      }
+
 
 
     WebSocket {
         id: socket
-        url: serverAddress.text //"ws://192.168.1.220:6006/ws"
+        url: serverAddress.text //"ws://192.168.1.199:6006/ws"
         onTextMessageReceived: {
             console.log("Received message: ",message);
             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
@@ -49,16 +72,23 @@ ApplicationWindow {
 
             }
 
+            if (messageParts[0] == "n") {	// notification
+                    messageParts.splice(0,1); // get rid of the "n" and join word intro string back again
+                    var text = messageParts.join(" ");
+                    notification(text);
+                }
+
 
         }
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
                              connectButton.enabled = true;
-                             connectButton.text = qsTr("Connect")
+                             connectButton.text = qsTr("Connect...")
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              connectButton.enabled = false;
+                             serverAddress.visible = false;
                              connectButton.text = qsTr("Connected")
                              //socket.sendTextMessage("Hello World")
                          } else if (socket.status == WebSocket.Closed) {
@@ -86,7 +116,7 @@ ApplicationWindow {
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: "#a9a9a9"
+                color: "#ffffff"
             }
 
             GradientStop {
@@ -106,19 +136,30 @@ ApplicationWindow {
 
 
 
-        Row {
-            x:5; y:5
+        RowLayout {
+            x:5;
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
             id: serverRow
+            width: parent.width - x*2
             spacing: 5
 
             Label {
+                id: serverLabel
+                visible: false
                 text: qsTr("Server: ")
             }
 
             TextField {
                 id: serverAddress
-                width: 200
-                text: "ws://192.168.1.220:6006/ws"
+                visible: true
+                Layout.fillWidth: true
+                Layout.preferredWidth: 250
+                Layout.minimumWidth: 80
+                Layout.maximumWidth:  400
+                //width: 200
+
+                text: "ws://192.168.1.199:6006/ws"
             }
 
             Button {
@@ -127,7 +168,7 @@ ApplicationWindow {
                //võibolla varem oli pare, kui enabled - socket.active
                 enabled: true //socket.active
                 //checkable: true
-                text: qsTr("Connect")
+                text: qsTr("Connect...")
                 onClicked: {
                     if (!socket.active) {
                         //socket.url = serverAddress.text
@@ -143,13 +184,13 @@ ApplicationWindow {
 
         RowLayout {
             id: beatRow
-            anchors.top:serverRow.bottom
+            anchors.top:parent.top
             anchors.topMargin: 5
             spacing: 60
             anchors.horizontalCenter: parent.horizontalCenter
-            height: mainRect.height * 0.25
-//            anchors.bottom: ledRow.top
-//            anchors.bottomMargin: 5
+            //height: mainRect.height * 0.25
+            anchors.bottom: ledRow.top
+            anchors.bottomMargin: 5
 
 
             Label {
@@ -159,62 +200,57 @@ ApplicationWindow {
                 //y: 43
                 Layout.fillHeight:  true
                 Layout.alignment: Qt.AlignCenter
+                //Layout.maximumHeight: mainRect.height*0.1
+                Layout.minimumHeight: 5
                 text: "0"
                 font.bold: true
                 style: Text.Normal
-                font.pointSize: parent.height*0.75
+                font.pointSize: Math.max(10, parent.height*0.5)
             }
 
 
 
             Label {
                 id: beatLabel
-                property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen", "forestgreen", "forestgreen", "forestgreen"  ]
-                color: colors[parseInt(text)] // different color for every beat. text must contain the beatnumber
+                property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen"]
+                color: colors[Math.min(parseInt(text),6)] // different color for every beat. text must contain the beatnumber
                 Layout.fillHeight:  true
                 Layout.alignment: Qt.AlignCenter
+                //Layout.maximumHeight: mainRect.height*0.25
+                Layout.minimumHeight: 5
                 text: "0"
                 font.bold: true
-                font.pointSize: parent.height*0.75
+                font.pointSize: Math.max(10, parent.height*0.5)
             }
 
         }
 
 
-
-        //        NumberAnimation {
-        //            id: anim1
-        //            target: redLed
-        //            property: "width"
-        //            duration: 200
-        //            from: 100
-        //            to: 10
-        //            easing.type: Easing.Linear
-        //        }
-
-        //NumberAnimation on width { from: mainRect.width * 0.25 ; to : mainRect.width *0.1; duration }
-
-        ColorAnimation {target: redLed; properties: "color";  id: globColor; from: target.bright ;to: target.dark; duration:  beatLength *1000}
-         NumberAnimation {target: redLed; easing.type: Easing.Linear; properties: "width"; id: globWidth;from: mainRect.width*0.28; to: mainRect.width*0.1; duration:beatLength *1000}
+//        ColorAnimation {target: redLed; properties: "color";  id: globColor; from: target.bright ;to: target.dark; duration:  beatLength *1000}
+//         NumberAnimation {target: redLed; easing.type: Easing.Linear; properties: "width"; id: globWidth;from: mainRect.width*0.28; to: mainRect.width*0.1; duration:beatLength *1000}
 
         Row{
             id: ledRow
-            width: parent.width * 0.8
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: beatRow.bottom
-            anchors.topMargin: 10
+            width: parent.width *0.8
+            height: Math.min(mainRect.width,mainRect.height) / 3 // one third of the smaller side, whether portrait or landscape
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            anchors.top: beatRow.bottom
+//            anchors.topMargin: 10
+            anchors.centerIn: parent
+            property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
+
             spacing: 10
 
             Item {
                 id: led1
-                width: mainRect.width *0.28
-                height: width
+                width: parent.width/3//mainRect.width *0.28
+                height: parent.height//width
 
                 Rectangle {
                     id: redLed
                     //anchors.verticalCenter: parent.verticalCenter
                     anchors.centerIn: parent
-                    width: mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4 // parent.width/4 //mainRect.width *0.1
                     height: width
                     color: "#5c0303"
                     radius: width/2
@@ -227,7 +263,7 @@ ApplicationWindow {
                     ParallelAnimation {
                         id: redAnimation
                         ColorAnimation {target: redLed; properties: "color";  from: target.bright ;to: target.dark; duration:  beatLength *1000}
-                        NumberAnimation {target: redLed;  properties: "width";from: mainRect.width*0.28; to: mainRect.width*0.1; duration:beatLength *1000}
+                        NumberAnimation {target: redLed;  properties: "width";from: ledRow.ledOnWidth; to: ledRow.ledOnWidth/4; duration:beatLength *1000}
                     }
 
                 }
@@ -237,12 +273,12 @@ ApplicationWindow {
 
             Item {
                 id: led2
-                width: mainRect.width *0.28
-                height: width
+                width: parent.width/3//mainRect.width *0.28
+                height: parent.height//width
 
                 Rectangle {
                     id: greenLed
-                    width: mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4 //mainRect.width *0.1
                     anchors.centerIn: parent
                     height: width
                     radius: width/2
@@ -254,20 +290,20 @@ ApplicationWindow {
                     ParallelAnimation {
                         id: greenAnimation
                         ColorAnimation {target: greenLed; properties: "color";  from: target.bright ;to: target.dark; duration:  beatLength *1000}
-                        NumberAnimation {target: greenLed;  properties: "width";from: mainRect.width*0.20; to: mainRect.width*0.1; duration:beatLength *1000}
+                        NumberAnimation {target: greenLed;  properties: "width";from: ledRow.ledOnWidth*0.8; to: ledRow.ledOnWidth/4 ; duration:beatLength *1000}
                     }
                 }
             }
 
             Item {
                 id: led3
-                width: mainRect.width *0.28
-                height: width
+                width: parent.width/3//mainRect.width *0.28
+                height: parent.height//width
 
                 Rectangle {
                     id: blueLed
                     anchors.centerIn: parent
-                    width: mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4 //mainRect.width *0.1
                     height: width
                     radius: width/2
                     border.color: "#ffea44"
@@ -278,9 +314,27 @@ ApplicationWindow {
                     ParallelAnimation {
                         id: blueAnimation
                         ColorAnimation {target: blueLed; properties: "color";  from: target.bright ;to: target.dark; duration:  beatLength *1000}
-                        NumberAnimation {target: blueLed;  properties: "width";from: mainRect.width*0.20; to: mainRect.width*0.1; duration:beatLength *1000}
+                        NumberAnimation {target: blueLed;  properties: "width";from: ledRow.ledOnWidth*0.8; to: ledRow.ledOnWidth/4; duration:beatLength *1000}
                     }
                 }
+
+            }
+        }
+
+        Rectangle {
+            id: notificationRect
+            color: "transparent"
+            anchors.top: ledRow.bottom
+            anchors.bottom: mainRect.bottom
+            width: parent.width
+
+            Label {
+                anchors.centerIn: parent
+                id: notificationLabel
+                color: "green"
+                text: ""
+                font.bold: true
+                font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
 
             }
         }
@@ -315,6 +369,10 @@ ApplicationWindow {
             }
         }
     }
+
+
+
+
 
     MessageDialog {
         id: messageDialog
