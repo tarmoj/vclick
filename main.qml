@@ -45,7 +45,7 @@ ApplicationWindow {
 
     function notification(message) {
         notificationLabel.text = message;
-        notificationRect.color = "red";
+        notificationRect.color = "darkblue";
         clearNotification.start();
       }
 
@@ -186,8 +186,9 @@ ApplicationWindow {
             id: beatRow
             anchors.top:parent.top
             anchors.topMargin: 5
-            spacing: 60
+            spacing: mainRect.width/8
             anchors.horizontalCenter: parent.horizontalCenter
+            //y:mainRect.height * 0.125
             //height: mainRect.height * 0.25
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
@@ -200,12 +201,11 @@ ApplicationWindow {
                 //y: 43
                 Layout.fillHeight:  true
                 Layout.alignment: Qt.AlignCenter
-                //Layout.maximumHeight: mainRect.height*0.1
+                //TODO: center in row
                 Layout.minimumHeight: 5
                 text: "0"
                 font.bold: true
-                style: Text.Normal
-                font.pointSize: Math.max(10, parent.height*0.5)
+                font.pointSize: Math.max(10, Math.min(mainRect.width/6,parent.height*0.5 ) )// how to fit into width?
             }
 
 
@@ -220,7 +220,7 @@ ApplicationWindow {
                 Layout.minimumHeight: 5
                 text: "0"
                 font.bold: true
-                font.pointSize: Math.max(10, parent.height*0.5)
+                font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
             }
 
         }
@@ -238,7 +238,7 @@ ApplicationWindow {
 //            anchors.topMargin: 10
             anchors.centerIn: parent
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
-
+            z:3 // to raise above notificationRect
             spacing: 10
 
             Item {
@@ -323,15 +323,35 @@ ApplicationWindow {
 
         Rectangle {
             id: notificationRect
-            color: "transparent"
+            color: "transparent"//"#3c3c62"
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.00;
+                    color: "black";
+                }
+                GradientStop {
+                    position: 0.26;
+                    color: "darkblue";
+                }
+                GradientStop {
+                    position: 0.87;
+                    color: "darkblue";
+                }
+                GradientStop {
+                    position: 1.00;
+                    color: "black";
+                }
+            } //"transparent"
             anchors.top: ledRow.bottom
             anchors.bottom: mainRect.bottom
+            anchors.bottomMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
 
             Label {
                 anchors.centerIn: parent
                 id: notificationLabel
-                color: "green"
+                color: "yellow"
                 text: ""
                 font.bold: true
                 font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
