@@ -71,7 +71,7 @@ void CsoundHandler::start(QString scoFileName, int fromBar)
 			qDebug()<<"TEmp file: "<<tempFile.fileName();
 			tempFile.close();
 
-			QString command = "csound -d -g -odac -+rtaudio=jack /home/tarmo/tarmo/csound/metronome/metro_blank.orc "+ tempFile.fileName() + " &";
+			QString command = "csound -d -g -odac:system:playback_ -+rtaudio=jack /home/tarmo/tarmo/csound/metronome/metro_blank.orc "+ tempFile.fileName() + " &";
 			system(command.toLocal8Bit());
 		}
 
