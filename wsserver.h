@@ -31,7 +31,7 @@ Q_SIGNALS:
 	void newLed(int ledNumber, float duration);
 	void newBeatBar(int bar, int beat);
 	void newNotification(QString notification); // for future, if text to send
-
+	void newTempo(QString tempo);
 
 private Q_SLOTS:
     void onNewConnection();
@@ -41,6 +41,7 @@ private Q_SLOTS:
 	void handleBeatBar(int bar, int beat);
 	void handleLed(int ledNumber, float duration);
 	void handleNotification(QString message);
+	void handleTempo(QString tempo);
 
 private:
     QWebSocketServer *m_pWebSocketServer;

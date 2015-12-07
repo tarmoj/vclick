@@ -32,6 +32,8 @@ ApplicationWindow {
             beatLabel.text = beat;
         }
 
+        onNewTempo: tempoLabel.text = tempo;
+
 
     }
 
@@ -110,7 +112,7 @@ ApplicationWindow {
                     id: scoField
                     width: 200
                     placeholderText: qsTr("sco file")
-                    text: "/home/tarmo/tarmo/csound/metronome/scott/scott.sco";
+                    text: "/home/tarmo/tarmo/csound/metronome/helena_nakht2/nakht2.sco";
 
                 }
 
@@ -179,6 +181,17 @@ ApplicationWindow {
                     text: qsTr("0")
                     font.pointSize: 32
                 }
+
+                Label {
+                    id: label4
+                    text: qsTr("Tempo: ")
+                }
+
+                Label {
+                    id: tempoLabel
+                    text: qsTr("0")
+                    //font.pointSize: 16
+                }
             }
 
 
@@ -198,11 +211,13 @@ ApplicationWindow {
         }
 
         Label {
-            id: label4
+            id: label6
             x: 10
             y: 285
             text: qsTr("Messages:")
         }
+
+
 
     }
 }

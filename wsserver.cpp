@@ -97,7 +97,9 @@ void WsServer::processTextMessage(QString message)
 		handleNotification(notification.simplified());
 	}
 
-
+	if (messageParts.contains("tempo")) {
+		handleTempo( messageParts[messageParts.indexOf("tempo")+1]);
+	}
 
 	if (bar>=0 && beat>=0)  // format message shorter for javascript
 		handleBeatBar(bar,beat);
@@ -166,6 +168,14 @@ void WsServer::handleNotification(QString message)
 	message = "n "+message;
 	qDebug()<<"Notification: "<<message;
 	send2all(message);
+}
+
+void WsServer::handleTempo(QString tempo)
+{
+	tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
+	qDebug()<<"Tempo: "<<tempo;
+	send2all("t "+tempo);
+	emit newTempo(tempo);
 }
 
 
