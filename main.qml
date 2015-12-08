@@ -78,6 +78,10 @@ ApplicationWindow {
                     notification(text);
                 }
 
+            if (messageParts[0] == "t") {	// tempo
+                    tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
+                }
+
 
         }
         onStatusChanged: if (socket.status == WebSocket.Error) {
@@ -181,10 +185,20 @@ ApplicationWindow {
 
         }
 
+        Label {
+            id: tempoLabel
+            anchors.top:parent.top
+            anchors.topMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "darkblue"
+            //font.pointSize: 20
+            text: qsTr("Tempo: 0")
+
+        }
 
         RowLayout {
             id: beatRow
-            anchors.top:parent.top
+            anchors.top:tempoLabel.bottom
             anchors.topMargin: 5
             spacing: mainRect.width/8
             anchors.horizontalCenter: parent.horizontalCenter
