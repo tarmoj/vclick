@@ -110,6 +110,28 @@ ApplicationWindow {
         active: false
     }
 
+    Connections {
+        target: oscServer
+
+        onNewBeatBar: {
+            barLabel.text = bar;
+            beatLabel.text = beat;
+        }
+
+        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo;
+
+        onNewLed: {
+            beatLength = duration;
+            if (led===0) redAnimation.restart()
+
+            if (led===1) greenAnimation.restart()
+            if (led===2) blueAnimation.restart()
+        }
+
+        onNewMessage: {notification(message);}
+
+    }
+
 
     Component.onCompleted: {
         socket.active = true;
@@ -184,6 +206,18 @@ ApplicationWindow {
 
 
         }
+
+        Label {
+            id: myIp
+            anchors.bottom: serverRow.top
+            anchors.bottomMargin: 2
+            anchors.left: serverRow.left
+            color: "darkblue"
+            text: qsTr("My IP: ")+ oscServer.getLocalAddress();
+
+        }
+
+
 
         Label {
             id: tempoLabel
@@ -403,8 +437,6 @@ ApplicationWindow {
             }
         }
     }
-
-
 
 
 

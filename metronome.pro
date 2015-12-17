@@ -2,7 +2,11 @@ TEMPLATE = app
 
 QT += qml quick widgets
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    oschandler.cpp \
+    src/qoscclient.cpp \
+    src/qoscserver.cpp \
+    src/qosctypes.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,3 +26,9 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+HEADERS += \
+	  oschandler.h \
+    src/qoscclient.h \
+    src/qoscserver.h \
+    src/qosctypes.h
