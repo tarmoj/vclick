@@ -24,6 +24,7 @@ public:
 	void sendMessage(QWebSocket *socket, QString message);
 	void send2all(QString message);
 	Q_INVOKABLE void setSendOsc(bool onOff);
+	Q_INVOKABLE void setOscAddresses(QString addresses);
 
 Q_SIGNALS:
     void closed();
@@ -32,6 +33,7 @@ Q_SIGNALS:
 	void newBeatBar(int bar, int beat);
 	void newNotification(QString notification); // for future, if text to send
 	void newTempo(QString tempo);
+	void updateOscAddresses(QString adresses);
 
 private Q_SLOTS:
     void onNewConnection();

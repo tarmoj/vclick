@@ -23,8 +23,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
     }
 
 	sendOsc = true;  // orig: false
-	oscAddresses<<"127.0.0.1"<<"192.168.1.106"; //<<"192.168.11.6"<<"192.168.11.11"<<"192.168.11.4"<<
-				  "192.168.11.3";
+	oscAddresses<< "127.0.0.1" <<"192.168.1.102";
 	foreach (QString address, oscAddresses) {
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
 		if (target)
@@ -51,7 +50,7 @@ void WsServer::onNewConnection()
     connect(pSocket, &QWebSocket::disconnected, this, &WsServer::socketDisconnected);
 
     m_clients << pSocket;
-    emit newConnection(m_clients.count());
+	emit newConnection(m_clients.count()); //TODO: kui enamus OSC-ga, siis näita pigem, mitu OSC aadressi reas
 }
 
 
@@ -73,6 +72,26 @@ void WsServer::processTextMessage(QString message)
 //		else:
 //			channels = TUTTI
 
+	if (messageParts[0]=="hello") { // comes as "hello <instrument>"
+		if (messageParts.length()>1)
+			QString instrument = messageParts[1];
+		QString senderUrl = pClient->peerAddress().toString();
+		qDebug()<<"Hello from: "<<senderUrl;
+		if (senderUrl.length()>2) { // append to oscAddresses and send confirmation
+			lo_address target = lo_address_new(senderUrl.toLocal8Bit(), "8008");
+			if (target) {
+				if (!targets.contains(target)) {
+					oscAddresses<<senderUrl;
+					targets<<target;
+					emit updateOscAddresses(oscAddresses.join(","));
+				}
+				lo_send(target, "/metronome/notification", "s", "Got you!");
+			} else {
+				qDebug()<<"Could not create OSC address to "<<senderUrl;
+			}
+
+		}
+	}
 
 	int bar = -1, beat = -1, led = -1;
 	float duration = 0;
@@ -152,7 +171,7 @@ void WsServer::handleLed(int ledNumber, float duration) {
 
 	if (sendOsc) {
 		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/led", "if", ledNumber, 0.05);
+			lo_send(target, "/metronome/led", "if", ledNumber, duration); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
 
 	}
 }
@@ -174,6 +193,11 @@ void WsServer::handleTempo(QString tempo)
 {
 	tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
 	qDebug()<<"Tempo: "<<tempo;
+	if (sendOsc) {
+		foreach(lo_address target, targets)
+			lo_send(target, "/metronome/tempo", "f", tempo.toFloat()); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
+
+	}
 	send2all("t "+tempo);
 	emit newTempo(tempo);
 }
@@ -200,4 +224,36 @@ void WsServer::send2all(QString message)
 void WsServer::setSendOsc(bool onOff)
 {
 	sendOsc  = onOff;
+}
+
+void WsServer::setOscAddresses(QString addresses)
+{
+	QStringList hosts = addresses.split(",");
+	// delete lists and build up again set sendOsc to false so far.
+	//TODO:
+	bool oldvalue = sendOsc;
+	sendOsc = false;
+	oscAddresses.clear();
+	targets.clear();
+	foreach (QString host, hosts) {
+		host = host.simplified();
+		if (host.length()>2) { // append to oscAddresses and send confirmation
+			qDebug()<<host;
+			lo_address target = lo_address_new(host.toLocal8Bit(), "8008");
+			if (target) {
+				if (!targets.contains(target)) {
+					oscAddresses<<host;
+					targets<<target;
+					emit updateOscAddresses(oscAddresses.join(",")); // send back valid addresses
+				}
+			} else {
+				qDebug()<<"Could not create OSC address to "<<host;
+			}
+
+		}
+
+	}
+	sendOsc = oldvalue;
+
+
 }

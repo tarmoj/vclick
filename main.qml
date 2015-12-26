@@ -34,7 +34,7 @@ ApplicationWindow {
 
         onNewTempo: tempoLabel.text = tempo;
 
-
+        onUpdateOscAddresses: oscAddresses.text = adresses;
     }
 
 
@@ -94,6 +94,33 @@ ApplicationWindow {
                 onCheckedChanged: {
                     if (checked) jackReader.start()
                     // else jackReader.stop()  // NOT good - cannot start again
+                }
+            }
+
+
+            Row {
+                id: oscRow
+                width: parent.width
+                //height: 30
+                spacing: 5
+
+                Label {
+                    //id: oscLabel
+                    text: qsTr("Registered clients: ")
+                }
+
+                TextField {
+                    id: oscAddresses
+                    width: 400
+                    placeholderText: qsTr("OSC addresses")
+                    text: "<none>";
+
+                }
+
+                Button {
+                    id: editOscButton
+                    text: qsTr("&Update")
+                    onClicked: wsServer.setOscAddresses(oscAddresses.text);
                 }
             }
 
