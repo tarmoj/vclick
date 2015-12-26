@@ -11,6 +11,7 @@ ApplicationWindow {
     height: 640
     visible: true
     property real beatLength: 1
+    property string instrument: "none" // TODO: set from menu for different channels
 
     menuBar: MenuBar {
         Menu {
@@ -53,10 +54,12 @@ ApplicationWindow {
 
     WebSocket {
         id: socket
-        url: serverAddress.text //"ws://192.168.1.199:6006/ws"
+        url: "ws://192.168.1.199:6006/ws"
+
         onTextMessageReceived: {
             console.log("Received message: ",message);
-            var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
+            /* do not use websockets any more for main comminucation
+             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
             if (messageParts[0]==="b") {
                 barLabel.text = messageParts[1]
                 beatLabel.text = messageParts[2]
@@ -82,29 +85,29 @@ ApplicationWindow {
                     tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
                 }
 
-
+            */
         }
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             connectButton.enabled = true;
-                             connectButton.text = qsTr("Connect...")
+                             //connectButton.enabled = true;
+                             //connectButton.text = qsTr("Connect...")
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
-                             connectButton.enabled = false;
+                             //connectButton.enabled = false;
                              serverAddress.visible = false;
-                             connectButton.text = qsTr("Connected")
-                             //socket.sendTextMessage("Hello World")
+                             //connectButton.text = qsTr("Connected")
+                             socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
+                             socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;
-                             connectButton.enabled = true;
-                             connectButton.text = qsTr("Connect")
-                             //messageBox.text += "\nSocket closed"
+                             //connectButton.enabled = true;
+                             //connectButton.text = qsTr("Connect")
                          }
                         else if (socket.status == WebSocket.Connecting) {
-                             connectButton.enabled = false;
-                             connectButton.text = qsTr("Connecting")
+                             //connectButton.enabled = false;
+                             //connectButton.text = qsTr("Connecting")
                          }
 
         active: false
@@ -133,9 +136,9 @@ ApplicationWindow {
     }
 
 
-    Component.onCompleted: {
-        socket.active = true;
-    }
+//    Component.onCompleted: {
+//        socket.active = true;
+//    }
 
     Rectangle {
         id: mainRect
@@ -192,13 +195,13 @@ ApplicationWindow {
                 id: connectButton
                 //checked:  //socket.active
                //võibolla varem oli pare, kui enabled - socket.active
-                enabled: true //socket.active
+                //enabled: true //socket.active
                 //checkable: true
-                text: qsTr("Connect...")
+                text: qsTr("Say Hello")
                 onClicked: {
                     if (!socket.active) {
-                        //socket.url = serverAddress.text
-                        //console.log("Connecting to ",socket.url)
+                        socket.url = serverAddress.text
+                        console.log("Connecting to ",socket.url)
                         socket.active =  true; // miks error QNativeSocketEngine::write() was not called in QAbstractSocket::ConnectedState - vaja vajutada 2 korda
                     }
                 }
@@ -274,8 +277,6 @@ ApplicationWindow {
         }
 
 
-//        ColorAnimation {target: redLed; properties: "color";  id: globColor; from: target.bright ;to: target.dark; duration:  beatLength *1000}
-//         NumberAnimation {target: redLed; easing.type: Easing.Linear; properties: "width"; id: globWidth;from: mainRect.width*0.28; to: mainRect.width*0.1; duration:beatLength *1000}
 
         Row{
             id: ledRow
