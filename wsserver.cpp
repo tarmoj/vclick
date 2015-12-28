@@ -20,10 +20,12 @@ WsServer::WsServer(quint16 port, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
-    }
+	}
 
-	sendOsc = true;  // orig: false
-	oscAddresses<< "127.0.0.1" <<"192.168.1.102";
+	sendOsc = true;
+	sendWs = false;
+	settings = new QSettings("settings.ini", QSettings::NativeFormat); // TODO platform independent
+	oscAddresses = getOscAddresses().split(","); //"127.0.0.1" <<"192.168.1.102";
 	foreach (QString address, oscAddresses) {
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
 		if (target)
@@ -151,42 +153,56 @@ void WsServer::handleBeatBar(int bar, int beat)
 {
 	qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
-	QString message;
-	message.sprintf("b %d %d", bar, beat); // short form to send out for javascript and app
-	send2all(message);
-
 	if (sendOsc) {
 		foreach(lo_address target, targets)
 			lo_send(target, "/metronome/beatbar", "ii", bar, beat);
-
 	}
+	if (sendWs) {
+		QString message;
+		message.sprintf("b %d %d", bar, beat); // short form to send out for javascript and app
+		send2all(message);
+	}
+
+
 }
 
 void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
-	QString message;
-	message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
-	send2all(message);
-
 	if (sendOsc) {
 		foreach(lo_address target, targets)
 			lo_send(target, "/metronome/led", "if", ledNumber, duration); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
 
 	}
+
+	if (sendWs) {
+		QString message;
+		message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
+		send2all(message);
+	}
+
+
 }
 
 void WsServer::handleNotification(QString message)
 {
+	qDebug()<<"Notification: "<<message;
+	if (sendOsc) {
+		foreach(lo_address target, targets)
+			lo_send(target, "/metronome/notification", "s", message.toLocal8Bit().data());
+	}
+
 
 	//joke for ending
-	QStringList endmessages = QStringList()<<"Uhhh..."<<"Hästi tehtud!"<< "Läbi sai" << "OK!" << "Nu-nuu..." << "Tsss!" << "Löpp" << "Pole hullu!";
-	if (message=="end") {
-		message = endmessages[qrand()%(endmessages.length()-1)];
+//	QStringList endmessages = QStringList()<<"Uhhh..."<<"Hästi tehtud!"<< "Läbi sai" << "OK!" << "Nu-nuu..." << "Tsss!" << "Löpp" << "Pole hullu!";
+//	if (message=="end") {
+//		message = endmessages[qrand()%(endmessages.length()-1)];
+//	}
+	if (sendWs) {
+		message = "n "+message;
+		send2all(message);
 	}
-	message = "n "+message;
-	qDebug()<<"Notification: "<<message;
-	send2all(message);
+
 }
 
 void WsServer::handleTempo(QString tempo)
@@ -198,8 +214,10 @@ void WsServer::handleTempo(QString tempo)
 			lo_send(target, "/metronome/tempo", "f", tempo.toFloat()); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
 
 	}
-	send2all("t "+tempo);
-	emit newTempo(tempo);
+	if (sendWs) {
+		send2all("t "+tempo);
+		emit newTempo(tempo);
+	}
 }
 
 
@@ -226,8 +244,16 @@ void WsServer::setSendOsc(bool onOff)
 	sendOsc  = onOff;
 }
 
+void WsServer::setSendWs(bool onOff)
+{
+	sendWs = onOff;
+}
+
 void WsServer::setOscAddresses(QString addresses)
 {
+
+	if (settings && !addresses.isEmpty() && !addresses.contains("none"))
+		settings->setValue("oscaddresses", addresses);
 	QStringList hosts = addresses.split(",");
 	// delete lists and build up again set sendOsc to false so far.
 	//TODO:
@@ -256,4 +282,10 @@ void WsServer::setOscAddresses(QString addresses)
 	sendOsc = oldvalue;
 
 
+}
+
+QString WsServer::getOscAddresses()
+{
+	if (settings)
+		return settings->value("oscaddresses").toString();
 }

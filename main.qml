@@ -1,5 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     visible: true
@@ -35,7 +36,25 @@ ApplicationWindow {
         onNewTempo: tempoLabel.text = tempo;
 
         onUpdateOscAddresses: oscAddresses.text = adresses;
+
+
     }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose score for metronome"
+        folder: "/home/tarmo/tarmo/csound/metronome"
+        onAccepted: {
+            console.log("You chose: " + fileDialog.fileUrl)
+            scoField.text = fileDialog.fileUrl
+        }
+        onRejected: {
+            console.log("Canceled")
+            visible = false;
+        }
+    }
+
+
 
 
     Rectangle {
@@ -76,7 +95,8 @@ ApplicationWindow {
             CheckBox {
                 id: wsCheckBox
                 text: qsTr("Send ws")
-                checked: true
+                checked: false
+                onCheckedChanged: wsServer.setSendWs(checked);
             }
 
             CheckBox {
@@ -113,7 +133,8 @@ ApplicationWindow {
                     id: oscAddresses
                     width: 400
                     placeholderText: qsTr("OSC addresses")
-                    text: "<none>";
+                    text: wsServer.getOscAddresses();
+
 
                 }
 
@@ -146,6 +167,7 @@ ApplicationWindow {
                 Button {
                     id: loadButton
                     text: qsTr("&Open")
+                    onClicked: fileDialog.visible=true
                 }
             }
 

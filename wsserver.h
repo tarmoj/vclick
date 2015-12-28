@@ -6,6 +6,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QHash>
 #include <QStringList>
+#include <QSettings>
 
 
 #include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
@@ -24,7 +25,9 @@ public:
 	void sendMessage(QWebSocket *socket, QString message);
 	void send2all(QString message);
 	Q_INVOKABLE void setSendOsc(bool onOff);
+	Q_INVOKABLE void setSendWs(bool onOff);
 	Q_INVOKABLE void setOscAddresses(QString addresses);
+	Q_INVOKABLE QString getOscAddresses();
 
 Q_SIGNALS:
     void closed();
@@ -48,9 +51,10 @@ private Q_SLOTS:
 private:
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
-	bool sendOsc;
+	bool sendOsc, sendWs;
 	QList <lo_address> targets;
 	QStringList oscAddresses;
+	QSettings * settings;
 
 
 };
