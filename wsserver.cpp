@@ -24,7 +24,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 
 	sendOsc = true;
 	sendWs = false;
-	settings = new QSettings("settings.ini", QSettings::NativeFormat); // TODO platform independent
+	settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, "metroserver","settings"); // TODO platform independent
 	oscAddresses = getOscAddresses().split(","); //"127.0.0.1" <<"192.168.1.102";
 	foreach (QString address, oscAddresses) {
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
@@ -79,17 +79,15 @@ void WsServer::processTextMessage(QString message)
 			QString instrument = messageParts[1];
 		QString senderUrl = pClient->peerAddress().toString();
 		qDebug()<<"Hello from: "<<senderUrl;
-		if (senderUrl.length()>2) { // append to oscAddresses and send confirmation
+		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 			lo_address target = lo_address_new(senderUrl.toLocal8Bit(), "8008");
-			if (target) {
-				if (!targets.contains(target)) {
-					oscAddresses<<senderUrl;
-					targets<<target;
-					emit updateOscAddresses(oscAddresses.join(","));
-				}
+			if (target && !oscAddresses.contains(senderUrl)) {
+				oscAddresses<<senderUrl;
+				targets<<target;
+				emit updateOscAddresses(oscAddresses.join(","));
 				lo_send(target, "/metronome/notification", "s", "Got you!");
 			} else {
-				qDebug()<<"Could not create OSC address to "<<senderUrl;
+				qDebug()<<"Adress already registered / could not create OSC address to "<<senderUrl;
 			}
 
 		}
@@ -252,8 +250,7 @@ void WsServer::setSendWs(bool onOff)
 void WsServer::setOscAddresses(QString addresses)
 {
 
-	if (settings && !addresses.isEmpty() && !addresses.contains("none"))
-		settings->setValue("oscaddresses", addresses);
+
 	QStringList hosts = addresses.split(",");
 	// delete lists and build up again set sendOsc to false so far.
 	//TODO:
@@ -263,7 +260,7 @@ void WsServer::setOscAddresses(QString addresses)
 	targets.clear();
 	foreach (QString host, hosts) {
 		host = host.simplified();
-		if (host.length()>2) { // append to oscAddresses and send confirmation
+		if (!host.isEmpty()) { // append to oscAddresses and send confirmation
 			qDebug()<<host;
 			lo_address target = lo_address_new(host.toLocal8Bit(), "8008");
 			if (target) {
@@ -279,6 +276,8 @@ void WsServer::setOscAddresses(QString addresses)
 		}
 
 	}
+	if (settings && !oscAddresses.isEmpty() && !addresses.contains("none")) // store in settings
+		settings->setValue("oscaddresses", oscAddresses);
 	sendOsc = oldvalue;
 
 

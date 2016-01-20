@@ -2,10 +2,13 @@ TEMPLATE = app
 
 QT += qml quick widgets network websockets
 
+INCLUDEPATH += /usr/local/include/csound
+
 SOURCES += main.cpp \
     wsserver.cpp \
     jackreader.cpp \
-    csoundhandler.cpp
+    csoundhandler.cpp \
+    csengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,6 +21,7 @@ include(deployment.pri)
 HEADERS += \
     wsserver.h \
     jackreader.h \
-    csoundhandler.h
+    csoundhandler.h \
+    csengine.h
 
-unix|win32: LIBS += -ljack -llo
+unix|win32: LIBS += -ljack -llo -lcsound64
