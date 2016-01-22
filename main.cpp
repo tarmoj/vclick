@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 	JackReader *jackReader = new JackReader();  // started from qml
 	//jackReader->start();
 
-	CsoundHandler cs;
+	//CsoundHandler cs;
 	//cs.start("/home/tarmo/tarmo/csound/metronome/scott/scott.sco",20);
 
 	// Csound engige --------------
@@ -31,16 +31,14 @@ int main(int argc, char *argv[])
 	QObject::connect(csoundThread, &QThread::finished, csoundThread, &QThread::deleteLater);
 	QObject::connect(&app, SIGNAL(aboutToQuit()), csound, SLOT(stop()) );
 
-	// kuskile funtsioonid startCsound, stopCsoundm thread private
-	// stopCsound -> connecct widget destoyed ja kuskil cs->stop(), csoundThread.quit(), csoundThread.wait()
-	//connect(&app, &Q::destroyed, csound, &CsEngine::stop); // <-mõtle seda... võibolla engine'iga
-	//QObject::connect(csoundThread, &QThread::started, csound, &CsEngine::play);
 
-	//connect(this, &BreathWindow::newChannelValue, cs, &CsEngine::setChannel );
-	//connect(this, &BreathWindow::newScoreEvent, cs, &CsEngine::scoreEvent );
 
-	//connect(wsServer, &WsServer::newChannelValue, cs, &CsEngine::setChannel );
-	//connect(wsServer, &WsServer::newScoreEvent, cs, &CsEngine::scoreEvent );
+	QObject::connect(csound,&CsEngine::newBeatBar, wsServer, &WsServer::handleBeatBar ); // QT5 style of connection
+	QObject::connect(csound,&CsEngine::newLed, wsServer, &WsServer::handleLed );
+	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
+	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
+
+
 
 
 	csoundThread->start();

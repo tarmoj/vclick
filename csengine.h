@@ -12,17 +12,27 @@ public:
 	explicit CsEngine(QObject *parent = 0);
 	~CsEngine();
 
+	//Q_INVOKABLE void setOrcSco(QString orc, QString sco);
+	Q_INVOKABLE MYFLT getChannel(QString channel);
+
 signals:
+	void startPlaying(QString scoFile, int startBar);
+	void newBeatBar(int bar, int beat);
+	void newLed(int ledNumber, float duration);
+	void newNotification(QString message);
+	void newTempo(QString tempo); // TODO: change to double/float
 
 public slots:
 	void setChannel(QString channel, MYFLT value);
-	void play();
+
+	void start(QString scoFile, int startBar);
+	void play(QString scoFile, int startBar);
 	void stop();
 	void scoreEvent(QString event);
 
 private:
 	Csound * cs;
-	QString csd; // resolve later
+	QString m_sco, m_orc, m_options; // resolve later
 	bool stopNow;
 };
 

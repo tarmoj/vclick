@@ -42,11 +42,13 @@ private Q_SLOTS:
     void onNewConnection();
     void processTextMessage(QString message);
     //void processBinaryMessage(QByteArray message);
-    void socketDisconnected();
+
+public Q_SLOTS:
+	void socketDisconnected();
 	void handleBeatBar(int bar, int beat);
 	void handleLed(int ledNumber, float duration);
 	void handleNotification(QString message);
-	void handleTempo(QString tempo);
+	void handleTempo(QString tempo); // TODO: change to double/float
 
 private:
     QWebSocketServer *m_pWebSocketServer;
