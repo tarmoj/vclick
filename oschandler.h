@@ -16,7 +16,7 @@ signals:
 	void newBeatBar(int bar, int beat);
 	void newLed(int led, double duration);
 	void newTempo(float tempo);
-	void newMessage(QString message);
+	void newMessage(QString message, float duration);
 
 
 public slots:

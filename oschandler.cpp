@@ -33,7 +33,7 @@ QString OscHandler::getLocalAddress()
 void OscHandler::dataIn(QString path, QVariant data)
 {
 	int type = data.type();
-	qDebug() << "OscHandler::dataIn " << path << " " << data<<type;
+	//qDebug() << "OscHandler::dataIn " << path << " " << data<<type;
 	QList <QVariant> args = data.toList();
 	if (path.startsWith("/metronome/beatbar")) {
 		if (args.length()>=2) {
@@ -62,10 +62,14 @@ void OscHandler::dataIn(QString path, QVariant data)
 	}
 
 	if (path.startsWith("/metronome/notification")) {
-		if (data.type()==QMetaType::QString){
+		if (args.length()>=2) {
+			QString message = args[0].toString(); // NB! in some reason punctuation marks like . and ! mess up the messages! better conversion!!! WHY? sometimes duration was 0 if there was . or ! in the message....
+			float duration = args[1].toFloat();
+			emit newMessage(message, duration);
+		} else if (data.type()==QMetaType::QString){
 			QString message = data.toString();
 			//qDebug()<<"MESSAGE: "<<message;
-			emit newMessage(message);
+			emit newMessage(message, 4.0);
 		}
 	}
 

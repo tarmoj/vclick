@@ -6,7 +6,7 @@ import Qt.WebSockets 1.0
 import QtQuick.Layouts 1.0
 
 ApplicationWindow {
-    title: qsTr("WS-metronome")
+    title: qsTr("eClick metronome")
     width: 480
     height: 640
     visible: true
@@ -44,9 +44,11 @@ ApplicationWindow {
 
     }
 
-    function notification(message) {
+    function notification(message, duration) {
+        console.log("notification in qml ", message, duration)
         notificationLabel.text = message;
         notificationRect.color = "darkblue";
+        clearNotification.interval = duration*1000; // into milliseconds
         clearNotification.start();
       }
 
@@ -121,7 +123,7 @@ ApplicationWindow {
             beatLabel.text = beat;
         }
 
-        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo;
+        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(3);
 
         onNewLed: {
             beatLength = duration;
@@ -131,7 +133,7 @@ ApplicationWindow {
             if (led===2) blueAnimation.restart()
         }
 
-        onNewMessage: {notification(message);}
+        onNewMessage: {notification(message, duration);}
 
     }
 
