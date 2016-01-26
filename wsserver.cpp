@@ -182,12 +182,12 @@ void WsServer::handleLed(int ledNumber, float duration) {
 
 }
 
-void WsServer::handleNotification(QString message)
+void WsServer::handleNotification(QString message, float duration)
 {
-	qDebug()<<"Notification: "<<message;
+	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
 	if (sendOsc) {
 		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/notification", "s", message.toLocal8Bit().data());
+			lo_send(target, "/metronome/notification", "sf", message.toLocal8Bit().data(),duration);
 	}
 
 
@@ -212,9 +212,10 @@ void WsServer::handleTempo(QString tempo)
 			lo_send(target, "/metronome/tempo", "f", tempo.toFloat()); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
 
 	}
+	emit newTempo(tempo); // for UI
 	if (sendWs) {
 		send2all("t "+tempo);
-		emit newTempo(tempo);
+
 	}
 }
 

@@ -162,7 +162,7 @@ ApplicationWindow {
                     id: scoField
                     width: 200
                     placeholderText: qsTr("sco file")
-                    text: "/home/tarmo/tarmo/csound/metronome/helena_nakht2/nakht2.sco";
+                    text: "/home/tarmo/tarmo/csound/metronome/test.sco";
 
                 }
 

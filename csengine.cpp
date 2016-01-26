@@ -8,7 +8,7 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 	stopNow = false;
 	//temp:
 	m_orc="/home/tarmo/tarmo/csound/metronome/metro_simple.orc"; // TODO: to settings
-	m_sco= "/home/tarmo/tarmo/csound/metronome/helena_nakht2/nakht2.sco"; // probably dont need.
+	m_sco= "/home/tarmo/tarmo/csound/metronome/test.sco"; // probably dont need.
 	m_options = "-odac -+rtaudio=null"; // into Settings;
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
 }
@@ -36,45 +36,58 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
 	cs->SetOption("-+rtaudio=null");
-	cs->Compile(m_orc.toLocal8Bit().data(), scoFile.toLocal8Bit().data() ); // ERROR HANDLING!
-	MYFLT bar, beat, red, green, blue, tempo; // maybe leds into an array, lisa QStringList()<<"red"<<"green"<<"blue";
-	MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
-	QStringList leds = QStringList() <<"red"<<"green"<<"blue";
+	int result = cs->Compile(m_orc.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
 
-	while (cs->PerformKsmps()==0 && !stopNow) {
+	if (!result ) {
 
-		for (int i=0;i<3;i++) {
-			MYFLT duration =  getChannel(leds[i]);
-			if (duration>0) {
-				emit newLed(i,duration);
-				qDebug()<<leds[i].toUpper()<<": " <<duration;
-				setChannel(leds[i],0); // set to 0 in Csound
-			}
-		}
+		MYFLT bar, beat, red, green, blue, tempo, flagUp; // flagUp - for how many seconds show a new notification
+		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
+		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 
-		beat = getChannel("beat");
-		bar = getChannel("bar");
-		if (beat!=oldBeat || bar!=oldBar) {
-			emit newBeatBar(bar, beat);
-			qDebug()<<"BAR: "<<bar<< "BEAT: "<<beat;
-			oldBeat = beat; oldBar = bar;
-			// check for tempo changes:
-			tempo = getChannel("tempo");
-			if (tempo!=oldTempo) {
-				emit newTempo(QString::number(tempo,'g',3));
-				qDebug()<<"TEMPO: "<<tempo;
-				oldTempo = tempo;
+		while (cs->PerformKsmps()==0 && !stopNow) {
+			for (int i=0;i<3;i++) {
+				MYFLT duration =  getChannel(leds[i]);
+				if (duration>0) {
+					emit newLed(i,duration);
+					qDebug()<<leds[i].toUpper()<<": " <<duration;
+					setChannel(leds[i],0); // set to 0 in Csound
+				}
 			}
 
+			beat = getChannel("beat");
+			bar = getChannel("bar");
+			if (beat!=oldBeat || bar!=oldBar) {
+				emit newBeatBar((MYFLT) int(bar), beat);
+				qDebug()<<"BAR: "<<bar<< "BEAT: "<<beat;
+				oldBeat = beat; oldBar = bar;
+				// check for tempo changes:
+				tempo = getChannel("tempo");
+				if (tempo!=oldTempo) {
+					emit newTempo(QString::number(tempo,'g',3));
+					qDebug()<<"TEMPO: "<<tempo;
+					oldTempo = tempo;
+				}
+			}
+
+			flagUp = getChannel("new_notification"); // duration > 0 if new message in the string channel
+			if (flagUp>0) {
+				QString notification = getStringChannel("notification");
+				qDebug()<<"NOTIFICATION: " << notification << "for (seconds:) " << flagUp;
+				emit newNotification(notification, flagUp);
+				setChannel("new_notification",0);
+			}
+
+			// NOTIFICATION: TODO: string channel
+
+
+			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
 		}
-
-		// NOTIFICATION: TODO: string channel
-
-
-		QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
+		qDebug()<<"Stopping csound";
+		cs->Stop();
+	} else {
+		qDebug()<<"Could not compile and strart with score file: "<<scoFile;
 	}
-	qDebug()<<"Stopping csound";
-	cs->Stop();
+
 	delete cs;
 	stopNow = false;
 
@@ -96,6 +109,15 @@ double CsEngine::getChannel(QString channel)
 //	if (value>0)
 //		qDebug()<<"channel: "<<channel << " value: "<<value;
 	return value;
+}
+
+QString CsEngine::getStringChannel(QString channel)
+{
+
+	char string[1024]; // to assume the message is not longer...
+	cs->GetStringChannel(channel.toLocal8Bit(),string);
+	return QString(string);
+
 }
 
 void CsEngine::scoreEvent(QString event)

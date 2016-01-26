@@ -1,0 +1,20 @@
+
+-nimi: Metrofy / Wi_track /?
+
+- csound develop crashes with sco & orc
+- server - OSC saatmine QT koodi pealt
+- server - My IP address  (vt. kliendi koodist)
+- Csound on API  - class CsEngine - mõtle, kuidas, et oleks omaette thread (moveToTHread - vt. breathing game ) 
+- eraldi dialoog OSC aadresside jaosk. Tabel: / instrument / aadress / viivis . Erista, mis määratud, mis juurde tulnud (väljad read-only, kiri tuhmim vms)
+- Csoundis proge eraldi kanalid // ? sün // ? kuidas saata info sündmusest? poratiivsuse mõttes python v osc ei ole head... vbolla sündmuste kanalid: red, green, blue - kui mitte 0 siis duration; seal kõrval kanal "channels", kus milliste bittidega saata [kas võib juhtuda, et seal kaks korraga? liida, muidu 0]; bar, beat - csound seab numbri, host loeb ja kustutab 0-i.
+
+
+Klient:
+eraldi dialoog Seaded -> server 
+sound klick
+check-boxes: Sound, Animation - ! Testi, kas nii on kiirem
+salvesta serveri aadress
+
+Tõlge eesti keelde
+
+Raspberry?

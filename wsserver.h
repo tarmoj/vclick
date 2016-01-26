@@ -47,7 +47,7 @@ public Q_SLOTS:
 	void socketDisconnected();
 	void handleBeatBar(int bar, int beat);
 	void handleLed(int ledNumber, float duration);
-	void handleNotification(QString message);
+	void handleNotification(QString message, float duration=4);
 	void handleTempo(QString tempo); // TODO: change to double/float
 
 private:

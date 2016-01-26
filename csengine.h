@@ -14,12 +14,13 @@ public:
 
 	//Q_INVOKABLE void setOrcSco(QString orc, QString sco);
 	Q_INVOKABLE MYFLT getChannel(QString channel);
+	Q_INVOKABLE QString getStringChannel(QString channel);
 
 signals:
 	void startPlaying(QString scoFile, int startBar);
 	void newBeatBar(int bar, int beat);
 	void newLed(int ledNumber, float duration);
-	void newNotification(QString message);
+	void newNotification(QString message, float duration);
 	void newTempo(QString tempo); // TODO: change to double/float
 
 public slots:
