@@ -1,7 +1,7 @@
 #ifndef OSCHANDLER_H
 #define OSCHANDLER_H
 
-#include "src/qoscserver.h"
+#include "qosc/qoscserver.h"
 
 
 class OscHandler : public QObject

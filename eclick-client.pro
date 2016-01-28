@@ -4,9 +4,9 @@ QT += qml quick widgets
 
 SOURCES += main.cpp \
     oschandler.cpp \
-    src/qoscclient.cpp \
-    src/qoscserver.cpp \
-    src/qosctypes.cpp
+	qosc/qoscclient.cpp \
+	qosc/qoscserver.cpp \
+	qosc/qosctypes.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,6 +29,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
 	  oschandler.h \
-    src/qoscclient.h \
-    src/qoscserver.h \
-    src/qosctypes.h
+	qosc/qoscclient.h \
+	qosc/qoscserver.h \
+	qosc/qosctypes.h
