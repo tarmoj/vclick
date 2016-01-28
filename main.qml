@@ -6,7 +6,7 @@ import Qt.WebSockets 1.0
 import QtQuick.Layouts 1.0
 
 ApplicationWindow {
-    title: qsTr("eClick metronome")
+    title: qsTr("eClick client")
     width: 480
     height: 640
     visible: true
