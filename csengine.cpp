@@ -1,6 +1,7 @@
 #include "csengine.h"
 #include <QDebug>
 #include <QCoreApplication>
+#include <QFile>
 
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
@@ -28,8 +29,67 @@ CsEngine::~CsEngine()
 
 void CsEngine::start(QString scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
-	m_sco = scoFile;
-	emit startPlaying(scoFile, startBar);
+	// check for starting bar number and construct a temporary score with necessary changes:
+	// load scoreFile
+	QFile scoreFile(scoFile.remove("file:/")); // otherwise does not open...
+
+	if (scoreFile.open(QFile::ReadOnly  |QFile::Text)) {
+		QString contents = QString(scoreFile.readAll());
+		QStringList lines = contents.split("\n");
+		QStringList tempoLines;
+		float startTime = 0;
+		foreach (QString line, lines) {
+			line = line.simplified();
+			if (line.startsWith("i 1 ") || line.startsWith("i1 ") ) {
+				qDebug()<<"tempo line: "<<line;
+				tempoLines.append(line);
+			}
+			if (line.startsWith("i 2") || line.startsWith("i2") ) { // TODO: OR starts with i \"bar\"
+				QStringList fields = line.split(" ");
+				int barno = fields[7].toInt(); // NB! does not work, if 'i2'
+				if (barno==startBar) {
+					qDebug()<<"Found bar "<<barno;
+					startTime = fields[2].toFloat();
+					qDebug()<<"Starts at: " << startTime;
+
+				}
+			}
+
+		}
+
+		if (startBar>1) {
+			QString tempo = "#TEMPO1#";
+			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
+
+			// find what was the last temo setting (i 1 statement) before startTime and reinsert it
+			for (int i=tempoLines.length()-1; i>=0;i--) { // from end towards beginning
+				QStringList fields = tempoLines[i].split(" ");
+				if (fields[2].toFloat() <= startTime) {
+					fields[2] = QString::number(startTime); // replace the time that is jumped over with the time where the bar starts
+					tempo = fields[4] ;
+					QString newTempoLine = fields.join(" ") + "\n\n";
+					replaceString += newTempoLine;
+					break; // no more searching needed
+				}
+			}
+			qDebug()<<"replaceString: "<<replaceString;
+			contents.replace(";ADVANCE",replaceString);
+			contents.replace( "#define REPTEMPO #$TEMPO1#", "#define REPTEMPO #" + tempo + "#"); // tempo of count-down
+		}
+
+		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco"); // TODO: use temporary file! - see how not to close it too soon
+		QFile tempFile("temp.sco");
+		if (tempFile.open(QFile::WriteOnly  |QFile::Text) ) {
+			tempFile.write(contents.toLocal8Bit().data());
+			qDebug()<<"TEMP file: "<<tempFile.fileName();
+			tempFile.close();
+		}
+
+		emit startPlaying("temp.sco", startBar); // TODO: name of temporary file!
+	}
+
+
+
 }
 
 void CsEngine::play(QString scoFile, int startBar) {

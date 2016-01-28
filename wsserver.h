@@ -10,6 +10,7 @@
 
 
 #include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
+//#include "qosc/qoscclient.h"
 
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
@@ -57,6 +58,7 @@ private:
 	QList <lo_address> targets;
 	QStringList oscAddresses;
 	QSettings * settings;
+	// TODO: QOscClient * oscClient;
 
 
 };

@@ -195,7 +195,7 @@ ApplicationWindow {
                 Button {
                     id: startButton
                     text: qsTr("Star&t")
-                    onClicked: cs.startPlaying(scoField.text, startBarSpinBox.value)//cs.start(scoField.text, startBarSpinBox.value )
+                    onClicked: cs.start(scoField.text, startBarSpinBox.value)//cs.start(scoField.text, startBarSpinBox.value )
                 }
 
                 Button {
