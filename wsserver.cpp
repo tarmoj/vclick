@@ -3,6 +3,7 @@
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
 #include <QDir>
+#include <QNetworkInterface>
 
 
 QT_USE_NAMESPACE
@@ -298,3 +299,21 @@ QString WsServer::getOscAddresses()
 			return QString();
 	}
 }
+
+QString WsServer::getLocalAddress()
+{
+	QString address = QString();
+	QList <QHostAddress> localAddresses = QNetworkInterface::allAddresses();
+	for(int i = 0; i < localAddresses.count(); i++) {
+
+		if(!localAddresses[i].isLoopback())
+			if (localAddresses[i].protocol() == QAbstractSocket::IPv4Protocol ) {
+				address = localAddresses[i].toString();
+				qDebug() << "YOUR IP: " << address;
+
+		}
+
+	}
+	return address;
+}
+

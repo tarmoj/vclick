@@ -29,6 +29,7 @@ public:
 	Q_INVOKABLE void setSendWs(bool onOff);
 	Q_INVOKABLE void setOscAddresses(QString addresses);
 	Q_INVOKABLE QString getOscAddresses();
+	Q_INVOKABLE QString getLocalAddress();
 
 Q_SIGNALS:
     void closed();

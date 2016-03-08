@@ -86,13 +86,18 @@ ApplicationWindow {
 
             Label {
                 id: ipLabel
-                text: qsTr("My ip: ")
+                text: qsTr("My ip: ")+ wsServer.getLocalAddress();
             }
 
             Label {
                 id: clientsLabel
-                text: qsTr("Clients: ")
+                text: qsTr("WS clients: ")
             }
+
+//            Label {
+//                id: oscCountLabel
+//                text: qsTr("OSC targets: ")
+//            }
 
             CheckBox {
                 id: wsCheckBox
