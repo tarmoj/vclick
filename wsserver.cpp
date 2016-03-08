@@ -11,7 +11,7 @@ QT_USE_NAMESPACE
 
 WsServer::WsServer(quint16 port, QObject *parent) :
     QObject(parent),
-	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("EchoServer"),
+	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("eClickServer"),
                                             QWebSocketServer::NonSecureMode, this)),
     m_clients()
 {
@@ -24,9 +24,9 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 
 	sendOsc = true;
 	sendWs = false;
-	settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, "metroserver","settings"); // TODO platform independent
-	oscAddresses = getOscAddresses().split(","); //"127.0.0.1" <<"192.168.1.102";
-	foreach (QString address, oscAddresses) {
+	settings = new QSettings("eclick","server-settings"); // TODO platform independent
+	oscAddresses =  getOscAddresses().split(",");
+	foreach (QString address, oscAddresses) { // what happens if oscAddresse s empty?
 		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
 		if (target)
 			targets<<target;
@@ -250,8 +250,6 @@ void WsServer::setSendWs(bool onOff)
 
 void WsServer::setOscAddresses(QString addresses)
 {
-
-
 	QStringList hosts = addresses.split(",");
 	// delete lists and build up again set sendOsc to false so far.
 	//TODO:
@@ -277,8 +275,12 @@ void WsServer::setOscAddresses(QString addresses)
 		}
 
 	}
-	if (settings && !oscAddresses.isEmpty() && !addresses.contains("none")) // store in settings
-		settings->setValue("oscaddresses", oscAddresses);
+	if (settings) { // store in settings
+		if (addresses=="none" ||  oscAddresses.isEmpty()  ) // allow also stroring empty addresses line, but avoid invalid value.
+			settings->setValue("oscaddresses", "");
+		else
+			settings->setValue("oscaddresses", oscAddresses);
+	}
 	sendOsc = oldvalue;
 
 
@@ -286,6 +288,13 @@ void WsServer::setOscAddresses(QString addresses)
 
 QString WsServer::getOscAddresses()
 {
-	if (settings)
-		return settings->value("oscaddresses").toString();
+	if (settings) {
+		QVariant value = settings->value("oscaddresses");
+		if (value.type()==QMetaType::QString)
+			return value.toString();
+		else if (value.type()==QMetaType::QStringList)
+			return value.toStringList().join(",");
+		else
+			return QString();
+	}
 }
