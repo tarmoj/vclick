@@ -23,6 +23,7 @@ QString OscHandler::getLocalAddress()
 			if (localAddresses[i].protocol() == QAbstractSocket::IPv4Protocol ) {
 				address = localAddresses[i].toString();
 				qDebug() << "YOUR IP: " << address;
+				break; // get the first address (avoid bridges etc)
 
 		}
 

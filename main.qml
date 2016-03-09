@@ -123,7 +123,7 @@ ApplicationWindow {
             beatLabel.text = beat;
         }
 
-        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(3);
+        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2);
 
         onNewLed: {
             beatLength = duration;
@@ -201,10 +201,12 @@ ApplicationWindow {
                 //checkable: true
                 text: qsTr("Say Hello")
                 onClicked: {
+                    console.log("Socket state: ", socket.status)
+                    //TODO: wait while connected
                     if (!socket.active) {
                         socket.url = serverAddress.text
                         console.log("Connecting to ",socket.url)
-                        socket.active =  true; // miks error QNativeSocketEngine::write() was not called in QAbstractSocket::ConnectedState - vaja vajutada 2 korda
+                        //socket.active =  true; // HAHA -  seting url already connects it anyway!
                     }
                 }
             }
