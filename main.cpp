@@ -3,6 +3,7 @@
 #include "wsserver.h"
 #include "csengine.h"
 #include <QQmlContext>
+#include <QThread>
 
 #ifdef Q_OS_UNIX
 	#include "jackreader.h"

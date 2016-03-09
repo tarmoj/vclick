@@ -2,15 +2,16 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QFile>
+#include <QUrl>
 
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
 	stopNow = false;
 	//temp:
-	m_orc="/home/tarmo/tarmo/csound/metronome/metro_simple.orc"; // TODO: to settings
-	m_sco= "/home/tarmo/tarmo/csound/metronome/test.sco"; // probably dont need.
-	m_options = "-odac -+rtaudio=null"; // into Settings;
+    m_orc=":/csound/metro_simple.orc"; //"/home/tarmo/tarmo/csound/metronome/metro_simple.orc"; // TODO: to settings
+    //m_sco= "/home/tarmo/tarmo/csound/metronome/test.sco"; // probably dont need.
+    //m_options = "-odac -+rtaudio=null"; // into Settings;
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
 }
 
@@ -31,7 +32,9 @@ void CsEngine::start(QString scoFile, int startBar) // TODO - ühenda kohe QML s
 {
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
-	QFile scoreFile(scoFile.remove("file:/")); // otherwise does not open...
+    QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
+    QString testname = ":/csound/test.sco"; //scoreUrl.toLocalFile();
+    QFile scoreFile(testname);
 
 	if (scoreFile.open(QFile::ReadOnly  |QFile::Text)) {
 		QString contents = QString(scoreFile.readAll());
@@ -87,6 +90,9 @@ void CsEngine::start(QString scoFile, int startBar) // TODO - ühenda kohe QML s
 
 		emit startPlaying("temp.sco", startBar); // TODO: name of temporary file!
 	}
+    else {
+        qDebug()<<"Could not open file "<<scoFile;
+    }
 
 
 
@@ -96,7 +102,8 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
 	cs->SetOption("-+rtaudio=null");
-	int result = cs->Compile(m_orc.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+    bool copyresult=QFile::copy(m_orc,"temp.orc"); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
+    int result = cs->Compile(/*m_orc.toLocal8Bit().data()*/ "temp.orc", scoFile.toLocal8Bit().data() );
 
 	if (!result ) {
 

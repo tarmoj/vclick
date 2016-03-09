@@ -2,7 +2,8 @@ TEMPLATE = app
 
 QT += qml quick widgets network websockets
 
-INCLUDEPATH += /usr/local/include/csound
+unix: INCLUDEPATH += /usr/local/include/csound
+win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"
 
 SOURCES += main.cpp \
     wsserver.cpp \ 
@@ -13,7 +14,8 @@ SOURCES += main.cpp \
 
 unix: SOURCES += jackreader.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    cs.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -30,5 +32,9 @@ HEADERS += \
 
 unix: HEADERS +=  jackreader.h
 
+win32: LIBS += -L "$$(PROGRAMFILES)\\Csound6\\bin"
 unix|win32: LIBS += -lcsound64
 unix: LIBS += -ljack
+
+message("libraries: "$$LIBS)
+

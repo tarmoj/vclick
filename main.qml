@@ -168,7 +168,7 @@ ApplicationWindow {
                     id: scoField
                     width: 200
                     placeholderText: qsTr("sco file")
-                    text: "/home/tarmo/tarmo/csound/metronome/test.sco";
+                    text: "file:///C:/Users/Kasutaja/Documents/src/eclick-server/test.sco";
 
                 }
 
