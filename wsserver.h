@@ -9,8 +9,8 @@
 #include <QSettings>
 
 
-#include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
-//#include "qosc/qoscclient.h"
+//#include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
+#include "qosc/qoscclient.h"
 
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
@@ -48,18 +48,19 @@ private Q_SLOTS:
 public Q_SLOTS:
 	void socketDisconnected();
 	void handleBeatBar(int bar, int beat);
-	void handleLed(int ledNumber, float duration);
+	void handleLed(int ledNumber, float duration); // to double everywhere?
 	void handleNotification(QString message, float duration=4);
-	void handleTempo(QString tempo); // TODO: change to double/float
+	void handleTempo(double tempo); // TODO: change to double/float
 
 private:
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
 	bool sendOsc, sendWs;
-	QList <lo_address> targets;
+	//QList <lo_address> targets;
 	QStringList oscAddresses;
 	QSettings * settings;
-	// TODO: QOscClient * oscClient;
+	QList <QOscClient *> m_oscClients;
+	void createOscClientsList(QString addresses);
 
 
 };

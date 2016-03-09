@@ -5,13 +5,13 @@ QT += qml quick widgets network websockets
 INCLUDEPATH += /usr/local/include/csound
 
 SOURCES += main.cpp \
-    wsserver.cpp \
-    jackreader.cpp \
-    csoundhandler.cpp \
+    wsserver.cpp \ 
     csengine.cpp \
     qosc/qoscclient.cpp \
     qosc/qoscserver.cpp \
     qosc/qosctypes.cpp
+
+unix: SOURCES += jackreader.cpp
 
 RESOURCES += qml.qrc
 
@@ -23,11 +23,12 @@ include(deployment.pri)
 
 HEADERS += \
     wsserver.h \
-    jackreader.h \
-    csoundhandler.h \
     csengine.h \
     qosc/qoscclient.h \
     qosc/qoscserver.h \
     qosc/qosctypes.h
 
-unix|win32: LIBS += -ljack -lcsound64 -llo
+unix: HEADERS +=  jackreader.h
+
+unix|win32: LIBS += -lcsound64
+unix: LIBS += -ljack

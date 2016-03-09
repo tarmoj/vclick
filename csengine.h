@@ -21,7 +21,7 @@ signals:
 	void newBeatBar(int bar, int beat);
 	void newLed(int ledNumber, float duration);
 	void newNotification(QString message, float duration);
-	void newTempo(QString tempo); // TODO: change to double/float
+	void newTempo(double tempo); // TODO: change to double/float
 
 public slots:
 	void setChannel(QString channel, MYFLT value);

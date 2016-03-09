@@ -123,7 +123,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 				// check for tempo changes:
 				tempo = getChannel("tempo");
 				if (tempo!=oldTempo) {
-					emit newTempo(QString::number(tempo,'g',3));
+					emit newTempo(tempo);
 					qDebug()<<"TEMPO: "<<tempo;
 					oldTempo = tempo;
 				}

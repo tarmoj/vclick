@@ -116,6 +116,7 @@ ApplicationWindow {
 
             CheckBox {
                 id: jackCheckBox
+                visible: (Qt.platform.os === "unix" || Qt.platform.os === "linux")
                 text: "Read from Jack"
                 checked: false
                 onCheckedChanged: {

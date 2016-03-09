@@ -14,7 +14,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
     QObject(parent),
 	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("eClickServer"),
                                             QWebSocketServer::NonSecureMode, this)),
-    m_clients()
+	m_clients(), m_oscClients()
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
@@ -26,13 +26,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	sendOsc = true;
 	sendWs = false;
 	settings = new QSettings("eclick","server-settings"); // TODO platform independent
-	oscAddresses =  getOscAddresses().split(",");
-	foreach (QString address, oscAddresses) { // what happens if oscAddresse s empty?
-		lo_address target = lo_address_new(address.toLocal8Bit(), "8008");
-		if (target)
-			targets<<target;
-
-	}
+	createOscClientsList(getOscAddresses());
 }
 
 
@@ -76,21 +70,25 @@ void WsServer::processTextMessage(QString message)
 //			channels = TUTTI
 
 	if (messageParts[0]=="hello") { // comes as "hello <instrument>"
-		if (messageParts.length()>1)
-			QString instrument = messageParts[1];
+		if (messageParts.length()>1) {
+			QString instrument = messageParts[1]; // for future
+		}
 		QString senderUrl = pClient->peerAddress().toString();
 		qDebug()<<"Hello from: "<<senderUrl;
 		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
-			lo_address target = lo_address_new(senderUrl.toLocal8Bit(), "8008");
-			if (target && !oscAddresses.contains(senderUrl)) {
-				oscAddresses<<senderUrl;
-				targets<<target;
-				emit updateOscAddresses(oscAddresses.join(","));
-				lo_send(target, "/metronome/notification", "s", "Got you!");
+			QOscClient * target = new QOscClient(pClient->peerAddress(),8008,this); // what if localhost, does it work then?
+			if (target) {
+				if (!oscAddresses.contains(senderUrl)) {
+					oscAddresses<<senderUrl;
+					emit updateOscAddresses(oscAddresses.join(","));
+					target->sendData("/metronome/notification", "Got you!" );
+				} else {
+					qDebug()<<"Adress already registered: "<<senderUrl;
+					target->sendData("/metronome/notification", "All fine" );
+				}
 			} else {
-				qDebug()<<"Adress already registered / could not create OSC address to "<<senderUrl;
+				qDebug()<<"Could not create OSC address to "<<senderUrl;
 			}
-
 		}
 	}
 
@@ -118,7 +116,7 @@ void WsServer::processTextMessage(QString message)
 	}
 
 	if (messageParts.contains("tempo")) {
-		handleTempo( messageParts[messageParts.indexOf("tempo")+1]);
+		handleTempo( messageParts[messageParts.indexOf("tempo")+1].toDouble());
 	}
 
 	if (bar>=0 && beat>=0)  // format message shorter for javascript
@@ -153,8 +151,11 @@ void WsServer::handleBeatBar(int bar, int beat)
 	qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
 	if (sendOsc) {
-		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/beatbar", "ii", bar, beat);
+		foreach(QOscClient * target, m_oscClients) {
+			QList<QVariant> data;
+			data << bar << beat;
+			target->sendData("/metronome/beatbar", data);
+		}
 	}
 	if (sendWs) {
 		QString message;
@@ -169,9 +170,11 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
 	if (sendOsc) {
-		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/led", "if", ledNumber, duration); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
-
+		foreach(QOscClient * target, m_oscClients) {
+			QList<QVariant> data;
+			data << ledNumber << (double)duration; // QOsc types does not recognise float...
+			target->sendData("/metronome/led", data);
+		}
 	}
 
 	if (sendWs) {
@@ -187,11 +190,12 @@ void WsServer::handleNotification(QString message, float duration)
 {
 	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
 	if (sendOsc) {
-		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/notification", "sf", message.toLocal8Bit().data(),duration);
+		foreach(QOscClient * target, m_oscClients) {
+			QList<QVariant> data;
+			data << message << (double)duration; // QOsc types does not recognise float...
+			target->sendData("/metronome/notification", data);
+		}
 	}
-
-
 	//joke for ending
 //	QStringList endmessages = QStringList()<<"Uhhh..."<<"Hästi tehtud!"<< "Läbi sai" << "OK!" << "Nu-nuu..." << "Tsss!" << "Löpp" << "Pole hullu!";
 //	if (message=="end") {
@@ -204,20 +208,48 @@ void WsServer::handleNotification(QString message, float duration)
 
 }
 
-void WsServer::handleTempo(QString tempo)
+void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
-	tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
+	//tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
 	qDebug()<<"Tempo: "<<tempo;
 	if (sendOsc) {
-		foreach(lo_address target, targets)
-			lo_send(target, "/metronome/tempo", "f", tempo.toFloat()); // TODO: vana oscMetronoom ootab kestusena vist 0.05...
+		foreach(QOscClient * target, m_oscClients) {
+			//QList<QVariant> data;
+			//data << ledNumber << (double)duration; // QOsc types does not recognise float...
+			target->sendData("/metronome/tempo", tempo);
+		}
 
 	}
-	emit newTempo(tempo); // for UI
+	QString tempoString = QString::number(tempo, 'f',2);
+	emit newTempo(tempoString); // construct string here!
 	if (sendWs) {
-		send2all("t "+tempo);
+		send2all("t "+tempoString);
 
 	}
+}
+
+void WsServer::createOscClientsList(QString addresses)
+{
+	oscAddresses.clear();
+	m_oscClients.clear();
+	foreach (QString address, addresses.split(",")) {
+		address = address.simplified();
+		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
+		if (!address.isEmpty()) { // for any case
+			QOscClient * client = new QOscClient(QHostAddress(address), 8008, this);
+			if (client) {
+				m_oscClients<<client; // muuda target oscClient vms
+				oscAddresses<<address;
+				//testing
+				client->sendData("/test", address);
+			} else {
+				qDebug()<<"Could not create OSC address to "<<address;
+			}
+		}
+	}
+	emit updateOscAddresses(oscAddresses.join(","));
+	qDebug()<<"OSC targets count: " << m_oscClients.count();
+
 }
 
 
@@ -239,6 +271,7 @@ void WsServer::send2all(QString message)
 	}
 }
 
+
 void WsServer::setSendOsc(bool onOff)
 {
 	sendOsc  = onOff;
@@ -251,31 +284,10 @@ void WsServer::setSendWs(bool onOff)
 
 void WsServer::setOscAddresses(QString addresses)
 {
-	QStringList hosts = addresses.split(",");
-	// delete lists and build up again set sendOsc to false so far.
-	//TODO:
 	bool oldvalue = sendOsc;
-	sendOsc = false;
-	oscAddresses.clear();
-	targets.clear();
-	foreach (QString host, hosts) {
-		host = host.simplified();
-		if (!host.isEmpty()) { // append to oscAddresses and send confirmation
-			qDebug()<<host;
-			lo_address target = lo_address_new(host.toLocal8Bit(), "8008");
-			if (target) {
-				if (!targets.contains(target)) {
-					oscAddresses<<host;
-					targets<<target;
-					emit updateOscAddresses(oscAddresses.join(",")); // send back valid addresses
-				}
-			} else {
-				qDebug()<<"Could not create OSC address to "<<host;
-			}
+	sendOsc = false; // as kind of mutex not to send any osc messages during that time
+	createOscClientsList(addresses);
 
-		}
-
-	}
 	if (settings) { // store in settings
 		if (addresses=="none" ||  oscAddresses.isEmpty()  ) // allow also stroring empty addresses line, but avoid invalid value.
 			settings->setValue("oscaddresses", "");
@@ -283,8 +295,6 @@ void WsServer::setOscAddresses(QString addresses)
 			settings->setValue("oscaddresses", oscAddresses);
 	}
 	sendOsc = oldvalue;
-
-
 }
 
 QString WsServer::getOscAddresses()
@@ -310,7 +320,7 @@ QString WsServer::getLocalAddress()
 			if (localAddresses[i].protocol() == QAbstractSocket::IPv4Protocol ) {
 				address = localAddresses[i].toString();
 				qDebug() << "YOUR IP: " << address;
-
+				break; // get the first address
 		}
 
 	}
