@@ -85,6 +85,9 @@ void QOscServer::readyRead() {
 						QString s = toString( tmp );
 						value = s;
 						i += s.size();
+						if (i%4==0) {
+							i+=4; // if previous was string with x*4 cahracters, go to next slot TODO: test!
+						}
 					}
 					if ( type == 'i' ) {
 						value = toInt32( tmp );
