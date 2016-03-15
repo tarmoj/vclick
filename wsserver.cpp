@@ -81,6 +81,7 @@ void WsServer::processTextMessage(QString message)
 				if (!oscAddresses.contains(senderUrl)) {
 					oscAddresses<<senderUrl;
 					emit updateOscAddresses(oscAddresses.join(","));
+					m_oscClients << target;
 					target->sendData("/metronome/notification", "Got you!" );
 				} else {
 					qDebug()<<"Adress already registered: "<<senderUrl;

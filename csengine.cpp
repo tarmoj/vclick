@@ -2,7 +2,6 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QFile>
-#include <QUrl>
 
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
@@ -28,12 +27,12 @@ CsEngine::~CsEngine()
 //}
 
 
-void CsEngine::start(QString scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
+void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
-    QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
-    QString testname = ":/csound/test.sco"; //scoreUrl.toLocalFile();
+	//QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
+	QString testname = scoFile.path(); //":/csound/test.sco"; //scoreUrl.toLocalFile();
     QFile scoreFile(testname);
 
 	if (scoreFile.open(QFile::ReadOnly  |QFile::Text)) {
@@ -103,11 +102,11 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
 	cs->SetOption("-+rtaudio=null");
     bool copyresult=QFile::copy(m_orc,"temp.orc"); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
-    int result = cs->Compile(/*m_orc.toLocal8Bit().data()*/ "temp.orc", scoFile.toLocal8Bit().data() );
+	int result = cs->Compile("temp.orc", scoFile.toLocal8Bit().data() );
 
 	if (!result ) {
 
-		MYFLT bar, beat, red, green, blue, tempo, flagUp; // flagUp - for how many seconds show a new notification
+		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
 		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 

@@ -2,6 +2,7 @@
 #define CSENGINE_H
 
 #include <QObject>
+#include <QUrl>
 #include "csound.hpp"
 
 
@@ -26,7 +27,7 @@ signals:
 public slots:
 	void setChannel(QString channel, MYFLT value);
 
-	void start(QString scoFile, int startBar);
+	void start(QUrl scoFile, int startBar);
 	void play(QString scoFile, int startBar);
 	void stop();
 	void scoreEvent(QString event);

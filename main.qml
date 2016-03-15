@@ -167,8 +167,8 @@ ApplicationWindow {
                 TextField {
                     id: scoField
                     width: 200
-                    placeholderText: qsTr("sco file")
-                    text: "file:///C:/Users/Kasutaja/Documents/src/eclick-server/test.sco";
+                    placeholderText: qsTr("score file")
+                    text: ":/csound/test.sco";
 
                 }
 
@@ -201,7 +201,7 @@ ApplicationWindow {
                 Button {
                     id: startButton
                     text: qsTr("Star&t")
-                    onClicked: cs.start(scoField.text, startBarSpinBox.value)//cs.start(scoField.text, startBarSpinBox.value )
+                    onClicked: cs.start(scoField.text, startBarSpinBox.value)
                 }
 
                 Button {
