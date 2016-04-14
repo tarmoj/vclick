@@ -5,7 +5,7 @@
 #include <QQmlContext>
 #include <QThread>
 
-#ifdef Q_OS_UNIX
+#ifdef Q_OS_LINUX
 	#include "jackreader.h"
 #endif
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
-#ifdef Q_OS_UNIX
+#ifdef Q_OS_LINUX
 	JackReader *jackReader = new JackReader();  // started from qml
 #endif
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "csound"
 	engine.rootContext()->setContextProperty("cs", csound);
 
-#ifdef Q_OS_UNIX
+#ifdef Q_OS_LINUX
 	engine.rootContext()->setContextProperty("jackReader", jackReader);
 	QObject::connect(jackReader, SIGNAL(newBeatBar(int,int)), wsServer, SLOT(handleBeatBar(int,int)) );
 	QObject::connect(jackReader, SIGNAL(newLed(int,float)), wsServer, SLOT(handleLed(int,float))) ;
