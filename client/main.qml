@@ -2,8 +2,10 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
-import Qt.WebSockets 1.0
+//import Qt.WebSockets 1.0
 import QtQuick.Layouts 1.0
+import Qt.labs.settings 1.0
+import QtMultimedia 5.5
 
 ApplicationWindow {
     title: qsTr("eClick client")
@@ -12,6 +14,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
+    //property string installPath: "assets:/"
 
     menuBar: MenuBar {
         Menu {
@@ -29,6 +32,25 @@ ApplicationWindow {
                 onTriggered: Qt.quit();
             }
         }
+    }
+
+
+    Audio {
+        id: sound1
+        source: installPath + "sound1.wav" // sound could not be played fro resource many times...
+        onError: {console.log("Audio error: ", errorString)}
+}
+
+    Audio {
+        id: sound2
+        source: installPath + "sound2.wav"
+        onError: {console.log("Audio error: ", errorString)}
+
+    }
+    Audio {
+        id: sound3
+        source: installPath + "sound3.wav"
+        onError: {console.log("Audio error: ", errorString)}
     }
 
     Timer {
@@ -53,59 +75,41 @@ ApplicationWindow {
       }
 
 
-
+/*
     WebSocket {
         id: socket
         url: "ws://192.168.1.199:6006/ws"
 
+//        Component.onCompleted: {
+//            var storedAddress = settings.getSettingsValue("serverAddress")//<<check if not empty!
+//            //if (storedAddress)
+//            console.log(storedAddress)
+//            serverAddress.text = storedAddress;
+//        }
+
         onTextMessageReceived: {
             console.log("Received message: ",message);
-            /* do not use websockets any more for main comminucation
-             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
-            if (messageParts[0]==="b") {
-                barLabel.text = messageParts[1]
-                beatLabel.text = messageParts[2]
-
-            }
-            if (messageParts[0]==="l") {
-                var led = parseInt( messageParts[1] );
-                beatLength = parseFloat(messageParts[2]); // TODO - enable different durations for different beats
-                if (led===0) redAnimation.restart()
-
-                if (led===1) greenAnimation.restart()
-                if (led===2) blueAnimation.restart()
-
-            }
-
-            if (messageParts[0] == "n") {	// notification
-                    messageParts.splice(0,1); // get rid of the "n" and join word intro string back again
-                    var text = messageParts.join(" ");
-                    notification(text);
-                }
-
-            if (messageParts[0] == "t") {	// tempo
-                    tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
-                }
-
-            */
         }
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             //connectButton.enabled = true;
-                             //connectButton.text = qsTr("Connect...")
+                             connectButton.enabled = true;
+                             connectButton.text = qsTr("Say Hello")
+                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
-                             //connectButton.enabled = false;
                              serverAddress.visible = false;
-                             //connectButton.text = qsTr("Connected")
+                             connectButton.text = qsTr("Connected")
+                             connectButton.enabled = false;
+                             settings.serverAddress = socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;
-                             //connectButton.enabled = true;
-                             //connectButton.text = qsTr("Connect")
+                             serverAddress.visible = true;
+                             connectButton.enabled = true;
+                             connectButton.text = qsTr("Say Hello")
                          }
                         else if (socket.status == WebSocket.Connecting) {
                              //connectButton.enabled = false;
@@ -113,7 +117,7 @@ ApplicationWindow {
                          }
 
         active: false
-    }
+    } */
 
     Connections {
         target: oscServer
@@ -127,14 +131,36 @@ ApplicationWindow {
 
         onNewLed: {
             beatLength = duration;
-            if (led===0) redAnimation.restart()
+            if (led===0) {
+                if (soundCheckBox.checked) {
+                    sound1.play();
+                }
+                redAnimation.restart()
+            }
 
-            if (led===1) greenAnimation.restart()
-            if (led===2) blueAnimation.restart()
+            if (led===1) {
+                if (soundCheckBox.checked) {
+                    sound2.play();
+                }
+                greenAnimation.restart()
+            }
+            if (led===2) {
+                if (soundCheckBox.checked) {
+                    sound3.play();
+                }
+                blueAnimation.restart()
+            }
         }
 
         onNewMessage: {notification(message, duration);}
 
+    }
+
+    Settings {
+        id: settings
+        property alias serverAddress: serverAddress.text
+        property alias sound: soundCheckBox.checked
+        property alias animation: animationCheckBox.checked
     }
 
 
@@ -164,6 +190,26 @@ ApplicationWindow {
             }
         }
         anchors.fill: parent
+
+        CheckBox {
+            x:5; y: 5
+            id: animationCheckBox
+            checked: true
+            text: qsTr("Animation")
+//            onCheckedChanged: {settings.setSettingsValue("animation", checked)}
+//            Component.onCompleted: animationCheckBox.checked  = settings.getSettingsValue("animation")
+
+        }
+
+        CheckBox {
+            x:5;
+            anchors.top: animationCheckBox.bottom
+            id: soundCheckBox
+            checked: false
+            text: qsTr("Sound")
+//            onCheckedChanged: {settings.setSettingsValue("sound", checked)}
+//            Component.onCompleted: soundCheckBox.checked  = settings.getSettingsValue("sound")
+        }
 
 
 
@@ -206,6 +252,7 @@ ApplicationWindow {
                     if (!socket.active) {
                         socket.url = serverAddress.text
                         console.log("Connecting to ",socket.url)
+                        //? if socket.status==closed -> socekt.active=true;
                         //socket.active =  true; // HAHA -  seting url already connects it anyway!
                     }
                 }
@@ -414,31 +461,46 @@ ApplicationWindow {
 
         Row {
             id: testRow
-            visible: false
+            visible: true //false
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 10
             spacing: 10
 
+
             Button {
                 id: button1
 
                 text: qsTr("LEd1")
-                onClicked: { redAnimation.restart() }
+                onClicked: {
+                    redAnimation.restart();
+                    if (soundCheckBox.checked) {
+                        sound1.play();
+                    }
+                }
             }
 
             Button {
                 id: button2
 
                 text: qsTr("Led2")
-                onClicked:  greenAnimation.restart()
+                onClicked:  { greenAnimation.restart()
+                    if (soundCheckBox.checked) {
+                        sound2.play();
+                    }
+                }
             }
 
             Button {
                 id: button3
 
                 text: qsTr("Led3")
-                onClicked:  blueAnimation.restart()
+                onClicked:  {
+                    if (soundCheckBox.checked) {
+                        sound3.play();
+                    }
+                    blueAnimation.restart()
+                }
             }
         }
     }

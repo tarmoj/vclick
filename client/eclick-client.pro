@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     oschandler.cpp \
 	qosc/qoscclient.cpp \
 	qosc/qoscserver.cpp \
-	qosc/qosctypes.cpp
+	qosc/qosctypes.cpp \
+    settingshandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,4 +32,14 @@ HEADERS += \
 	  oschandler.h \
 	qosc/qoscclient.h \
 	qosc/qoscserver.h \
-	qosc/qosctypes.h
+	qosc/qosctypes.h \
+    settingshandler.h
+
+android {
+	sounds.path = /assets
+	sounds.files = sounds/*.wav
+	INSTALLS += sounds
+} else {
+	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD # to copy sounds to the destination dir
+}
+

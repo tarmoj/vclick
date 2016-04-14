@@ -28,7 +28,7 @@ i 2 8 4 4 4 0 3 $TUTTI
 i 2 12 4 4 4 0 4 $TUTTI
 
 
-i "notification" 0 2 "Alustage nüüd!"
+i "notification" 0 2 "Go!"
 i "notification" 4 8 "Ritenuto"
 ;i "notification" 4 4 "Ritenuto" ;NB! in some reason punctuation marks like . and ! mess up the messages!
 
