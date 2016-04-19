@@ -2,10 +2,10 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
-//import Qt.WebSockets 1.0
 import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
 import QtMultimedia 5.5
+import QtWebSockets 1.0
 
 ApplicationWindow {
     title: qsTr("eClick client")
@@ -66,6 +66,17 @@ ApplicationWindow {
 
     }
 
+    Timer {
+        id: ledOffTimer
+        running: false
+        repeat: false
+        interval: 80
+        property var object: redLed ;
+
+        onTriggered: {object.width = ledRow.ledOffWidth; object.color = object.dark ;}
+
+    }
+
     function notification(message, duration) {
         console.log("notification in qml ", message, duration)
         notificationLabel.text = message;
@@ -75,7 +86,9 @@ ApplicationWindow {
       }
 
 
-/*
+
+
+
     WebSocket {
         id: socket
         url: "ws://192.168.1.199:6006/ws"
@@ -117,7 +130,7 @@ ApplicationWindow {
                          }
 
         active: false
-    } */
+    }
 
     Connections {
         target: oscServer
@@ -135,20 +148,41 @@ ApplicationWindow {
                 if (soundCheckBox.checked) {
                     sound1.play();
                 }
-                redAnimation.restart()
+                if (animationCheckBox.checked) {
+                    redAnimation.restart();
+                } else {
+                    redLed.color = redLed.bright
+                    redLed.width = ledRow.ledOnWidth;
+                    ledOffTimer.object = redLed
+                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                }
             }
 
             if (led===1) {
                 if (soundCheckBox.checked) {
                     sound2.play();
                 }
-                greenAnimation.restart()
+                if (animationCheckBox.checked) {
+                    greenAnimation.restart();
+                } else {
+                    greenLed.color = greenLed.bright
+                    greenLed.width = ledRow.ledOnWidth;
+                    ledOffTimer.object = greenLed
+                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                }
             }
             if (led===2) {
                 if (soundCheckBox.checked) {
                     sound3.play();
                 }
-                blueAnimation.restart()
+                if (animationCheckBox.checked) {
+                    blueAnimation.restart();
+                } else {
+                    blueLed.color = blueLed.bright
+                    blueLed.width = ledRow.ledOnWidth;
+                    ledOffTimer.object = blueLed
+                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                }
             }
         }
 
@@ -241,19 +275,12 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                //checked:  //socket.active
-               //võibolla varem oli pare, kui enabled - socket.active
-                //enabled: true //socket.active
-                //checkable: true
                 text: qsTr("Say Hello")
                 onClicked: {
-                    console.log("Socket state: ", socket.status)
-                    //TODO: wait while connected
+                    //console.log("Socket state: ", socket.status)
                     if (!socket.active) {
                         socket.url = serverAddress.text
                         console.log("Connecting to ",socket.url)
-                        //? if socket.status==closed -> socekt.active=true;
-                        //socket.active =  true; // HAHA -  seting url already connects it anyway!
                     }
                 }
             }
@@ -338,7 +365,9 @@ ApplicationWindow {
 //            anchors.topMargin: 10
             anchors.centerIn: parent
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
+            property real ledOffWidth: ledRow.ledOnWidth/4
             z:3 // to raise above notificationRect
+
             spacing: 10
 
             Item {
@@ -363,7 +392,7 @@ ApplicationWindow {
                     ParallelAnimation {
                         id: redAnimation
                         ColorAnimation {target: redLed; properties: "color";  from: target.bright ;to: target.dark; duration:  beatLength *1000}
-                        NumberAnimation {target: redLed;  properties: "width";from: ledRow.ledOnWidth; to: ledRow.ledOnWidth/4; duration:beatLength *1000}
+                        NumberAnimation {target: redLed;  properties: "width";from: ledRow.ledOnWidth; to: ledRow.ledOffWidth; duration:beatLength *1000}
                     }
 
                 }
@@ -471,9 +500,17 @@ ApplicationWindow {
             Button {
                 id: button1
 
-                text: qsTr("LEd1")
+                text: qsTr("Led1")
                 onClicked: {
-                    redAnimation.restart();
+                    if (animationCheckBox.checked) {
+                        redAnimation.restart();
+                    } else {
+                        redLed.color = redLed.bright
+                        redLed.width = ledRow.ledOnWidth;
+                        ledOffTimer.object = redLed
+                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    }
+
                     if (soundCheckBox.checked) {
                         sound1.play();
                     }
@@ -484,7 +521,15 @@ ApplicationWindow {
                 id: button2
 
                 text: qsTr("Led2")
-                onClicked:  { greenAnimation.restart()
+                onClicked:  {
+                    if (animationCheckBox.checked) {
+                        greenAnimation.restart();
+                    } else {
+                        greenLed.color = greenLed.bright
+                        greenLed.width = ledRow.ledOnWidth;
+                        ledOffTimer.object = greenLed
+                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    }
                     if (soundCheckBox.checked) {
                         sound2.play();
                     }
@@ -499,7 +544,14 @@ ApplicationWindow {
                     if (soundCheckBox.checked) {
                         sound3.play();
                     }
-                    blueAnimation.restart()
+                    if (animationCheckBox.checked) {
+                        blueAnimation.restart();
+                    } else {
+                        blueLed.color = blueLed.bright
+                        blueLed.width = ledRow.ledOnWidth;
+                        ledOffTimer.object = blueLed
+                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    }
                 }
             }
         }
