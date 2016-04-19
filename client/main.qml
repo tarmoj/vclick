@@ -91,7 +91,7 @@ ApplicationWindow {
 
     WebSocket {
         id: socket
-        url: "ws://192.168.1.199:6006/ws"
+        url: serverAddress.text//"ws://192.168.1.199:6006/ws"
 
 //        Component.onCompleted: {
 //            var storedAddress = settings.getSettingsValue("serverAddress")//<<check if not empty!
@@ -106,29 +106,31 @@ ApplicationWindow {
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             connectButton.enabled = true;
-                             connectButton.text = qsTr("Say Hello")
+//                             connectButton.enabled = true;
+//                             connectButton.text = qsTr("Say Hello")
                              notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              serverAddress.visible = false;
-                             connectButton.text = qsTr("Connected")
-                             connectButton.enabled = false;
+//                             connectButton.text = qsTr("Connected")
+//                             connectButton.enabled = false;
                              settings.serverAddress = socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;
-                             serverAddress.visible = true;
-                             connectButton.enabled = true;
-                             connectButton.text = qsTr("Say Hello")
+//                             serverAddress.visible = true;
+//                             connectButton.enabled = true;
+//                             connectButton.text = qsTr("Say Hello")
                          }
                         else if (socket.status == WebSocket.Connecting) {
-                             //connectButton.enabled = false;
-                             //connectButton.text = qsTr("Connecting")
+                             console.log("Socket connecting")
+//                             connectButton.enabled = false;
+//                             connectButton.text = qsTr("Connecting")
                          }
 
+        onActiveChanged: console.log("Socket active: ", active)
         active: false
     }
 
@@ -277,10 +279,11 @@ ApplicationWindow {
                 id: connectButton
                 text: qsTr("Say Hello")
                 onClicked: {
-                    //console.log("Socket state: ", socket.status)
+                    console.log("Socket state, errorString: ", socket.status, socket.errorString)
                     if (!socket.active) {
-                        socket.url = serverAddress.text
-                        console.log("Connecting to ",socket.url)
+                        //socket.url = serverAddress.text
+                        socket.active = true
+                        console.log("Connecting to ",socket.url, socket.status)
                     }
                 }
             }
@@ -490,7 +493,7 @@ ApplicationWindow {
 
         Row {
             id: testRow
-            visible: true //false
+            visible: false
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 10
