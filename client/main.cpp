@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
 	OscHandler oscServer(8008);
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");
+	app.setOrganizationName("eclick"); // for settings
+	app.setApplicationName("client");
     QQmlApplicationEngine engine;
 	engine.rootContext()->setContextProperty("oscServer", &oscServer);
 	//engine.rootContext()->setContextProperty("settings", &settings);

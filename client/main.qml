@@ -93,13 +93,6 @@ ApplicationWindow {
         id: socket
         url: serverAddress.text//"ws://192.168.1.199:6006/ws"
 
-//        Component.onCompleted: {
-//            var storedAddress = settings.getSettingsValue("serverAddress")//<<check if not empty!
-//            //if (storedAddress)
-//            console.log(storedAddress)
-//            serverAddress.text = storedAddress;
-//        }
-
         onTextMessageReceived: {
             console.log("Received message: ",message);
         }
@@ -232,9 +225,6 @@ ApplicationWindow {
             id: animationCheckBox
             checked: true
             text: qsTr("Animation")
-//            onCheckedChanged: {settings.setSettingsValue("animation", checked)}
-//            Component.onCompleted: animationCheckBox.checked  = settings.getSettingsValue("animation")
-
         }
 
         CheckBox {
@@ -243,8 +233,6 @@ ApplicationWindow {
             id: soundCheckBox
             checked: false
             text: qsTr("Sound")
-//            onCheckedChanged: {settings.setSettingsValue("sound", checked)}
-//            Component.onCompleted: soundCheckBox.checked  = settings.getSettingsValue("sound")
         }
 
 

@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+	app.setOrganizationName("eclick"); // for settings
+	app.setApplicationName("server");
+
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
 #ifdef Q_OS_LINUX

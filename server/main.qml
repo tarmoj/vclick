@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
+import Qt.labs.settings 1.0
 
 ApplicationWindow {
     visible: true
@@ -24,6 +25,15 @@ ApplicationWindow {
 
     signal play()
 
+    Settings {
+        id: settings
+        property alias scoreFile:  scoField.text
+        property alias sendWs: wsCheckBox.checked
+        property alias sendOsc: oscCheckBox.checked
+        property alias readFromJack: jackCheckBox.checked
+        property alias lastScorePath: fileDialog.folder
+    }
+
     Connections {
         target: wsServer
         onNewConnection: {
@@ -45,10 +55,13 @@ ApplicationWindow {
     FileDialog {
         id: fileDialog
         title: "Please choose score for metronome"
-        folder: "/home/tarmo/tarmo/csound/metronome"
+        //folder: "file://"
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrl)
-            scoField.text = fileDialog.fileUrl
+            scoField.text = fileUrl
+            var basename = fileUrl.toString()
+            basename = basename.slice(0, basename.lastIndexOf("/")+1)
+            folder = basename
+            console.log("You chose: " + fileUrl + " in folder: " + basename)
         }
         onRejected: {
             console.log("Canceled")
@@ -77,7 +90,7 @@ ApplicationWindow {
 
         Column {
             id: mainColumn
-            spacing: 5
+            spacing: 10
             anchors.rightMargin: 5
             anchors.leftMargin: 5
             anchors.bottomMargin: 5
@@ -174,8 +187,14 @@ ApplicationWindow {
 
                 Button {
                     id: loadButton
-                    text: qsTr("&Open")
+                    text: qsTr("&Load")
                     onClicked: fileDialog.visible=true
+                }
+
+                Button {
+                    id: testScoreButton
+                    text: qsTr("&Test")
+                    onClicked: scoField.text=":/csound/test.sco"
                 }
             }
 
@@ -257,6 +276,7 @@ ApplicationWindow {
         TextArea {
             id: textArea1
             y: 275
+            visible: false
             frameVisible: true
             readOnly: true
             anchors.left: parent.left
@@ -272,6 +292,7 @@ ApplicationWindow {
             x: 10
             y: 285
             text: qsTr("Messages:")
+            visible: false
         }
 
 
