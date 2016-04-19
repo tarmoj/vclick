@@ -6,8 +6,7 @@ SOURCES += main.cpp \
     oschandler.cpp \
 	qosc/qoscclient.cpp \
 	qosc/qoscserver.cpp \
-	qosc/qosctypes.cpp \
-    settingshandler.cpp
+	qosc/qosctypes.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,8 +31,7 @@ HEADERS += \
 	  oschandler.h \
 	qosc/qoscclient.h \
 	qosc/qoscserver.h \
-	qosc/qosctypes.h \
-    settingshandler.h
+	qosc/qosctypes.h
 
 android {
 	sounds.path = /assets

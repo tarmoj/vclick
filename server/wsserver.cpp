@@ -25,7 +25,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 
 	sendOsc = true;
 	sendWs = false;
-	settings = new QSettings("eclick","server-settings"); // TODO platform independent
+	settings = new QSettings("eclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
 }
 
