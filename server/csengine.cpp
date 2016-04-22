@@ -32,7 +32,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
 	//QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
-	QString testname = scoFile.path(); //":/csound/test.sco"; //scoreUrl.toLocalFile();
+    QString testname = (scoFile.toString().startsWith("file:") ) ? scoFile.toLocalFile() : scoFile.path(); //":/csound/test.sco"; //scoreUrl.toLocalFile();
     QFile scoreFile(testname);
 
 	if (scoreFile.open(QFile::ReadOnly  |QFile::Text)) {

@@ -101,7 +101,7 @@ ApplicationWindow {
                              socket.active = false;
 //                             connectButton.enabled = true;
 //                             connectButton.text = qsTr("Say Hello")
-                             notification("Failed!", 1.0);
+//                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              serverAddress.visible = false;
