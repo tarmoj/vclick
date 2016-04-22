@@ -38,6 +38,12 @@ android {
 	sounds.files = sounds/*.wav
 	INSTALLS += sounds
 } else {
-	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD # to copy sounds to the destination dir
+linux:	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD # to copy sounds to the destination dir
+macx {
+    sounds.path = Contents/Resources
+    sounds.files = sounds
+    QMAKE_BUNDLE_DATA += sounds
+
+    }
 }
 

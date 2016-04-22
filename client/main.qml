@@ -38,7 +38,7 @@ ApplicationWindow {
     Audio {
         id: sound1
         source: installPath + "sound1.wav" // sound could not be played fro resource many times...
-        onError: {console.log("Audio error: ", errorString)}
+        onError: {console.log("Audio error: ", errorString, source)}
 }
 
     Audio {

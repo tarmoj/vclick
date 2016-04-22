@@ -40,5 +40,7 @@ linux: LIBS += -ljack
 mac: {
 LIBS += -F/Library/Frameworks/ -framework CsoundLib64
 INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
+# NB! copy libs from CsoundLib64.framework/libs to eclick-server bundle ? perhaps in release bundle step?
 }
-message("libraries: "$$LIBS)
+
+#message("libraries: "$$LIBS)
