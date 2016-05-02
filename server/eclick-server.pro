@@ -6,6 +6,7 @@ linux: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
+mac: ICON = eclick-server.icns
 SOURCES += main.cpp \
     wsserver.cpp \ 
     csengine.cpp \

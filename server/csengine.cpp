@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QFile>
+#include <QDir>
 
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
@@ -16,8 +17,8 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 
 CsEngine::~CsEngine()
 {
-	cs->Stop();
-	delete cs;  // this is probably not necessary
+    //cs->Stop();
+    //delete cs;  // this is probably not necessary
 }
 
 
@@ -80,14 +81,15 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 		}
 
 		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco"); // TODO: use temporary file! - see how not to close it too soon
-		QFile tempFile("temp.sco");
+        QString tempName = QDir::tempPath() + "/temp.sco";
+        QFile tempFile(tempName);
 		if (tempFile.open(QFile::WriteOnly  |QFile::Text) ) {
 			tempFile.write(contents.toLocal8Bit().data());
 			qDebug()<<"TEMP file: "<<tempFile.fileName();
 			tempFile.close();
 		}
 
-		emit startPlaying("temp.sco", startBar); // TODO: name of temporary file!
+        emit startPlaying(tempName, startBar); // TODO: name of temporary file!
 	}
     else {
         qDebug()<<"Could not open file "<<scoFile;
@@ -101,8 +103,9 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
 	cs->SetOption("-+rtaudio=null");
-    bool copyresult=QFile::copy(m_orc,"temp.orc"); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
-	int result = cs->Compile("temp.orc", scoFile.toLocal8Bit().data() );
+    QString tempOrcName = QDir::tempPath() + "/temp.orc";
+    bool copyresult=QFile::copy(m_orc,tempOrcName); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
+    int result = cs->Compile(tempOrcName.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
 
 	if (!result ) {
 
