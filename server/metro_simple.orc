@@ -99,24 +99,39 @@ instr 2, bar ; example i 2 <start> <dur> <beats_in_bar> <fraction of full note (
 
 	kmetrofreq=gkTempo/60*iMetro_rate
 	kBeat_trig metro kmetrofreq
+	
+	kSubdivMetroRate init 1
 	if (iSubdivs>1) then
-		kSubdiv_trig metro kmetrofreq*iSubdivs
+		if (p4==1 && p5==4) then
+			kSubdivMetroRate = iSubdivs/p3 ; allow various lengths for 1/4 time
+		else
+			kSubdivMetroRate = kmetrofreq*iSubdivs
+		endif
+		kSubdiv_trig metro kSubdivMetroRate
+		printf "SUBDIV %f\n", kSubdiv_trig, kSubdivMetroRate
 	endif
 	
 	kBeat init iFirstBeat
 
 	kKlick_type init 0
 
-    	
 	if (kBeat_trig==1) then	
-		
+
 		gkBeat = kBeat
 		;schedkwhen kBeat_trig,0,0,"oscnumbers",0,0.1,iBarno,kBeat,iChannels
 		
 		if (kBeat==1 && iBarno>=0) then ; if the first beat and not signalled otherwise (negative barno), use RED led
-			gkRedBlink = 1/kmetrofreq ; set the duration in seconds. Host should take care of seting it to 0 after the value is read.
+			if (p4==1 && p5==4) then
+				gkRedBlink = p3 ; allow 1/4 bars to be of any given length (say 1.5 seconds...)
+			else
+				gkRedBlink = 1/kmetrofreq ; set the duration in seconds. Host should take care of seting it to 0 after the value is read.
+			endif
 		else 
-			gkGreenBlink = 1/kmetrofreq
+			if (p4==1 && p5==4) then
+				gkGreenBlink = p3 ; for 1/4 time
+			else
+				gkGreenBlink = 1/kmetrofreq
+			endif
 		endif
 		kBeat += 1
 		if (kBeat>iBeats) then ; Is is sometimes necessary to play 4/8 but start counting from say 3?

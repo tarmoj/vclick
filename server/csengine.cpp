@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QDir>
-
+#include <QTemporaryFile>
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
@@ -102,12 +102,15 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
-	cs->SetOption("-+rtaudio=null");
-    QString tempOrcName = QDir::tempPath() + "/temp.orc";
-    bool copyresult=QFile::copy(m_orc,tempOrcName); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
-    int result = cs->Compile(tempOrcName.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+    cs->SetOption("-+rtaudio=null");
+    //QString tempOrcName = QDir::tempPath() + "/temp.orc";
+    QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
+    tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_simple.orc");
+    //bool copyresult=QFile::copy(m_orc,tempOrcName); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
+    //int result = cs->Compile(tempOrcName.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+    int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
 
-	if (!result ) {
+    if (!result ) {
 
 		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
@@ -126,8 +129,8 @@ void CsEngine::play(QString scoFile, int startBar) {
 			beat = getChannel("beat");
 			bar = getChannel("bar");
 			if (beat!=oldBeat || bar!=oldBar) {
-				emit newBeatBar((MYFLT) int(bar), beat);
-				qDebug()<<"BAR: "<<bar<< "BEAT: "<<beat;
+                emit newBeatBar( int(bar), round(beat)); // round since sometimes given as 5.2999999
+                qDebug()<<"BAR: "<<int(bar)<< "BEAT: "<<round(beat);
 				oldBeat = beat; oldBar = bar;
 				// check for tempo changes:
 				tempo = getChannel("tempo");
@@ -153,6 +156,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 		}
 		qDebug()<<"Stopping csound";
 		cs->Stop();
+        tempOrcFile->remove(); // for any case
 	} else {
 		qDebug()<<"Could not compile and strart with score file: "<<scoFile;
 	}
