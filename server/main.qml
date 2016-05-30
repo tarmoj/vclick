@@ -5,9 +5,9 @@ import Qt.labs.settings 1.0
 
 ApplicationWindow {
     visible: true
-    width: 640
+    width: 740
     height: 480
-    title: qsTr("Metronome server")
+    title: qsTr("eClick server")
 
     menuBar: MenuBar {
         Menu {
@@ -147,7 +147,7 @@ ApplicationWindow {
 
                 Label {
                     //id: oscLabel
-                    text: qsTr("Registered clients: ")
+                    text: qsTr("Clients: ")
                 }
 
                 TextField {
@@ -163,6 +163,19 @@ ApplicationWindow {
                     id: editOscButton
                     text: qsTr("&Update")
                     onClicked: wsServer.setOscAddresses(oscAddresses.text);
+                }
+
+                Button {
+                    id: addLocalhostButton
+                    text: qsTr("+ this computer")
+                    tooltip: qsTr("To send messages to client in the same computer")
+                    onClicked: {
+                        if (oscAddresses.text.indexOf("127.0.0.1")<0 ) {
+                            oscAddresses.text += ",localhost ";
+                            wsServer.setOscAddresses(oscAddresses.text)
+                        }
+
+                    }
                 }
             }
 

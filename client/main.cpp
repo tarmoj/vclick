@@ -3,6 +3,7 @@
 #include "oschandler.h"
 //#include "settingshandler.h"
 #include <QQmlContext>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
 	//settings.setSettingsValue("serverAddress","ws:test");
 	app.setOrganizationName("eclick"); // for settings
 	app.setApplicationName("client");
+	app.setWindowIcon(QIcon(":/eclick-client.png"));
     QQmlApplicationEngine engine;
 	engine.rootContext()->setContextProperty("oscServer", &oscServer);
 	//engine.rootContext()->setContextProperty("settings", &settings);

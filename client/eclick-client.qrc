@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>eclick-client.png</file>
+    </qresource>
+</RCC>

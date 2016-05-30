@@ -1,4 +1,5 @@
 TEMPLATE = app
+#TARGET += "eClickServer"
 
 QT += qml quick widgets network websockets
 
@@ -7,6 +8,8 @@ win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
 mac: ICON = eclick-server.icns
+win32: RC_ICONS = eclick-client.png
+
 SOURCES += main.cpp \
     wsserver.cpp \ 
     csengine.cpp \
@@ -17,7 +20,8 @@ SOURCES += main.cpp \
 linux: SOURCES += jackreader.cpp
 
 RESOURCES += qml.qrc \
-    cs.qrc
+    cs.qrc \
+    eclick-server.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

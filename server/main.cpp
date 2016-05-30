@@ -4,6 +4,7 @@
 #include "csengine.h"
 #include <QQmlContext>
 #include <QThread>
+#include <QIcon>
 
 #ifdef Q_OS_LINUX
 	#include "jackreader.h"
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
 
 	app.setOrganizationName("eclick"); // for settings
 	app.setApplicationName("server");
+
+	app.setWindowIcon(QIcon(":/eclick-server.png"));
 
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
