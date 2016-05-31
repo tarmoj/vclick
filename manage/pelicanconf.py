@@ -26,7 +26,7 @@ DEFAULT_PAGINATION = False
 
 THEME = '../theme/gum'
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+RELATIVE_URLS = True
 PLUGIN_PATHS = [] # pelican_youtube shoud be installed systemwide with pip
 PLUGINS = [
      'pelican_youtube',
