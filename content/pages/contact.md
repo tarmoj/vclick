@@ -6,4 +6,4 @@ Contact the author:
 
 Tarmo Johannes [trmjhnns ae gmail com](mailto:trmjhnns@gmail.com)
 
-Source code repository int GitHub: <https://tarmojgithub.com/tarmoj/eclick/>
+Source code repository int GitHub: <https://github.com/tarmoj/eclick/>
