@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Tarmo Johannes'
 SITENAME = u'eClick'
-SITEURL = ''
+SITEURL = 'http://tarmoj.github.io/eclick'
+SITE_URL = SITEURL
 
 TIMEZONE = 'Europe/Tallinn'
 
@@ -26,7 +27,7 @@ DEFAULT_PAGINATION = False
 
 THEME = '../theme/Responsive-Pelican' #'../theme/gum'
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+RELATIVE_URLS = True
 PLUGIN_PATHS = [] # pelican_youtube shoud be installed systemwide with pip
 PLUGINS = [
      'pelican_youtube',
