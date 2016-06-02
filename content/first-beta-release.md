@@ -3,6 +3,7 @@ Date: 2016-05-31
 Slug: first_release
 Author: Tarmo Johannes
 Tags: release
+Category: news
 
 
 

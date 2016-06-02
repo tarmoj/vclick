@@ -1,5 +1,6 @@
 Title: About
 Date: 2016-05-31 10:20
+sortorder: 1
 
 #eClick
 **eClick** is a wire-free visual click-track (or metronome) system, useful for ensembles, bands or other formations. No need for cables, headphones, extra amplifiers or mixers - just use wifi network and the **eClick** software.

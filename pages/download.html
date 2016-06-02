@@ -1,55 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
+
 <head>
-
-        <title>Download</title>
-        <meta charset="utf-8" />
-
-
-        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
-        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
-
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
-
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
-
-
-
-
-
-
+    <title>Download</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" id="responsive-style-css"  href='/theme/css/style.css' type="text/css" media="all" />
+    <link rel="stylesheet" id="responsive-style-css"  href='/theme/css/highlight.css' type="text/css" media="all" />
+    
 </head>
 
-<body id="index" class="home">
+<body id="index" class="blog">
+<div id="container" class="hfeed">
+    <header id="header" >
+        <div id="logo">
+                <h1><img src="/theme/image/default-logo.png" width="300" height="100" alt="小铱的故事" />
+                eClick</h1>
+        </div> <!-- /#logo-->
+        <nav id="menu" class="main-nav"><ul class="menu">
+            <li ><a href="/eclick/pages/about.html">About</a></li>
+            <li ><a href="/eclick/pages/download.html">Download</a></li>
+            <li ><a href="/eclick/pages/getting-started.html">Getting started</a></li>
+            <li ><a href="/eclick/pages/how-it-works.html">How it works</a></li>
+            <li ><a href="/eclick/pages/score-files.html">Score files</a></li>
+            <li ><a href="/eclick/pages/contribute.html">Contribute</a></li>
+            <li ><a href="/eclick/pages/contact.html">Contact</a></li>
 
-
-    <div class="container">
-
-        <div class="row">
-
-          <header id="banner" class="body">
-                  <h1><a href="">eClick <strong></strong></a></h1>
-          </header><!-- /#banner -->
-
-            <div id="navigation" class="navbar row">
-              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
-             
-              <ul class="columns">
-                <li><a href="">Home</a></li>
-
-                <li><a href="/eclick/pages/about.html">About</a></li>
-                <li><a href="/eclick/pages/download.html">Download</a></li>
-                <li><a href="/eclick/pages/getting-started.html">Getting started</a></li>
-                <li><a href="/eclick/pages/how-it-works.html">How it works</a></li>
-                <li><a href="/eclick/pages/score-files.html">Score files</a></li>
-                <li><a href="/eclick/pages/contribute.html">Contribute</a></li>
-                <li><a href="/eclick/pages/contact.html">Contact</a></li>
-
-              </ul>
-            </div>
-
+        </ul></nav><!-- /#menu -->
+    </header>
+    <section id="wrapper" class="clearfix">
+        <section id="content" class="grid col-620" >
     <h1>Download</h1>
     
 
@@ -63,44 +43,71 @@ Windows
 OSX
 Source code</p>
 
-       </div><!-- /.row -->
-    </div><!-- /.container -->
+        </section><!-- #content -->
+        <section id="widgets" class="grid col-300 fit" >
+            <!--
+            <section id="widget-search" class="widget-wrapper widget_search">
+
+                <form id="searchform" action="http://www.google.com/search" method="get">
+                    <input id="q" class="field" type="text" placeholder="Search Blog" name="q" ></input>
+                    <input id="ie" name="ie" type="hidden" value="utf-8" ></input>
+                    <input id="oe" name="oe" type="hidden" value="utf-8" ></input>
+                    <input id="channel" name="channel" type="hidden" value="suggest" ></input>
+                    <input id="searchsubmit" class="submit" type="submit" value="">
+                </form>
+            </section>
+            -->
+            <section id="widget-category" class="widget-wrapper widget_archive">
+                <div class="widget-title">
+                    Category
+                </div>
+                <ul>
+                        <li><a href="/category/news.html" >news </a></li>
+                </ul>
+            </section>
+
+            <section id="widget-tagcloud" class="widget-wrapper widget_archive">
+                <div class="widget-title">
+                    Tagcloud
+                </div>
+                <div>
+                </div>
+            </section>
 
 
-       <div class="container.nopad bg">
-
-    
-        <footer id="credits" class="row">
-          <div class="seven columns left-center">
-
-                   <address id="about" class="vcard body">
-                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
-                    which takes great advantage of <a href="http://python.org">Python</a>.
-                    <br />
-                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
-                    </address>
-          </div>
-
-
-          <div class="seven columns">
-            <div class="row">
-              <ul class="socbtns">
-
-
-
-
-
-              </ul>
+            <section id="widget-links" class="widget-wrapper widget_archive">
+                <div class="widget-title">
+                    Links
+                </div>
+                <ul>
+                </ul>
+            </section>
+            
+        </section><!-- widgets -->
+    </section><!-- /#wrapper -->
+    <footer id="footer" class="clearfix"><section class="footer-wrapper">
+        <div class="grid col-940" >
+            <div class="grid col-540"></div>
+            <div class="grid col-380 fit" >
+                <ul class="social-icons">
+                    <!-- TO BE CONTINUED -->
+                </ul>
             </div>
-          </div>
-        </footer>
+        </div>
 
-    </div>
+        <div class="grid col-300 copyright" >
+            <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" rel="license">
+                <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" style="border-width:0" alt="知识共享许可协议"></img>
+            </a>
+        </div>
+        <div class="grid col-300 ">
 
-
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
-
+        </div>
+        <div class="grid col-300 fit powered">
+            Powered by <a href="http://getpelican.com/">Pelican</a> <br />
+            which takes great advantage of <a href="http://python.org">Python</a>
+        </div>
+    </section></footer>
+</div>
 </body>
 </html>
