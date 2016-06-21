@@ -1,6 +1,6 @@
 Title: Score files
 Date: 2016-05-31 10:20
-Sortorder: 5
+sortorder: 5
 
 You ask: How does eClick know when to send the the beats? How is the clicktrack done?
 
