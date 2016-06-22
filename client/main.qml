@@ -307,16 +307,28 @@ ApplicationWindow {
 
         }
 
-        RowLayout {
-            id: beatRow
+        Item {
+            id: beatRowContainer
             anchors.top:tempoLabel.bottom
             anchors.topMargin: 5
-            spacing: mainRect.width/8
-            anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.horizontalCenter: parent.horizontalCenter
             //y:mainRect.height * 0.125
             //height: mainRect.height * 0.25
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
+            width: parent.width
+        RowLayout {
+            id: beatRow
+            spacing: mainRect.width/8
+            anchors.centerIn: parent
+//            anchors.top:tempoLabel.bottom
+//            anchors.topMargin: 5
+
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            //y:mainRect.height * 0.125
+//            //height: mainRect.height * 0.25
+//            anchors.bottom: ledRow.top
+//            anchors.bottomMargin: 5
 
 
             Label {
@@ -330,7 +342,7 @@ ApplicationWindow {
                 Layout.minimumHeight: 5
                 text: "0"
                 font.bold: true
-                font.pointSize: Math.max(10, Math.min(mainRect.width/6,parent.height*0.5 ) )// how to fit into width?
+                font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )// better way - how to fit into width? get width of actual label width? - 0 0 and 000 999 are different!
             }
 
 
@@ -343,11 +355,12 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
                 //Layout.maximumHeight: mainRect.height*0.25
                 Layout.minimumHeight: 5
-                text: "0"
+                text: "9"
                 font.bold: true
                 font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
             }
 
+        }
         }
 
 
