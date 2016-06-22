@@ -55,6 +55,7 @@ ApplicationWindow {
     FileDialog {
         id: fileDialog
         title: "Please choose score for metronome"
+        nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
         //folder: "file://"
         onAccepted: {
             scoField.text = fileUrl
