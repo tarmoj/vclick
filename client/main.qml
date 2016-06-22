@@ -15,17 +15,22 @@ ApplicationWindow {
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
     //property string installPath: "assets:/"
+    property string version: "0.1.0"
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("&File")
-            MenuItem {
-                text: qsTr("&Server adress")
+            title: qsTr("&Menu")
+            /*MenuItem {
+                text: qsTr("Toggle &Server adress")
                 onTriggered: serverAddress.visible = true // messageDialog.show(qsTr("Open action triggered"));
-            }
+            }*/
             MenuItem {
                 text: qsTr("&Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible // messageDialog.show(qsTr("Open action triggered"));
+            }
+            MenuItem {
+                text: qsTr("&About")
+                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
             }
             MenuItem {
                 text: qsTr("E&xit")
@@ -552,7 +557,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: messageDialog
-        title: qsTr("May I have your attention, please?")
+        //title: qsTr("May I have your attention, please?")
 
         function show(caption) {
             messageDialog.text = caption;
