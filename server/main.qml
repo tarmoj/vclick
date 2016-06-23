@@ -8,18 +8,34 @@ ApplicationWindow {
     width: 740
     height: 480
     title: qsTr("eClick server")
+    property string version: "0.1.0"
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("File")
-//            MenuItem {
-//                text: qsTr("&Open")
-//                onTriggered: console.log("Open action triggered");
-//            }
+            title: qsTr("&Menu")
             MenuItem {
-                text: qsTr("Exit")
+                text: qsTr("&Setting")
+                enabled: false
+                //onTriggered: // messageDialog.show(qsTr("Open action triggered"));
+            }
+            MenuItem {
+                text: qsTr("&About")
+                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
+            }
+            MenuItem {
+                text: qsTr("E&xit")
                 onTriggered: Qt.quit();
             }
+        }
+    }
+
+    MessageDialog {
+        id: messageDialog
+        //title: qsTr("Message")
+
+        function show(caption) {
+            messageDialog.text = caption;
+            messageDialog.open();
         }
     }
 

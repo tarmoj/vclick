@@ -8,7 +8,10 @@ win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
 mac: ICON = eclick-server.icns
-win32: RC_ICONS = eclick-client.png
+
+DESTDIR=bin #Target file directory
+OBJECTS_DIR=generated_files #Intermediate object files directory
+MOC_DIR=generated_files #Intermediate moc files directory
 
 SOURCES += main.cpp \
     wsserver.cpp \ 
