@@ -43,7 +43,7 @@ android {
 	sounds.files = sounds/*.wav
 	INSTALLS += sounds
 } else {
-linux:	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD # to copy sounds to the destination dir
+linux:	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD/$$DESTDIR # to copy sounds to the destination dir
 win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/sounds/*)" "$$shell_path($$OUT_PWD/release/sounds)"
 # ei tööta veel... use $$shell_path() http://stackoverflow.com/questions/14938577/convert-unix-path-to-windows-in-qmake-script
 macx {
