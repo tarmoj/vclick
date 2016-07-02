@@ -33,7 +33,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
+                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("E&xit")
@@ -483,8 +483,8 @@ ApplicationWindow {
                 color: "yellow"
                 text: ""
                 font.bold: true
-                font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
-
+                //font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
+                font.pixelSize: Math.max(20, Math.min(mainRect.width/10, parent.height ) )
             }
         }
 

@@ -14,13 +14,13 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Menu")
             MenuItem {
-                text: qsTr("&Setting")
+                text: qsTr("&Settings")
                 enabled: false
                 //onTriggered: // messageDialog.show(qsTr("Open action triggered"));
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
+                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK and Csound audio engine."));
             }
             MenuItem {
                 text: qsTr("E&xit")
