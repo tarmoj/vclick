@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets websockets
+QT += qml quick widgets websockets multimedia
 
 SOURCES += main.cpp \
     oschandler.cpp \
