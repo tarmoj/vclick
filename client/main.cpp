@@ -5,10 +5,11 @@
 #include <QQmlContext>
 #include <QIcon>
 
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+     
 	OscHandler oscServer(8008);
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");
@@ -22,8 +23,10 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("installPath", "assets:/"); // take care in .pro file to install the files
 #elif defined(Q_OS_MACX)
     engine.rootContext()->setContextProperty("installPath", "file:///" + QCoreApplication::applicationDirPath() + "/../Resources/sounds/"); // necessary since sounds cannot be played repeatedly from resource
+//#elif defined(Q_OS_IOS)
+//    engine.rootContext()->setContextProperty("installPath", "file:///" + QCoreApplication::applicationDirPath()+"/sounds/"); // necessary since sounds cannot be played repeatedly from resource
 #else
-	engine.rootContext()->setContextProperty("installPath", "file:///" + QCoreApplication::applicationDirPath() + "/sounds/"); // necessary since sounds cannot be played repeatedly from resource
+    engine.rootContext()->setContextProperty("installPath", "file:///" + QCoreApplication::applicationDirPath() + "/sounds/"); // necessary since sounds cannot be played repeatedly from resource
 #endif
 	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

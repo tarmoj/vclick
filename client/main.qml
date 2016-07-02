@@ -23,10 +23,10 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Menu")
-            /*MenuItem {
-                text: qsTr("Toggle &Server adress")
-                onTriggered: serverAddress.visible = true // messageDialog.show(qsTr("Open action triggered"));
-            }*/
+            MenuItem {
+                text: qsTr("Show/Hide &server address")
+                onTriggered: serverRow.visible = !serverRow.visible // messageDialog.show(qsTr("Open action triggered"));
+            }
             MenuItem {
                 text: qsTr("&Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible // messageDialog.show(qsTr("Open action triggered"));
@@ -52,13 +52,13 @@ ApplicationWindow {
     Audio {
         id: sound2
         source: installPath + "sound2.wav"
-        onError: {console.log("Audio error: ", errorString)}
+        onError: {console.log("Audio error: ", errorString, source)}
 
     }
     Audio {
         id: sound3
         source: installPath + "sound3.wav"
-        onError: {console.log("Audio error: ", errorString)}
+        onError: {console.log("Audio error: ", errorString, source)}
     }
 
     Timer {
@@ -112,7 +112,7 @@ ApplicationWindow {
 //                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
-                             serverAddress.visible = false;
+                             //serverAddress.visible = false;
 //                             connectButton.text = qsTr("Connected")
 //                             connectButton.enabled = false;
                              settings.serverAddress = socket.url
@@ -198,6 +198,7 @@ ApplicationWindow {
         property alias serverAddress: serverAddress.text
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
+        property alias serverRowVisible: serverRow.visible
     }
 
 
