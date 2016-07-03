@@ -1,5 +1,6 @@
 
 
+
 Uus ikoon OK
 Versiooni number OK
 Help-about leht (Lisa veebileht, Csound, Qt)
@@ -10,6 +11,7 @@ License iga faili juurde TODO!
 ? http://stackoverflow.com/questions/12279425/qtcreator-central-header-for-source-code-copyright-author
 
 
+- mõtle, kuidas teha, et ka 1/4 saaks alajaotusi mängida, ja ka siis, kui selle kestus nt 1.5 või mistahes ühik
 - server  - kui fail audioga, siis sea SFDIR orc parameetrisse
 - eraldi dialoog OSC aadresside jaosk. Tabel: / instrument / aadress / viivis . Erista, mis määratud, mis juurde tulnud (väljad read-only, kiri tuhmim vms)
 - Csound - eraldi moodulid helile (null / jack ) <- vt CsoundQt kood 
@@ -17,7 +19,7 @@ License iga faili juurde TODO!
 - Csoundis proge eraldi kanalid // ? sün // ? kuidas saata info sündmusest? poratiivsuse mõttes python v osc ei ole head... vbolla sündmuste kanalid: red, green, blue - kui mitte 0 siis duration; seal kõrval kanal "channels", kus milliste bittidega saata [kas võib juhtuda, et seal kaks korraga? liida, muidu 0]; bar, beat - csound seab numbri, host loeb ja kustutab 0-i.
 
 
-Klient:
+
 
 
 Raspberry?
