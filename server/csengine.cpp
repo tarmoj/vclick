@@ -101,6 +101,9 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
+	QString message;
+	cs->CreateMessageBuffer(1); // also to stdout for debugging
+
 	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
     cs->SetOption("-+rtaudio=null");
     //QString tempOrcName = QDir::tempPath() + "/temp.orc";
@@ -108,14 +111,23 @@ void CsEngine::play(QString scoFile, int startBar) {
     tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_simple.orc");
     //bool copyresult=QFile::copy(m_orc,tempOrcName); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
     //int result = cs->Compile(tempOrcName.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
-    int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+
+	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+
+	while (cs->GetMessageCnt()>0) { // HOW to get error message here?
+		message += QString(cs->GetFirstMessage()) + "\n";
+		//qDebug()<<"Csound MESSAGE: " << message;
+		cs->PopFirstMessage();
+	}
+	if (!message.isEmpty()) {
+		emit csoundMessage(message.trimmed());
+	}
 
     if (!result ) {
 
 		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
 		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
-
 		while (cs->PerformKsmps()==0 && !stopNow) {
 			for (int i=0;i<3;i++) {
 				MYFLT duration =  getChannel(leds[i]);
@@ -149,8 +161,12 @@ void CsEngine::play(QString scoFile, int startBar) {
 				setChannel("new_notification",0);
 			}
 
-			// NOTIFICATION: TODO: string channel
-
+			if (cs->GetMessageCnt()>0) {
+				message = QString(cs->GetFirstMessage());
+				//qDebug()<<"Csound MESSAGE: " << message;
+				emit csoundMessage(message.trimmed());
+				cs->PopFirstMessage();
+			}
 
 			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
 		}
@@ -160,7 +176,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	} else {
 		qDebug()<<"Could not compile and strart with score file: "<<scoFile;
 	}
-
+	cs->DestroyMessageBuffer();
 	delete cs;
 	stopNow = false;
 

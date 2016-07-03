@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
 	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
 	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
 
+	QObject::connect(csound,&CsEngine::csoundMessage, wsServer, &WsServer::csoundMessage );
+
 	csoundThread->start();
 
 	// QML engine and connections
