@@ -4,12 +4,15 @@
 //#include "settingshandler.h"
 #include <QQmlContext>
 #include <QIcon>
+#include <QFont>
 
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-     
+
+    app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
+
 	OscHandler oscServer(8008);
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");

@@ -5,6 +5,7 @@
 #include <QQmlContext>
 #include <QThread>
 #include <QIcon>
+#include <QFont>
 
 #ifdef Q_OS_LINUX
 	#include "jackreader.h"
@@ -13,6 +14,8 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 
 	app.setOrganizationName("eclick"); // for settings
 	app.setApplicationName("server");
