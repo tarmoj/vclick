@@ -39,6 +39,7 @@ Q_SIGNALS:
 	void newNotification(QString notification); // for future, if text to send
 	void newTempo(QString tempo);
 	void updateOscAddresses(QString adresses);
+	void csoundMessage(QString message); // since qml and sending object must live in the same thread
 
 private Q_SLOTS:
     void onNewConnection();

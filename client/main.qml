@@ -15,22 +15,25 @@ ApplicationWindow {
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
     //property string installPath: "assets:/"
-    property string version: "0.1.0"
+    property string version: "0.1.0-1"
+//    property double defaultPixelDensity: 5.56611  //pixel density of my current screen
+//    property double scaleFactor: defaultPixelDensity/Screen.pixelDensity
+
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Menu")
-            /*MenuItem {
-                text: qsTr("Toggle &Server adress")
-                onTriggered: serverAddress.visible = true // messageDialog.show(qsTr("Open action triggered"));
-            }*/
+            MenuItem {
+                text: qsTr("Show/Hide &server address")
+                onTriggered: serverRow.visible = !serverRow.visible // messageDialog.show(qsTr("Open action triggered"));
+            }
             MenuItem {
                 text: qsTr("&Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible // messageDialog.show(qsTr("Open action triggered"));
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
+                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("E&xit")
@@ -49,13 +52,13 @@ ApplicationWindow {
     Audio {
         id: sound2
         source: installPath + "sound2.wav"
-        onError: {console.log("Audio error: ", errorString)}
+        onError: {console.log("Audio error: ", errorString, source)}
 
     }
     Audio {
         id: sound3
         source: installPath + "sound3.wav"
-        onError: {console.log("Audio error: ", errorString)}
+        onError: {console.log("Audio error: ", errorString, source)}
     }
 
     Timer {
@@ -83,7 +86,7 @@ ApplicationWindow {
     }
 
     function notification(message, duration) {
-        console.log("notification in qml ", message, duration)
+        //console.log("notification in qml ", message, duration)
         notificationLabel.text = message;
         notificationRect.color = "darkblue";
         clearNotification.interval = duration*1000; // into milliseconds
@@ -99,17 +102,17 @@ ApplicationWindow {
         url: serverAddress.text//"ws://192.168.1.199:6006/ws"
 
         onTextMessageReceived: {
-            console.log("Received message: ",message);
+            //console.log("Received message: ",message);
         }
         onStatusChanged: if (socket.status == WebSocket.Error) {
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
 //                             connectButton.enabled = true;
-//                             connectButton.text = qsTr("Say Hello")
+//                             connectButton.text = qsTr("Hello, Server")
 //                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
-                             serverAddress.visible = false;
+                             //serverAddress.visible = false;
 //                             connectButton.text = qsTr("Connected")
 //                             connectButton.enabled = false;
                              settings.serverAddress = socket.url
@@ -128,7 +131,7 @@ ApplicationWindow {
 //                             connectButton.text = qsTr("Connecting")
                          }
 
-        onActiveChanged: console.log("Socket active: ", active)
+        //onActiveChanged: console.log("Socket active: ", active)
         active: false
     }
 
@@ -195,6 +198,7 @@ ApplicationWindow {
         property alias serverAddress: serverAddress.text
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
+        property alias serverRowVisible: serverRow.visible
     }
 
 
@@ -252,7 +256,7 @@ ApplicationWindow {
 
             Label {
                 id: serverLabel
-                visible: false
+                visible: true
                 text: qsTr("Server: ")
             }
 
@@ -262,7 +266,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 250
                 Layout.minimumWidth: 80
-                Layout.maximumWidth:  400
+                //Layout.maximumWidth:  400
                 //width: 200
 
                 text: "ws://192.168.1.199:6006/ws"
@@ -270,7 +274,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: qsTr("Say Hello")
+                text: qsTr("Hello, Server")
                 onClicked: {
                     console.log("Socket state, errorString: ", socket.status, socket.errorString)
                     if (!socket.active) {
@@ -322,15 +326,13 @@ ApplicationWindow {
                 Label {
                     id: barLabel
                     color: "ghostwhite" //"#d6d6d6"
-                    //x: 62
-                    //y: 43
                     Layout.fillHeight:  true
                     Layout.alignment: Qt.AlignCenter
-                    //TODO: center in row
                     Layout.minimumHeight: 5
                     text: "0"
                     font.bold: true
-                    font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )// better way - how to fit into width? get width of actual label width? - 0 0 and 000 999 are different!
+                    //font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )
+                    font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
                 }
 
 
@@ -345,7 +347,8 @@ ApplicationWindow {
                     Layout.minimumHeight: 5
                     text: "0"
                     font.bold: true
-                    font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
+                    font.pixelSize: barLabel.font.pixelSize
+                    //font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
                 }
 
             }
@@ -480,8 +483,8 @@ ApplicationWindow {
                 color: "yellow"
                 text: ""
                 font.bold: true
-                font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
-
+                //font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
+                font.pixelSize: Math.max(20, Math.min(mainRect.width/10, parent.height ) )
             }
         }
 

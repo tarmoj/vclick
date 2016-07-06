@@ -5,6 +5,7 @@
 #include <QQmlContext>
 #include <QThread>
 #include <QIcon>
+#include <QFont>
 
 #ifdef Q_OS_LINUX
 	#include "jackreader.h"
@@ -13,6 +14,8 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 
 	app.setOrganizationName("eclick"); // for settings
 	app.setApplicationName("server");
@@ -39,6 +42,8 @@ int main(int argc, char *argv[])
 	QObject::connect(csound,&CsEngine::newLed, wsServer, &WsServer::handleLed );
 	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
 	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
+
+	QObject::connect(csound,&CsEngine::csoundMessage, wsServer, &WsServer::csoundMessage );
 
 	csoundThread->start();
 

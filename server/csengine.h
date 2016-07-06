@@ -23,6 +23,7 @@ signals:
 	void newLed(int ledNumber, float duration);
 	void newNotification(QString message, float duration);
 	void newTempo(double tempo); // TODO: change to double/float
+	void csoundMessage(QString message);
 
 public slots:
 	void setChannel(QString channel, MYFLT value);

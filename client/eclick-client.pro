@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets websockets
+QT += qml quick widgets websockets multimedia
 
 SOURCES += main.cpp \
     oschandler.cpp \
@@ -10,6 +10,8 @@ SOURCES += main.cpp \
 
 RESOURCES += qml.qrc \
     eclick-client.qrc
+
+macx: ICON = eclick-client.icns
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -52,5 +54,16 @@ macx {
     QMAKE_BUNDLE_DATA += sounds
 
     }
+}
+
+ios {
+    QMAKE_INFO_PLIST = ios/Info.plist
+    ios_icon.files = $$files($$PWD/ios/icons/*.png)
+    QMAKE_BUNDLE_DATA += ios_icon
+    sounds.files = sounds
+    QMAKE_BUNDLE_DATA += sounds
+    app_launch_images.files = $$PWD/ios/Launch.storyboard #$$files($$PWD/ios/launchimages/LaunchImage*.png) #$$PWD/ios/Launch.xib
+    QMAKE_BUNDLE_DATA += app_launch_images
+
 }
 

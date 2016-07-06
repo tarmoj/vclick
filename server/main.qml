@@ -6,7 +6,7 @@ import Qt.labs.settings 1.0
 ApplicationWindow {
     visible: true
     width: 740
-    height: 480
+    height: 620
     title: qsTr("eClick server")
     property string version: "0.1.0"
 
@@ -14,13 +14,13 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Menu")
             MenuItem {
-                text: qsTr("&Setting")
+                text: qsTr("&Settings")
                 enabled: false
                 //onTriggered: // messageDialog.show(qsTr("Open action triggered"));
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br><br>(c) Tarmo Johannes 2016"));
+                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK and Csound audio engine."));
             }
             MenuItem {
                 text: qsTr("E&xit")
@@ -65,8 +65,10 @@ ApplicationWindow {
 
         onUpdateOscAddresses: oscAddresses.text = adresses;
 
+        onCsoundMessage: messageArea.append(message)
 
     }
+
 
     FileDialog {
         id: fileDialog
@@ -83,7 +85,7 @@ ApplicationWindow {
         onRejected: {
             console.log("Canceled")
             visible = false;
-        }
+        }        
     }
 
 
@@ -110,7 +112,7 @@ ApplicationWindow {
             spacing: 10
             anchors.rightMargin: 5
             anchors.leftMargin: 5
-            anchors.bottomMargin: 5
+            anchors.bottomMargin: 10
             anchors.topMargin: 5
             anchors.fill: parent
 
@@ -299,31 +301,27 @@ ApplicationWindow {
                     //font.pointSize: 16
                 }
             }
+            Label {
+                id: label6
+                text: qsTr("Csound messages:")
+                visible: true
+            }
 
+            TextArea {
+                id: messageArea
+                visible: true
+                readOnly: true
+                font.pointSize: 8
+                font.family: "Courier"
+                height: (mainColumn.y+mainColumn.height)-y
+                width: parent.width
+                text:"Csound messages"
+            }
 
         }
 
-        TextArea {
-            id: textArea1
-            y: 275
-            visible: false
-            frameVisible: true
-            readOnly: true
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 10
-        }
 
-        Label {
-            id: label6
-            x: 10
-            y: 285
-            text: qsTr("Messages:")
-            visible: false
-        }
+
 
 
 
