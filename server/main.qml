@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 740
     height: 620
     title: qsTr("eClick server")
-    property string version: "0.1.0"
+    property string version: "0.1.1"
 
     menuBar: MenuBar {
         Menu {

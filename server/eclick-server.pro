@@ -8,6 +8,7 @@ win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
 mac: ICON = eclick-server.icns
+win32: RC_FILE =  winicon.rc # for windows icon
 
 DESTDIR=bin #Target file directory
 OBJECTS_DIR=generated_files #Intermediate object files directory
@@ -52,3 +53,9 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 #message("libraries: "$$LIBS)
+
+DISTFILES += \
+    winicon.rc
+
+win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/eclick-server.bat)" "$$shell_path($$OUT_PWD/$$DESTDIR/)" # a workaround script for win8 and possibly other versions
+
