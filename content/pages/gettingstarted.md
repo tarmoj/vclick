@@ -22,7 +22,7 @@ You need to get two programs to work together - the server and client(s).
 
 Press **Start** If you see numbers moving on server's screen, the client should display the same numbers and blink the leds. If it does so, you are good to go.
 
-<img src=../images/client+server_on_desktop.png width=600 >
+<img src=../images/client%2Bserver_on_desktop.png width=600 >
 
 <br><br>
 
