@@ -36,20 +36,43 @@
 
     <p>You need to get two programs to work together - the server and client(s).</p>
 <p><img src=../images/eclick-server.png width=64 >
-<strong>The server</strong> is the program with red icon. It plays the clicktrack and sends out wifi messages.</p>
-<p><img src=../images/eclick-client.png width=64 > <strong>The client</strong> is the app with green icon. It receives the messages and displays the beats and other info to player. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).</p>
-<h3>Follow these steps:</h3>
+<strong>The server</strong> is has red application icon. It plays the clicktrack and sends out wifi messages.</p>
+<p><img src=../images/eclick-client.png width=64 > <strong>The client</strong> is the app marked with green icon. It receives the messages from server and displays the beats and other info to player(s). You can have numerous clients connected to the server, ie the server sends the same signals to all players. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).</p>
+<h3>First steps:</h3>
 <p>1) Donwload server to your computer (see <a href="download.html">Downloads</a> )</p>
-<p>2) Download a client to your device(s) - for testing it is useful to install it also to the same computer where you have the server</p>
+<p>2) Download a client to your device(s) - for testing it is useful to install a client also to the same computer where you have the server.</p>
 <p>3) First test - start the server and client in one computer. In server press button <strong>+ this computer</strong>. You should see address 127.0.0.1 added to the Clients. </p>
 <p>Press <strong>Start</strong> If you see numbers moving on server's screen, the client should display the same numbers and blink the leds. If it does so, you are good to go.</p>
-<p>3) Start server and client IN ONE NETWORK (the same wifi network or network cables connected to the same local network). </p>
+<p><img src=../images/client+server_on_desktop.png width=600 ></p>
+<p><br><br></p>
+<h2>Connect client(s) and server</h2>
+<p>The server (the central computer) and the clients (player's phones/laptops) <strong>must be IN ONE NETWORK</strong> (the same wifi network or network cables connected to the same router). </p>
+<ul>
+<li>
 <p><em>You ask</em>: How can I be sure the devices are in one network?</p>
-<p><em>Answer</em>: Look at the IP addres on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine.</p>
+</li>
+<li>
+<p><em>Answer</em>: Look at the IP address on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine.</p>
+</li>
+</ul>
+<p><br></p>
 <p><em>NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowd to connect to each other).</em></p>
-<p>4) connect clients to server a) b)</p>
-<p>5) Start - bar numbers </p>
-<p>6) Scores</p>
+<p><br></p>
+<p>To connect clients to server there are two possibilities: </p>
+<ol>
+<li>
+<p>Enter the IP address of server to client's <strong>Server address</strong> field and press <strong>Hello, Server</strong>. You should receive a notification "Got you!" on client's screen. <em>NB! Don't overwrite the beginning nor the ending of the address, it should look like: ws://&lt; IP address &gt;:6006/ws . Sometimes it is necessary to press "Hello" twice.</em></p>
+</li>
+<li>
+<p>Add the clients' addresses to server's field <strong>Clients</strong>, separated by commas. Then press <strong>Update</strong> and the clients on these addresses should be receiving the messages. The server remembers the addresses from last session, you don't need to enter them every time, if the addresses don't change.</p>
+</li>
+</ol>
+<p><br></p>
+<h3>Playing a piece</h3>
+<p>The rest is easy - load a score file on the server with definitions of time signatures, tempos etc and press <strong>Start</strong>. You can also enter from which bar you want to start (useful from rehearsing).</p>
+<p>To try out, download or copy a simple demo score file (50 bars in 4/4, tempo 60) from
+<a href="https://raw.githubusercontent.com/tarmoj/eclick/v0.1.1/server/simple-4-4.sco">https://raw.githubusercontent.com/tarmoj/eclick/v0.1.1/server/simple-4-4.sco</a> to your computer and see if you can load and play it.</p>
+<p>How to write or get score files for your specific pieces, see <a href="score-files.html">Score files</a>.</p>
 
         </section><!-- #content -->
         <section id="widgets" class="grid col-300 fit" >
@@ -66,7 +89,7 @@
             </section>
 -->
            
-            
+            <!--
             <section id="widget-category" class="widget-wrapper widget_archive">
                 <div class="widget-title">
                     Category
@@ -75,6 +98,7 @@
                         <li><a href="http://tarmoj.github.io/eclick/category/news.html" >News </a></li>
                 </ul>
             </section>
+-->
             <!--
             <section id="widget-tagcloud" class="widget-wrapper widget_archive">
                 <div class="widget-title">

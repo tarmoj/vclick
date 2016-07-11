@@ -34,15 +34,44 @@
     <h1>Download</h1>
     
 
-    <h2>eClick Server</h2>
-<p>Windows
-OSX
-Source code </p>
-<h2>eClick Client</h2>
-<p>Android
-Windows
-OSX
-Source code</p>
+    <p>The latest release (both source code and binary installers) can always be found from: </p>
+<p><a href="https://github.com/tarmoj/eclick/releases/latest">https://github.com/tarmoj/eclick/releases/latest</a></p>
+<p><br>
+<br></p>
+<h1>Version 0.1.1</h1>
+<h2>Server</h2>
+<p><a href="https://github.com/tarmoj/eclick/releases/download/v0.1.1/eclick-server-setup-0.1.1.exe">Windows</a></p>
+<p><a href="https://github.com/tarmoj/eclick/releases/download/v0.1.1/eclick-server-0.1.1.dmg">OSX</a></p>
+<p>Linux - please build from <a href="https://github.com/tarmoj/eclick/archive/v0.1.1.tar.gz">source code</a> </p>
+<h2>Client</h2>
+<p><a href="https://github.com/tarmoj/eclick/releases/download/v0.1.1/eclick-client-0.1.1.apk">Android</a> - with next versions available also in Google Play</p>
+<p><a href="https://github.com/tarmoj/eclick/releases/download/v0.1.1/eclick-client-setup-0.1.1.exe">Windows</a></p>
+<p><a href="https://github.com/tarmoj/eclick/releases/download/v0.1.1/eclick-client-0.1.1.dmg">OSX</a></p>
+<p><strong>Linux</strong> - please build from <a href="https://github.com/tarmoj/eclick/archive/v0.1.1.tar.gz">source code</a></p>
+<p><strong>iOs</strong> - the app is not in Apple Store yet but can be downloaded and used by registered testers from 
+<a href="http://tarmo.uuu.ee/varia/failid/eclick/ios/ios-download.html">http://tarmo.uuu.ee/varia/failid/eclick/ios/ios-download.html</a> 
+To become one, please send me the UDID of your device (necessary for granting access to use the app's test version).
+See <a href="http://get.udid.io">http://get.udid.io</a> or <a href="http://whatsmyudid.com">http://whatsmyudid.com</a> to find out how to get one. </p>
+<p><br>
+<a name="issues011"></a></p>
+<h2>Known issues</h2>
+<ul>
+<li>
+<p>The <strong>exact timing of the clients' clicks depends on the quality of network and the speed and power of the devices</strong> - older and weaker smartphones may display the clicks later  i.e. the clicks may not be always exactly together.  Mostly the tolerance is acceptable but please try to use similar devices for you clients. In next release I plan to create settings where you can set different delays for clients to even it out, if necessary.</p>
+</li>
+<li>
+<p>On Windows 8 and Windows 10 <strong>the server does not start playback if the program is started from the working directory</strong> (ie when you double click on the <em>eclick-server.exe</em> file)</p>
+<ul>
+<li>workaround: - create a Desktop shortcut, right-click on it, open "Properties" and change the working directory from C:\Program files (x86)\eClick\server to something else. OR start the server by double clicking (or creating a link to) <strong>eclick-server.bat</strong> in the same directory where is the .exe.</li>
+</ul>
+</li>
+<li>
+<p>On Windows the Csound output console displays often <strong>unreadable characters</strong>. Please ignore it, it will be fixed in next version. The most important role of the console is to show that Csound is working.</p>
+</li>
+<li>
+<p>With the client program, you sometimes need to <strong>click "Hello, server" twice</strong>,   even if you have the address correct.</p>
+</li>
+</ul>
 
         </section><!-- #content -->
         <section id="widgets" class="grid col-300 fit" >
@@ -59,7 +88,7 @@ Source code</p>
             </section>
 -->
            
-            
+            <!--
             <section id="widget-category" class="widget-wrapper widget_archive">
                 <div class="widget-title">
                     Category
@@ -68,6 +97,7 @@ Source code</p>
                         <li><a href="http://tarmoj.github.io/eclick/category/news.html" >News </a></li>
                 </ul>
             </section>
+-->
             <!--
             <section id="widget-tagcloud" class="widget-wrapper widget_archive">
                 <div class="widget-title">
