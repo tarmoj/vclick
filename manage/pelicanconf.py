@@ -27,7 +27,7 @@ DEFAULT_PAGINATION = False
 
 THEME = '../theme/Responsive-Pelican' #'../theme/gum'
 # Uncomment following line if you want document-relative URLs when developing
-RELATIVE_URLS = True
+#RELATIVE_URLS = True
 PLUGIN_PATHS = [] # pelican_youtube shoud be installed systemwide with pip
 PLUGINS = [
      'pelican_youtube',
@@ -44,12 +44,12 @@ PAGE_ORDER_BY = 'sortorder'
 
 # suffic /eclick/ since in github the page is in gh-branch by eclick repository, main site is tarmoj.github.io that is considered to be root
 MENUITEMS = (
-    ('Home', '/index.html'),
-    ('About', '/pages/about.html'),
-    ('Download', '/pages/download.html'),
-    ('Getting started', '/pages/getting-started.html'),
-    ('How it works', '/pages/how-it-works.html'),
-    ('Score files', '/pages/score-files.html'),
-    ('Contribute', '/pages/contribute.html'),
-    ('Contact', '/pages/contact.html')
+    ('Home', SITEURL+'/index.html'),
+    ('About', SITEURL+'/pages/about.html'),
+    ('Download', SITEURL+'/pages/download.html'),
+    ('Getting started', SITEURL+'/pages/getting-started.html'),
+    ('How it works', SITEURL+'/pages/how-it-works.html'),
+    ('Score files', SITEURL+'/pages/score-files.html'),
+    ('Contribute', SITEURL+'/pages/contribute.html'),
+    ('Contact', SITEURL+'/pages/contact.html')
 )
