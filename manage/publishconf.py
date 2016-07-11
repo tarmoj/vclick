@@ -12,7 +12,7 @@ from pelicanconf import *
 
 SITEURL = 'http://tarmoj.github.io/eclick'
 SITE_URL = SITEURL
-RELATIVE_URLS = False#True
+RELATIVE_URLS = True
 
 FEED_ALL_ATOM = '../feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = '../feeds/%s.atom.xml'
