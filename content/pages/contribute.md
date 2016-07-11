@@ -1,6 +1,7 @@
 Title: Contribute
 Date: 2016-05-31 10:20
 sortorder: 6
+Category: Pages
 
 ##TEST-REPORT-TEST-REPORT-TEST-REPORT
 

@@ -40,7 +40,7 @@
 <div id="container" class="hfeed">
     <header id="header" >
         <div id="logo">
-                <h1><img src="{{ SITE_URL }}/theme/image/default-logo.png" width="300" height="100" alt="LOGO" />
+                <h1><img src="{{ SITE_URL }}/theme/image/eclick-logo.png" width="300" height="100" alt="LOGO" />
                 {{ SITENAME }}</h1>
         </div> <!-- /#logo-->
         <nav id="menu" class="main-nav"><ul class="menu">
@@ -75,8 +75,8 @@
         </section><!-- #content -->
         {% block widgets %}
         <section id="widgets" class="grid col-300 fit" >
-            <!--
-            {% block searchform %}
+            
+            <!--{% block searchform %}
             <section id="widget-search" class="widget-wrapper widget_search">
 
                 <form id="searchform" action="http://www.google.com/search" method="get">
@@ -87,8 +87,9 @@
                     <input id="searchsubmit" class="submit" type="submit" value="">
                 </form>
             </section>
-            {% endblock %}
-            -->
+            {% endblock %}-->
+           
+            
             {% block categories %}
             <section id="widget-category" class="widget-wrapper widget_archive">
                 <div class="widget-title">
@@ -101,7 +102,7 @@
                 </ul>
             </section>
             {% endblock %}
-
+            <!--
             {% block tagcloud %}
             <section id="widget-tagcloud" class="widget-wrapper widget_archive">
                 <div class="widget-title">
@@ -127,7 +128,7 @@
                     {% endfor %}
                 </ul>
             </section>
-            {% endblock %}
+            {% endblock %}-->
             
         </section><!-- widgets -->
         {% endblock widgets %}

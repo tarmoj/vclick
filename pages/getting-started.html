@@ -14,17 +14,18 @@
 <div id="container" class="hfeed">
     <header id="header" >
         <div id="logo">
-                <h1><img src="http://tarmoj.github.io/eclick/theme/image/default-logo.png" width="300" height="100" alt="LOGO" />
+                <h1><img src="http://tarmoj.github.io/eclick/theme/image/eclick-logo.png" width="300" height="100" alt="LOGO" />
                 eClick</h1>
         </div> <!-- /#logo-->
         <nav id="menu" class="main-nav"><ul class="menu">
-            <li ><a href="/eclick/pages/about.html">About</a></li>
-            <li ><a href="/eclick/pages/download.html">Download</a></li>
-            <li ><a href="/eclick/pages/getting-started.html">Getting started</a></li>
-            <li ><a href="/eclick/pages/how-it-works.html">How it works</a></li>
-            <li ><a href="/eclick/pages/score-files.html">Score files</a></li>
-            <li ><a href="/eclick/pages/contribute.html">Contribute</a></li>
-            <li ><a href="/eclick/pages/contact.html">Contact</a></li>
+            <li ><a href="/index.html">Home</a></li>
+            <li ><a href="/pages/about.html">About</a></li>
+            <li ><a href="/pages/download.html">Download</a></li>
+            <li ><a href="/pages/getting-started.html">Getting started</a></li>
+            <li ><a href="/pages/how-it-works.html">How it works</a></li>
+            <li ><a href="/pages/score-files.html">Score files</a></li>
+            <li ><a href="/pages/contribute.html">Contribute</a></li>
+            <li ><a href="/pages/contact.html">Contact</a></li>
 
         </ul></nav><!-- /#menu -->
     </header>
@@ -33,22 +34,27 @@
     <h1>Getting started</h1>
     
 
-    <p>You need to get two programs work together the server and client(s).</p>
-<p>The server is the program with red icon. It plays the clicktrack and sends out wifi messages. </p>
-<p>Theclient is the app with green icon. It receives the messages and displays the beats and other info to player. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).</p>
-<p>1) Donwload server to your computer</p>
+    <p>You need to get two programs to work together - the server and client(s).</p>
+<p><img src=../images/eclick-server.png width=64 >
+<strong>The server</strong> is the program with red icon. It plays the clicktrack and sends out wifi messages.</p>
+<p><img src=../images/eclick-client.png width=64 > <strong>The client</strong> is the app with green icon. It receives the messages and displays the beats and other info to player. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).</p>
+<h3>Follow these steps:</h3>
+<p>1) Donwload server to your computer (see <a href="download.html">Downloads</a> )</p>
 <p>2) Download a client to your device(s) - for testing it is useful to install it also to the same computer where you have the server</p>
 <p>3) First test - start the server and client in one computer. In server press button <strong>+ this computer</strong>. You should see address 127.0.0.1 added to the Clients. </p>
-<p>Press <strong>Start</strong> If you see numbers moving on server's screen, the client should display the same numbers and blink the leds. If it so, you are good to go.</p>
+<p>Press <strong>Start</strong> If you see numbers moving on server's screen, the client should display the same numbers and blink the leds. If it does so, you are good to go.</p>
 <p>3) Start server and client IN ONE NETWORK (the same wifi network or network cables connected to the same local network). </p>
-<p>Qeustion: How can I be sure the devices are in one network?
-Answer: Look at the IP addres on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine.</p>
-<p>*NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowd to connect to each other). *</p>
+<p><em>You ask</em>: How can I be sure the devices are in one network?</p>
+<p><em>Answer</em>: Look at the IP addres on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine.</p>
+<p><em>NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowd to connect to each other).</em></p>
+<p>4) connect clients to server a) b)</p>
+<p>5) Start - bar numbers </p>
+<p>6) Scores</p>
 
         </section><!-- #content -->
         <section id="widgets" class="grid col-300 fit" >
-            <!--
-            <section id="widget-search" class="widget-wrapper widget_search">
+            
+            <!--            <section id="widget-search" class="widget-wrapper widget_search">
 
                 <form id="searchform" action="http://www.google.com/search" method="get">
                     <input id="q" class="field" type="text" placeholder="Search Blog" name="q" ></input>
@@ -58,16 +64,18 @@ Answer: Look at the IP addres on client's and server's screen. If they look simi
                     <input id="searchsubmit" class="submit" type="submit" value="">
                 </form>
             </section>
-            -->
+-->
+           
+            
             <section id="widget-category" class="widget-wrapper widget_archive">
                 <div class="widget-title">
                     Category
                 </div>
                 <ul>
-                        <li><a href="../category/news.html" >news </a></li>
+                        <li><a href="../category/news.html" >News </a></li>
                 </ul>
             </section>
-
+            <!--
             <section id="widget-tagcloud" class="widget-wrapper widget_archive">
                 <div class="widget-title">
                     Tagcloud
@@ -84,6 +92,7 @@ Answer: Look at the IP addres on client's and server's screen. If they look simi
                 <ul>
                 </ul>
             </section>
+-->
             
         </section><!-- widgets -->
     </section><!-- /#wrapper -->

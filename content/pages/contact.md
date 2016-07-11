@@ -1,6 +1,7 @@
 Title: Contact
 Date: 2016-05-31 10:20
 sortorder: 7
+Category: Pages
 
 
 Contact the author:

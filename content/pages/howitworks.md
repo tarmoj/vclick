@@ -1,6 +1,7 @@
 Title: How it works
 Date: 2016-05-31 10:20
 sortorder: 4
+Category: Pages
 
 IT works so - 
 

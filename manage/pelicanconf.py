@@ -44,11 +44,12 @@ PAGE_ORDER_BY = 'sortorder'
 
 # suffic /eclick/ since in github the page is in gh-branch by eclick repository, main site is tarmoj.github.io that is considered to be root
 MENUITEMS = (
-    ('About', '/eclick/pages/about.html'),
-    ('Download', '/eclick/pages/download.html'),
-    ('Getting started', '/eclick/pages/getting-started.html'),
-    ('How it works', '/eclick/pages/how-it-works.html'),
-    ('Score files', '/eclick/pages/score-files.html'),
-    ('Contribute', '/eclick/pages/contribute.html'),
-    ('Contact', '/eclick/pages/contact.html')
+    ('Home', '/index.html'),
+    ('About', '/pages/about.html'),
+    ('Download', '/pages/download.html'),
+    ('Getting started', '/pages/getting-started.html'),
+    ('How it works', '/pages/how-it-works.html'),
+    ('Score files', '/pages/score-files.html'),
+    ('Contribute', '/pages/contribute.html'),
+    ('Contact', '/pages/contact.html')
 )
