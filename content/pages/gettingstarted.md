@@ -6,7 +6,7 @@ Category: Pages
 You need to get two programs to work together - the server and client(s).
 
 <img src=../images/eclick-server.png width=64 >
-**The server** is has red application icon. It plays the clicktrack and sends out wifi messages.
+**The server** has red application icon. It plays the clicktrack and sends signals about beats, bar numbers etc to all players over wifi.
 
 
 
@@ -36,7 +36,7 @@ The server (the central computer) and the clients (player's phones/laptops) **mu
 
 <br>
 
-_NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowd to connect to each other)._
+_NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowed to connect to each other)._
 
 <br>
 

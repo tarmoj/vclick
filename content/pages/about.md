@@ -3,7 +3,17 @@ Date: 2016-05-31 10:20
 sortorder: 1
 Category: Pages
 
-**eClick** is a cross-platform wire-free visual click-track (or metronome) system, useful for ensembles, bands or other formations. No need for cables, headphones, extra amplifiers or mixers - just use wifi network and the **eClick** software.
+**eClick is a visual metronome system for ensembles** where central computer plays  the "click-track" of the piece and sends signals about beats, bar numbers, tempo changes and other information to the palyers' screens over wifi. Players can use their smartphones, tablets or laptops to display the info - no special hardware needed. Also no need for cables, headphones, extra amplifiers or mixers.
+
+**eClick is free and open-source** see [Downloads](downloads.html).
+
+
+**eClick is cross-platform** - the software exists for Linux, OSX and Windows, players' apps also for Android and iOs. 
+
+
+eClick works best in situations where you cannot hear clear beat or can get easily lost, have difficulties playing together but you don't have or cannot use a conductor.  It can be useful also in very diffents situations or for different formations. 
+
+See a demo:
 
 [![Demo in youtube](https://img.youtube.com/vi/80av5Aq36Gk/0.jpg)](https://www.youtube.com/watch?v=80av5Aq36Gk&feature=youtu.be)
 
