@@ -35,7 +35,7 @@ ApplicationWindow {
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
     //property string installPath: "assets:/"
-    property string version: "0.1.2"
+    property string version: "0.1.2-beta"
 //    property double defaultPixelDensity: 5.56611  //pixel density of my current screen
 //    property double scaleFactor: defaultPixelDensity/Screen.pixelDensity
 
