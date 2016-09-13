@@ -35,7 +35,7 @@ ApplicationWindow {
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
     //property string installPath: "assets:/"
-    property string version: "0.1.1"
+    property string version: "0.1.2"
 //    property double defaultPixelDensity: 5.56611  //pixel density of my current screen
 //    property double scaleFactor: defaultPixelDensity/Screen.pixelDensity
 
@@ -63,22 +63,23 @@ ApplicationWindow {
     }
 
 
-    Audio {
+    SoundEffect {
         id: sound1
-        source: installPath + "sound1.wav" // sound could not be played fro resource many times...
-        onError: {console.log("Audio error: ", errorString, source)}
+        source: "qrc:///sounds/sound1.wav" // <-check if it works in android! //installPath + "sound1.wav" // sound could not be played fro resource many times...
+        //onStatusChanged: console.log("sound1 status: ", status)
+        //onError: {console.log("Audio error: ", errorString, source)}
 }
 
-    Audio {
+    SoundEffect {
         id: sound2
-        source: installPath + "sound2.wav"
-        onError: {console.log("Audio error: ", errorString, source)}
+        source: "qrc:///sounds/sound2.wav"//installPath + "sound2.wav"
+        //onError: {console.log("Audio error: ", errorString, source)}
 
     }
-    Audio {
+    SoundEffect {
         id: sound3
-        source: installPath + "sound3.wav"
-        onError: {console.log("Audio error: ", errorString, source)}
+        source: "qrc:///sounds/sound3.wav" //installPath + "sound3.wav"
+        //onError: {console.log("Audio error: ", errorString, source)}
     }
 
     Timer {
@@ -119,7 +120,7 @@ ApplicationWindow {
 
     WebSocket {
         id: socket
-        url: serverAddress.text//"ws://192.168.1.199:6006/ws"
+        url: "ws://"+serverAddress.text+":6006/ws"//"ws://192.168.1.199:6006/ws"
 
         onTextMessageReceived: {
             //console.log("Received message: ",message);
@@ -135,7 +136,7 @@ ApplicationWindow {
                              //serverAddress.visible = false;
 //                             connectButton.text = qsTr("Connected")
 //                             connectButton.enabled = false;
-                             settings.serverAddress = socket.url
+                             settings.serverIP= serverAddress.text//socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
@@ -215,7 +216,7 @@ ApplicationWindow {
 
     Settings {
         id: settings
-        property alias serverAddress: serverAddress.text
+        property alias serverIP: serverAddress.text
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
         property alias serverRowVisible: serverRow.visible
@@ -277,7 +278,7 @@ ApplicationWindow {
             Label {
                 id: serverLabel
                 visible: true
-                text: qsTr("Server: ")
+                text: qsTr("Server IP: ")
             }
 
             TextField {
@@ -289,7 +290,7 @@ ApplicationWindow {
                 //Layout.maximumWidth:  400
                 //width: 200
 
-                text: "ws://192.168.1.199:6006/ws"
+                text: "192.168.1.199"
             }
 
             Button {
