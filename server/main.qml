@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 740
     height: 620
     title: qsTr("eClick server")
-    property string version: "0.1.1"
+    property string version: "0.1.2-beta"
 
     menuBar: MenuBar {
         Menu {
@@ -244,7 +244,8 @@ ApplicationWindow {
 
                 SpinBox {
                     id: startBarSpinBox
-                    maximumValue: 1000
+                    width: label2.width*1.25 // most likely enough to hold 999999
+                    maximumValue: 1000000 // to enable very large complex bar numbers like 10101
                     minimumValue: 1
 //                    onEditingFinished: cs.start(scoField.text, startBarSpinBox.value )
                 }
