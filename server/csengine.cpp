@@ -29,9 +29,7 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
 	stopNow = false;
 	//temp:
-    m_orc=":/csound/metro_simple.orc"; //"/home/tarmo/tarmo/csound/metronome/metro_simple.orc"; // TODO: to settings
-    //m_sco= "/home/tarmo/tarmo/csound/metronome/test.sco"; // probably dont need.
-    //m_options = "-odac -+rtaudio=null"; // into Settings;
+	m_orc=":/csound/metro_simple.orc";
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
 }
 
@@ -98,6 +96,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 			qDebug()<<"replaceString: "<<replaceString;
 			contents.replace(";ADVANCE",replaceString);
 			contents.replace( "#define REPTEMPO #$TEMPO1#", "#define REPTEMPO #" + tempo + "#"); // tempo of count-down
+			contents.replace( "#define REPTEMPO #60#", "#define REPTEMPO #" + tempo + "#"); // another version, since sometimes it is not #$TEMPO1# but #60# (Murail Winter Fragments)
 		}
 
 		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco"); // TODO: use temporary file! - see how not to close it too soon

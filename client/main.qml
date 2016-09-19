@@ -290,7 +290,7 @@ ApplicationWindow {
                 //Layout.maximumWidth:  400
                 //width: 200
 
-                text: "192.168.1.199"
+                text: "10.42.0.1"
             }
 
             Button {
