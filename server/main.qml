@@ -48,6 +48,7 @@ ApplicationWindow {
         property alias sendOsc: oscCheckBox.checked
         property alias readFromJack: jackCheckBox.checked
         property alias lastScorePath: fileDialog.folder
+        property alias coundOptions: csoundOptions.text
     }
 
     Connections {
@@ -155,6 +156,36 @@ ApplicationWindow {
                     if (checked) jackReader.start()
                     // else jackReader.stop()  // NOT good - cannot start again
                 }
+            }
+
+            CheckBox {
+                id: testCheckbox
+                text: qsTr("Test regularity")
+                checked: false
+                onCheckedChanged: wsServer.setTesting(checked);
+            }
+
+            Row {
+                id: csOptionsRow
+                spacing: 5
+
+                Label {
+                    //id: oscLabel
+                    text: qsTr("Csound Options: ")
+                }
+
+                TextField {
+                    id: csoundOptions
+                    width: 400
+                    placeholderText: qsTr("Csound options")
+                    text: "-odac -+rtaudio=null -d"
+                }
+
+                Button {
+                    text: "Reset"
+                    onClicked: csoundOptions.text = "-odac -+rtaudio=null -d"
+                }
+
             }
 
 

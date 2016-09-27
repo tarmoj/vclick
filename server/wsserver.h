@@ -8,6 +8,10 @@
 #include <QStringList>
 #include <QSettings>
 
+#include <QFile>
+#include <QTime>
+#include <QtMultimedia/QSoundEffect>
+
 
 //#include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
 /*
@@ -73,6 +77,8 @@ public Q_SLOTS:
 	void handleNotification(QString message, float duration=4);
 	void handleTempo(double tempo); // TODO: change to double/float
 
+	void setTesting(bool testing);
+
 private:
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
@@ -82,6 +88,11 @@ private:
 	QSettings * settings;
 	QList <QOscClient *> m_oscClients;
 	void createOscClientsList(QString addresses);
+
+	QFile logFile;
+	QTime time;
+	QSoundEffect sound;
+	bool testing;
 
 
 };
