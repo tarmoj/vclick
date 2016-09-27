@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTemporaryFile>
+#include <QSettings>
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
@@ -122,9 +123,20 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	QString message;
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
+	//TODO: options from settings
+	QSettings settings("eclick","server");
+	QString csoundOptions= settings.value("CsoundOptions").toString() ;
+	if (csoundOptions.isEmpty()) {
+		csoundOptions = "-odac -+rtaudio=null -d";
+	}
 
-	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
-    cs->SetOption("-+rtaudio=null");
+	foreach (QString option, csoundOptions.split(" ")) {
+		qDebug()<<"Setting Csound option: " << option;
+		cs->SetOption(option.toLocal8Bit().data());
+	}
+
+	//cs->SetOption("-odac:system:playback_"); // was: -odac
+	//cs->SetOption("-+rtaudio=jack"); // was: null
     //QString tempOrcName = QDir::tempPath() + "/temp.orc";
     QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
     tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_simple.orc");
