@@ -48,7 +48,7 @@ ApplicationWindow {
         property alias sendOsc: oscCheckBox.checked
         property alias readFromJack: jackCheckBox.checked
         property alias lastScorePath: fileDialog.folder
-        property alias coundOptions: csoundOptions.text
+        property alias csoundOptions: csoundOptions.text
     }
 
     Connections {

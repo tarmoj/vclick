@@ -125,7 +125,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
 	//TODO: options from settings
 	QSettings settings("eclick","server");
-	QString csoundOptions= settings.value("CsoundOptions").toString() ;
+	QString csoundOptions= settings.value("csoundOptions").toString() ;
 	if (csoundOptions.isEmpty()) {
 		csoundOptions = "-odac -+rtaudio=null -d";
 	}
