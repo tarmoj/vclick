@@ -117,6 +117,22 @@ void WsServer::processTextMessage(QString message)
 		}
 	}
 
+	if (messageParts[0]=="start") {
+		qDebug()<<"Remote call to start eClick";
+		QString scoreFile;
+		if (messageParts.length()>1) {
+			scoreFile = messageParts[1]; // for future
+		}
+		emit start(scoreFile); // message to QML to set the scorename and start Csound
+
+	}
+
+	if (messageParts[0]=="stop") {
+		qDebug()<<"Remote call to stop eClick";
+		emit stop(); // message to QML to set the scorename and start Csound
+
+	}
+
 	int bar = -1, beat = -1, led = -1;
 	float duration = 0;
 	if (messageParts.contains("bar")) {

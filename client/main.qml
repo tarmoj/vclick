@@ -160,8 +160,9 @@ ApplicationWindow {
         target: oscServer
 
         onNewBeatBar: {
-            barLabel.text = bar;
-            beatLabel.text = beat;
+            //barLabel.text = bar;
+            //beatLabel.text = beat;
+            beatbarLabel.text = bar + "  " + beat
         }
 
         onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2);
@@ -339,7 +340,22 @@ ApplicationWindow {
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
             width: parent.width
-            RowLayout {
+
+            Label {
+                id: beatbarLabel
+                color: "ghostwhite" //"#d6d6d6"
+                //TODO: värvivahetus ainult löögile!
+                text: "0  0"
+                font.bold: true
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                minimumPointSize: 10
+                font.pointSize: 120
+                fontSizeMode: Text.Fit
+            }
+
+            /*RowLayout {
                 id: beatRow
                 spacing: mainRect.width/8
                 anchors.centerIn: parent
@@ -354,6 +370,7 @@ ApplicationWindow {
                     font.bold: true
                     //font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )
                     font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
+                    fontSizeMode: Text.Fit
                 }
 
 
@@ -372,7 +389,7 @@ ApplicationWindow {
                     //font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
                 }
 
-            }
+            } */
         }
 
 

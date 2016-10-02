@@ -65,6 +65,9 @@ Q_SIGNALS:
 	void updateOscAddresses(QString adresses);
 	void csoundMessage(QString message); // since qml and sending object must live in the same thread
 
+	void start(QString scoreFile); // if started by remote
+	void stop();
+
 private Q_SLOTS:
     void onNewConnection();
     void processTextMessage(QString message);

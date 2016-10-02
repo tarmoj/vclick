@@ -68,6 +68,16 @@ ApplicationWindow {
 
         onCsoundMessage: messageArea.append(message)
 
+        onStart: {
+            if (scoreFile!="")  { // better check!
+                scoField.text = scoreFile;
+                startBarSpinBox.value = 1 // TODO: from parameter
+                cs.start(scoField.text, startBarSpinBox.value)
+            }
+        }
+
+        onStop: cs.stop()
+
     }
 
 
