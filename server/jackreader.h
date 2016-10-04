@@ -37,15 +37,19 @@ public:
 	void run();
 	Q_INVOKABLE void stop();
 
+
 private:
 	bool mStop;
+	bool startFromZero; // a hack to make 60-beat measures and show as timecode...
 
 
 
 signals:
 	void newBeatBar(int bar, int beat);
 	void newLed(int led, float duration);
+	void newTempo(double tempo);
 public slots:
+	void setZeroHack(bool state) {startFromZero= state;}
 };
 
 #endif // JACKREADER_H

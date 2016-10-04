@@ -157,15 +157,28 @@ ApplicationWindow {
 
             }
 
-            CheckBox {
-                id: jackCheckBox
-                visible: (Qt.platform.os === "unix" || Qt.platform.os === "linux")
-                text: "Read from Jack"
-                checked: false
-                onCheckedChanged: {
-                    if (checked) jackReader.start()
-                    // else jackReader.stop()  // NOT good - cannot start again
+            Row {
+                spacing:5
+
+                CheckBox {
+                    id: jackCheckBox
+                    visible: (Qt.platform.os === "linux")
+                    text: "Read from Jack"
+                    checked: false
+                    onCheckedChanged: {
+                        if (checked) jackReader.start()
+                        // else jackReader.stop()  // NOT good - cannot start again
+                    }
                 }
+
+                CheckBox {
+                    id: timeCodeCheckBox
+                    visible: (Qt.platform.os === "linux")
+                    text: "BBT to timecode hack"
+                    checked: false
+                    onCheckedChanged: jackReader.setZeroHack(checked)
+                }
+
             }
 
             CheckBox {

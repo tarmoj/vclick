@@ -78,6 +78,8 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("jackReader", jackReader);
 	QObject::connect(jackReader, SIGNAL(newBeatBar(int,int)), wsServer, SLOT(handleBeatBar(int,int)) );
 	QObject::connect(jackReader, SIGNAL(newLed(int,float)), wsServer, SLOT(handleLed(int,float))) ;
+	QObject::connect(jackReader,  SIGNAL(newTempo(double)), wsServer, SLOT(handleTempo(double)));
+
 #endif
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
