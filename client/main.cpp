@@ -31,8 +31,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+#ifdef Q_OS_MAC
     app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
-
+#endif
 	OscHandler oscServer(8008);
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");

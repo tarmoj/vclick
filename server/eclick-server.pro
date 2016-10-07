@@ -2,6 +2,7 @@ TEMPLATE = app
 #TARGET += "eClickServer"
 
 QT += qml quick widgets network websockets
+QT += multimedia #for testing
 
 linux: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "$$(PROGRAMFILES)\\Csound6\\include\\csound"

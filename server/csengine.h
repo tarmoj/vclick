@@ -52,11 +52,13 @@ public slots:
 	void play(QString scoFile, int startBar);
 	void stop();
 	void scoreEvent(QString event);
+	void setSFDIR(QUrl dir);
 
 private:
 	Csound * cs;
 	QString m_sco, m_orc, m_options; // resolve later
 	bool stopNow;
+	QString SFDIR;
 };
 
 #endif // CSENGINE_H

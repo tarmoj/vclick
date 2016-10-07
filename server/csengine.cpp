@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QDir>
 #include <QTemporaryFile>
+#include <QSettings>
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
@@ -122,9 +123,33 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound();
 	QString message;
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
+	//TODO: options from settings
+	QSettings settings("eclick","server");
+	QString csoundOptions= settings.value("csoundOptions").toString() ;
+	if (csoundOptions.isEmpty()) {
+		csoundOptions = "-odac -+rtaudio=null -d";
+	}
 
-	cs->SetOption("-odac"); // TODO: miks ei saa saata koos orc ja sco reaga?
-    cs->SetOption("-+rtaudio=null");
+	foreach (QString option, csoundOptions.split(" ")) {
+		qDebug()<<"Setting Csound option: " << option;
+		cs->SetOption(option.toLocal8Bit().data());
+	}
+
+	// look for SFDIR set by UI
+
+	QString sfdir = settings.value("sfdir").toString(); // proabably converting to String and stripping file:/// makes much more sense...
+
+
+	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty()) { // set SFDIR chosen in UI
+		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
+		sfdir=sfdir.replace("file:///", "/");
+		qDebug()<<"Set SFDIR to: " << sfdir;
+		QString option = "--env:SFDIR="+ sfdir; // TODO: does it work if path has spaces??
+		cs->SetOption(option.toLocal8Bit().data());
+	}
+
+	//cs->SetOption("-odac:system:playback_"); // was: -odac
+	//cs->SetOption("-+rtaudio=jack"); // was: null
     //QString tempOrcName = QDir::tempPath() + "/temp.orc";
     QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
     tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_simple.orc");
@@ -231,4 +256,10 @@ QString CsEngine::getStringChannel(QString channel)
 void CsEngine::scoreEvent(QString event)
 {
 	cs->InputMessage(event.toLocal8Bit());
+}
+
+void CsEngine::setSFDIR(QUrl dir)
+{
+	SFDIR = (dir.toString().startsWith("file:") ) ? dir.toLocalFile() : dir.path();
+	qDebug()<<"Set SFDIR to: " << SFDIR;
 }

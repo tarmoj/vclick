@@ -47,6 +47,9 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	sendWs = false;
 	settings = new QSettings("eclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
+
+	testing = false;
+
 }
 
 
@@ -55,6 +58,7 @@ WsServer::~WsServer()
 {
     m_pWebSocketServer->close();
     qDeleteAll(m_clients.begin(), m_clients.end());
+	//logFile.close();
 }
 
 
@@ -111,6 +115,22 @@ void WsServer::processTextMessage(QString message)
 				qDebug()<<"Could not create OSC address to "<<senderUrl;
 			}
 		}
+	}
+
+	if (messageParts[0]=="start") {
+		qDebug()<<"Remote call to start eClick";
+		QString scoreFile;
+		if (messageParts.length()>1) {
+			scoreFile = messageParts[1]; // for future
+		}
+		emit start(scoreFile); // message to QML to set the scorename and start Csound
+
+	}
+
+	if (messageParts[0]=="stop") {
+		qDebug()<<"Remote call to stop eClick";
+		emit stop(); // message to QML to set the scorename and start Csound
+
 	}
 
 	int bar = -1, beat = -1, led = -1;
@@ -171,11 +191,27 @@ void WsServer::handleBeatBar(int bar, int beat)
 {
 	qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
+	// for testing:
+	int now, difference=0;
+	if (testing) {
+		//logFile.write("\nRegularity in one OSC call: \n"); // empty line before next event
+		now = time.elapsed(); // TODO - mõõda ka eelmise löögi kaugusest!
+		sound.play();
+	}
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
+			// for testing
+			if (testing) {
+				difference = time.elapsed()-now;
+				if (difference>1) qDebug()<< "DIFFERENCE IN OSC CALL (in ms): " << difference;
+				QString logLine = QString::number(time.elapsed()-now)+ "\n";
+				now = time.elapsed();
+				//logFile.write(logLine.toLocal8Bit());
+			}
+
 		}
 	}
 	if (sendWs) {
@@ -247,6 +283,25 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 		send2all("t "+tempoString);
 
 	}
+}
+
+void WsServer::setTesting(bool testing)
+{
+	qDebug()<<"SET TESTING: "<<testing;
+
+	if (testing) {
+		// logfile for testing
+//		logFile.setFileName("eclick-server.log");
+//		if (!logFile.open(QIODevice::WriteOnly)) {
+//			qDebug()<<"Error in creating logFile";
+//		}
+		time.start();
+		sound.setSource(QUrl("file:///home/tarmo/tarmo/programm/qt-projects/eClick/client/sounds/sound2.wav")); //TODO - put into resource, if you are going to distribute it
+		//sound.play();
+
+	}
+	this->testing = testing;
+
 }
 
 void WsServer::createOscClientsList(QString addresses)
