@@ -144,7 +144,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
 		sfdir=sfdir.replace("file:///", "/");
 		qDebug()<<"Set SFDIR to: " << sfdir;
-		QString option = "--env:SFDIR=\""+ sfdir +"\""; // TODO: does it work if path has spaces??
+		QString option = "--env:SFDIR="+ sfdir; // TODO: does it work if path has spaces??
 		cs->SetOption(option.toLocal8Bit().data());
 	}
 
