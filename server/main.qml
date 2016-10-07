@@ -6,9 +6,9 @@ import Qt.labs.settings 1.0
 ApplicationWindow {
     visible: true
     width: 740
-    height: 620
+    height: 740
     title: qsTr("eClick server")
-    property string version: "0.1.2-beta"
+    property string version: "0.2.0-beta"
 
     menuBar: MenuBar {
         Menu {
@@ -49,6 +49,7 @@ ApplicationWindow {
         property alias readFromJack: jackCheckBox.checked
         property alias lastScorePath: fileDialog.folder
         property alias csoundOptions: csoundOptions.text
+        property alias sfdir: sfdirField.text
     }
 
     Connections {
@@ -83,7 +84,7 @@ ApplicationWindow {
 
     FileDialog {
         id: fileDialog
-        title: "Please choose score for metronome"
+        title: qsTr("Please choose score for metronome")
         nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
         //folder: "file://"
         onAccepted: {
@@ -97,6 +98,24 @@ ApplicationWindow {
             console.log("Canceled")
             visible = false;
         }        
+    }
+
+    FileDialog {
+        id: sfdirDialog
+        title: qsTr("Please choose folder of playbacks soundfiles")
+        folder: sfdirField.text
+        selectFolder: true
+
+        onAccepted: {
+            console.log("You chose: " + folder)
+            sfdirField.text = folder
+            //cs.setSFDIR(folder);
+        }
+        onRejected: {
+            console.log("Canceled")
+            visible = false;
+        }
+
     }
 
 
@@ -159,6 +178,7 @@ ApplicationWindow {
 
             Row {
                 spacing:5
+                id: jackRow
 
                 CheckBox {
                     id: jackCheckBox
@@ -183,6 +203,7 @@ ApplicationWindow {
 
             CheckBox {
                 id: testCheckbox
+                visible: true ; //TODO: make invisible or depending on options
                 text: qsTr("Test regularity")
                 checked: false
                 onCheckedChanged: wsServer.setTesting(checked);
@@ -209,7 +230,32 @@ ApplicationWindow {
                     onClicked: csoundOptions.text = "-odac -+rtaudio=null -d"
                 }
 
+
             }
+
+            Row {
+                id: soundFilesRow
+                spacing: 5
+
+                Label {
+                    text: qsTr("Direcotry of soundfiles (SFDIR): ")
+                }
+
+                TextField {
+                    id: sfdirField
+                    width: 300
+                    placeholderText: qsTr("SFDIR for Csound")
+                    text: "./";
+
+                }
+
+                Button {
+                    text: qsTr("Select")
+                    onClicked: { sfdirDialog.visible=true }
+                }
+
+            }
+
 
 
             Row {

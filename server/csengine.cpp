@@ -135,6 +135,19 @@ void CsEngine::play(QString scoFile, int startBar) {
 		cs->SetOption(option.toLocal8Bit().data());
 	}
 
+	// look for SFDIR set by UI
+
+	QString sfdir = settings.value("sfdir").toString(); // proabably converting to String and stripping file:/// makes much more sense...
+
+
+	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty()) { // set SFDIR chosen in UI
+		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
+		sfdir=sfdir.replace("file:///", "/");
+		qDebug()<<"Set SFDIR to: " << sfdir;
+		QString option = "--env:SFDIR=\""+ sfdir +"\""; // TODO: does it work if path has spaces??
+		cs->SetOption(option.toLocal8Bit().data());
+	}
+
 	//cs->SetOption("-odac:system:playback_"); // was: -odac
 	//cs->SetOption("-+rtaudio=jack"); // was: null
     //QString tempOrcName = QDir::tempPath() + "/temp.orc";
@@ -243,4 +256,10 @@ QString CsEngine::getStringChannel(QString channel)
 void CsEngine::scoreEvent(QString event)
 {
 	cs->InputMessage(event.toLocal8Bit());
+}
+
+void CsEngine::setSFDIR(QUrl dir)
+{
+	SFDIR = (dir.toString().startsWith("file:") ) ? dir.toLocalFile() : dir.path();
+	qDebug()<<"Set SFDIR to: " << SFDIR;
 }
