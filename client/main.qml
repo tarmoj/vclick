@@ -334,31 +334,72 @@ ApplicationWindow {
         }
 
         Item {
+            //color: "lightblue"
             id: beatRowContainer
             anchors.top:tempoLabel.bottom
             anchors.topMargin: 5
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
-            width: parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width*0.9
 
+/*
+            Row {
+                anchors.fill:parent
+                anchors.centerIn: parent
+                Label {
+                    color: "ghostwhite" //"#d6d6d6"
+                    //TODO: värvivahetus ainult löögile!
+                    text: "1"
+                    font.bold: true
+                    height: parent.height
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPointSize: 10
+                    font.pointSize: 200
+                    fontSizeMode: Text.Fit
+                }
+
+                Label {
+                    color: "ghostwhite" //"#d6d6d6"
+                    //TODO: värvivahetus ainult löögile!
+                    text: "2"
+                    font.bold: true
+                    height: parent.height
+                    //anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPointSize: 10
+                    font.pointSize: 200
+                    fontSizeMode: Text.Fit
+                }
+
+
+
+
+            }
+
+*/
             Label {
+                visible: true
                 id: beatbarLabel
                 color: "ghostwhite" //"#d6d6d6"
                 //TODO: värvivahetus ainult löögile!
-                text: "0  0"
+                text: "11001  12"
                 font.bold: true
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 minimumPointSize: 10
-                font.pointSize: 120
+                font.pointSize: 200
                 fontSizeMode: Text.Fit
             }
 
-            /*RowLayout {
+/*            RowLayout {
                 id: beatRow
                 spacing: mainRect.width/8
                 anchors.centerIn: parent
+                anchors.fill:parent
 
                 Label {
                     id: barLabel
@@ -366,10 +407,13 @@ ApplicationWindow {
                     Layout.fillHeight:  true
                     Layout.alignment: Qt.AlignCenter
                     Layout.minimumHeight: 5
-                    text: "0"
+                    //Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: "10101"
                     font.bold: true
                     //font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )
-                    font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
+                    //font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
                     fontSizeMode: Text.Fit
                 }
 
@@ -382,11 +426,14 @@ ApplicationWindow {
                     Layout.fillHeight:  true
                     Layout.alignment: Qt.AlignCenter
                     //Layout.maximumHeight: mainRect.height*0.25
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                     Layout.minimumHeight: 5
-                    text: "0"
+                    text: "12"
                     font.bold: true
                     font.pixelSize: barLabel.font.pixelSize
                     //font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
+                    fontSizeMode: Text.Fit
                 }
 
             } */
