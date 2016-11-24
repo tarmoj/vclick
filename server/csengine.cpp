@@ -29,7 +29,7 @@
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
 	stopNow = false;
-	//temp:
+	cs = NULL;
 	m_orc=":/csound/metro_simple.orc";
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
 }
@@ -125,7 +125,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
 	//TODO: options from settings
 	QSettings settings("eclick","server");
-	QString csoundOptions= settings.value("csoundOptions").toString() ;
+	QString csoundOptions= settings.value("csoundOptions").toString().simplified() ;
 	if (csoundOptions.isEmpty()) {
 		csoundOptions = "-odac -+rtaudio=null -d";
 	}
@@ -212,7 +212,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 				cs->PopFirstMessage();
 			}
 
-			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
+			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be called
 		}
 		qDebug()<<"Stopping csound";
 		cs->Stop();
@@ -222,6 +222,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	}
 	cs->DestroyMessageBuffer();
 	delete cs;
+	cs = NULL;
 	stopNow = false;
 
 }
@@ -232,30 +233,37 @@ void CsEngine::stop() {
 
 void CsEngine::setChannel(QString channel, double value) {
 	//qDebug()<<"channel: "<<channel << " value: "<<value;
-	cs->SetChannel(channel.toLocal8Bit(),value);
+	if (cs) // check if created
+		cs->SetChannel(channel.toLocal8Bit(),value);
 }
 
 
 double CsEngine::getChannel(QString channel)
 {
-	MYFLT value = cs->GetChannel(channel.toLocal8Bit());
-//	if (value>0)
-//		qDebug()<<"channel: "<<channel << " value: "<<value;
-	return value;
+	if (cs) {
+		MYFLT value = cs->GetChannel(channel.toLocal8Bit());
+		//	if (value>0)
+		//		qDebug()<<"channel: "<<channel << " value: "<<value;
+		return value;
+	} else
+		return -1;
 }
 
 QString CsEngine::getStringChannel(QString channel)
 {
-
-	char string[1024]; // to assume the message is not longer...
+	if (cs) {
+	char string[2048]; // to assume the message is not longer...
 	cs->GetStringChannel(channel.toLocal8Bit(),string);
 	return QString(string);
+	} else
+		return QString();
 
 }
 
 void CsEngine::scoreEvent(QString event)
 {
-	cs->InputMessage(event.toLocal8Bit());
+	if (cs)
+		cs->InputMessage(event.toLocal8Bit());
 }
 
 void CsEngine::setSFDIR(QUrl dir)

@@ -372,7 +372,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignRight//Qt.AlignCenter
                     Layout.minimumHeight: 5
                     verticalAlignment: Text.AlignVCenter
-                    text: "1"
+                    text: "0"
                     font.bold: true
                     font.pixelSize: beatbarLabel.paintedHeight*0.8
                     //font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
@@ -388,7 +388,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     Layout.minimumHeight: 5
-                    text: "1"
+                    text: "0"
                     font.bold: true
                     font.pixelSize: barLabel.font.pixelSize
                 }
