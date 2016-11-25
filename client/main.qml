@@ -67,21 +67,16 @@ ApplicationWindow {
 
     SoundEffect {
         id: sound1
-        source: "qrc:///sounds/sound1.wav" // <-check if it works in android! //installPath + "sound1.wav" // sound could not be played fro resource many times...
-        //onStatusChanged: console.log("sound1 status: ", status)
-        //onError: {console.log("Audio error: ", errorString, source)}
-}
+        source: "qrc:///sounds/sound1.wav"
+    }
 
     SoundEffect {
         id: sound2
         source: "qrc:///sounds/sound2.wav"//installPath + "sound2.wav"
-        //onError: {console.log("Audio error: ", errorString, source)}
-
     }
     SoundEffect {
         id: sound3
         source: "qrc:///sounds/sound3.wav" //installPath + "sound3.wav"
-        //onError: {console.log("Audio error: ", errorString, source)}
     }
 
     Timer {
@@ -94,7 +89,6 @@ ApplicationWindow {
             notificationLabel.text = "";
             notificationRect.color = "transparent";
         }
-
     }
 
     Timer {
@@ -114,10 +108,7 @@ ApplicationWindow {
         notificationRect.color = "darkblue";
         clearNotification.interval = duration*1000; // into milliseconds
         clearNotification.start();
-      }
-
-
-
+    }
 
 
     WebSocket {
@@ -127,31 +118,31 @@ ApplicationWindow {
         onTextMessageReceived: {
             //console.log("Received message: ",message);
         }
-        onStatusChanged: if (socket.status == WebSocket.Error) {
+        onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-//                             connectButton.enabled = true;
-//                             connectButton.text = qsTr("Hello, Server")
-//                             notification("Failed!", 1.0);
+                             //                             connectButton.enabled = true;
+                             //                             connectButton.text = qsTr("Hello, Server")
+                             //                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              //serverAddress.visible = false;
-//                             connectButton.text = qsTr("Connected")
-//                             connectButton.enabled = false;
+                             //                             connectButton.text = qsTr("Connected")
+                             //                             connectButton.enabled = false;
                              settings.serverIP= serverAddress.text//socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;
-//                             serverAddress.visible = true;
-//                             connectButton.enabled = true;
-//                             connectButton.text = qsTr("Say Hello")
+                             //                             serverAddress.visible = true;
+                             //                             connectButton.enabled = true;
+                             //                             connectButton.text = qsTr("Say Hello")
                          }
-                        else if (socket.status == WebSocket.Connecting) {
+                         else if (socket.status == WebSocket.Connecting) {
                              console.log("Socket connecting")
-//                             connectButton.enabled = false;
-//                             connectButton.text = qsTr("Connecting")
+                             //                             connectButton.enabled = false;
+                             //                             connectButton.text = qsTr("Connecting")
                          }
 
         //onActiveChanged: console.log("Socket active: ", active)
@@ -164,7 +155,6 @@ ApplicationWindow {
         onNewBeatBar: {
             barLabel.text = bar;
             beatLabel.text = beat;
-            beatbarLabel.text = bar + "  " + beat // must be dubbled to set both right scale and and colors
         }
 
         onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2);
@@ -181,7 +171,7 @@ ApplicationWindow {
                     redLed.color = redLed.bright
                     redLed.width = ledRow.ledOnWidth;
                     ledOffTimer.object = redLed
-                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    ledOffTimer.start()
                 }
             }
 
@@ -195,7 +185,7 @@ ApplicationWindow {
                     greenLed.color = greenLed.bright
                     greenLed.width = ledRow.ledOnWidth;
                     ledOffTimer.object = greenLed
-                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    ledOffTimer.start()
                 }
             }
             if (led===2) {
@@ -211,11 +201,11 @@ ApplicationWindow {
                     ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
                 }
             }
+            }
+
+            onNewMessage: {notification(message, duration);}
+
         }
-
-        onNewMessage: {notification(message, duration);}
-
-    }
 
     Settings {
         id: settings
@@ -226,9 +216,9 @@ ApplicationWindow {
     }
 
 
-//    Component.onCompleted: {
-//        socket.active = true;
-//    }
+    //    Component.onCompleted: {
+    //        socket.active = true;
+    //    }
 
     Rectangle {
         id: mainRect
@@ -290,8 +280,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 250
                 Layout.minimumWidth: 80
-                //Layout.maximumWidth:  400
-                //width: 200
+
 
                 text: "10.42.0.1"
             }
@@ -335,66 +324,59 @@ ApplicationWindow {
 
         }
 
-        Item {
-            //color: "lightblue"
-            id: beatRowContainer
+
+        RowLayout {
+            id: beatRow
             anchors.top:tempoLabel.bottom
             anchors.topMargin: 5
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*0.8
+            width: parent.width*0.98
 
-            Label { // kind of hack to get right scale of the text
-                visible: false
-                id: beatbarLabel
-                //color: "ghostwhite" //"#d6d6d6"
-                text: "1  1"
-                font.bold: true
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                minimumPointSize: 10
-                font.pointSize: 200
-                fontSizeMode: Text.Fit
-            }
-
-            RowLayout {
-                id: beatRow
-                spacing: beatbarLabel.paintedHeight/3
-                anchors.centerIn: parent
-                anchors.fill:parent
+            Item {
+                id:leftRectangle
+                //color: "lightpink"
+                height: parent.height
+                width: parent.width*0.47
+                anchors.left: parent.left
 
                 Label {
                     id: barLabel
                     color: "ghostwhite" //"#d6d6d6"
-                    Layout.fillHeight:  true
-                    Layout.alignment: Qt.AlignRight//Qt.AlignCenter
-                    Layout.minimumHeight: 5
-                    verticalAlignment: Text.AlignVCenter
                     text: "0"
                     font.bold: true
-                    font.pixelSize: beatbarLabel.paintedHeight*0.8
-                    //font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPointSize: 10
+                    font.pointSize: 200
+                    fontSizeMode: Text.Fit
                 }
+            }
 
-
+            Item {
+                id:rightRectangle
+                //color: "pink"
+                height: parent.height
+                width: parent.width*0.47
+                anchors.right: parent.right
 
                 Label {
                     id: beatLabel
                     property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen"]
                     color: colors[Math.min(parseInt(text),6)] // different color for every beat. text must contain the beatnumber
-                    Layout.fillHeight:  true
-                    Layout.alignment: Qt.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    Layout.minimumHeight: 5
                     text: "0"
                     font.bold: true
-                    font.pixelSize: barLabel.font.pixelSize
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    font.pixelSize: barLabel.paintedHeight*0.75 // quite good approximization TEST on mobile devices!
                 }
-
             }
+
         }
+
 
 
 
@@ -402,10 +384,7 @@ ApplicationWindow {
             id: ledRow
             width: parent.width *0.8
             height: Math.min(mainRect.width,mainRect.height) / 3 // one third of the smaller side, whether portrait or landscape
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            anchors.top: beatRow.bottom
-//            anchors.topMargin: 10
-            anchors.centerIn: parent
+             anchors.centerIn: parent
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
             property real ledOffWidth: ledRow.ledOnWidth/4
             z:3 // to raise above notificationRect
@@ -419,7 +398,6 @@ ApplicationWindow {
 
                 Rectangle {
                     id: redLed
-                    //anchors.verticalCenter: parent.verticalCenter
                     anchors.centerIn: parent
                     width: ledRow.ledOnWidth/4 // parent.width/4 //mainRect.width *0.1
                     height: width
@@ -429,7 +407,6 @@ ApplicationWindow {
                     border.color: "#ffea44"
                     property color bright: "red"
                     property color dark: "#5c0303"
-                    // TOO: beatLength here - local
 
                     ParallelAnimation {
                         id: redAnimation
@@ -525,7 +502,6 @@ ApplicationWindow {
                 color: "yellow"
                 text: ""
                 font.bold: true
-                //font.pointSize: Math.min(Math.max(10,parent.height/2),60) // not too small, not too big
                 font.pixelSize: Math.max(20, Math.min(mainRect.width/10, parent.height ) )
             }
         }
@@ -603,7 +579,6 @@ ApplicationWindow {
 
     MessageDialog {
         id: messageDialog
-        //title: qsTr("May I have your attention, please?")
 
         function show(caption) {
             messageDialog.text = caption;
