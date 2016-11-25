@@ -31,6 +31,7 @@ public:
 	explicit OscHandler(quint16 port, QObject *parent = 0);
 	~OscHandler();
 	Q_INVOKABLE QString getLocalAddress();
+	Q_INVOKABLE void restart();
 
 signals:
 	void newBeatBar(int bar, int beat);

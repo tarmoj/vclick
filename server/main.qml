@@ -50,6 +50,7 @@ ApplicationWindow {
         property alias lastScorePath: fileDialog.folder
         property alias csoundOptions: csoundOptions.text
         property alias sfdir: sfdirField.text
+        property alias volume: volumeSlider.value
     }
 
     Connections {
@@ -203,7 +204,7 @@ ApplicationWindow {
 
             CheckBox {
                 id: testCheckbox
-                visible: true ; //TODO: make invisible or depending on options
+                visible: false ; //TODO: make invisible or depending on options
                 text: qsTr("Test regularity")
                 checked: false
                 onCheckedChanged: wsServer.setTesting(checked);
@@ -236,6 +237,7 @@ ApplicationWindow {
             Row {
                 id: soundFilesRow
                 spacing: 5
+                visible: volumeLabel.visible // don't show if there is no audio output. volumeLabel checks that
 
                 Label {
                     text: qsTr("Direcotry of soundfiles (SFDIR): ")
@@ -353,13 +355,32 @@ ApplicationWindow {
                 Button {
                     id: startButton
                     text: qsTr("Star&t")
-                    onClicked: cs.start(scoField.text, startBarSpinBox.value)
+                    onClicked: {
+                        cs.start(scoField.text, startBarSpinBox.value)
+                        cs.setChannel("volume", volumeSlider.value)
+                    }
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("&Stop")
                     onClicked: cs.stop()
+                }
+
+                Label {
+                    id: volumeLabel
+                    text: qsTr("Volume:")
+                    visible: (csoundOptions.text.indexOf("-+rtaudio=null")<0 && csoundOptions.text.indexOf("-n ")<0) // if not containg null or -n then probably sending audio
+                }
+
+                Slider {
+                    width: 100
+                    id: volumeSlider
+                    visible: volumeLabel.visible
+                    value: 1
+                    minimumValue: 0
+                    maximumValue: 1.5
+                    onValueChanged: cs.setChannel("volume", value)
                 }
             }
 

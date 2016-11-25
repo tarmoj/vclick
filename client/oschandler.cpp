@@ -20,6 +20,7 @@
 */
 #include "oschandler.h"
 #include <QNetworkInterface>
+#include <QThread>
 
 OscHandler::OscHandler(quint16 port, QObject *parent) : QObject(parent)
 {
@@ -49,6 +50,17 @@ QString OscHandler::getLocalAddress()
 
 	}
 	return address;
+}
+
+void OscHandler::restart() // probably does not work
+{
+	qDebug()<<"Stopping";
+	delete m_server;
+	QThread::msleep(1000);
+	m_server = new QOscServer(8008, 0); //TODO: osc port now hardcoded, put into config
+	qDebug()<<"Created again";
+	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
+
 }
 
 void OscHandler::dataIn(QString path, QVariant data)

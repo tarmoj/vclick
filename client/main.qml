@@ -34,10 +34,8 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
-    //property string installPath: "assets:/"
-    property string version: "0.1.2-beta"
-//    property double defaultPixelDensity: 5.56611  //pixel density of my current screen
-//    property double scaleFactor: defaultPixelDensity/Screen.pixelDensity
+    property string version: "0.2.0-beta"
+
 
 
     menuBar: MenuBar {
@@ -46,6 +44,10 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Show/Hide &server address")
                 onTriggered: serverRow.visible = !serverRow.visible // messageDialog.show(qsTr("Open action triggered"));
+            }
+            MenuItem {
+                text: qsTr("&Restart OSC listener")
+                onTriggered: oscServer.restart()
             }
             MenuItem {
                 text: qsTr("&Toggle test leds")
@@ -160,9 +162,9 @@ ApplicationWindow {
         target: oscServer
 
         onNewBeatBar: {
-            //barLabel.text = bar;
-            //beatLabel.text = beat;
-            beatbarLabel.text = bar + "  " + beat
+            barLabel.text = bar;
+            beatLabel.text = beat;
+            beatbarLabel.text = bar + "  " + beat // must be dubbled to set both right scale and and colors
         }
 
         onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2);
@@ -341,51 +343,13 @@ ApplicationWindow {
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width*0.9
+            width: parent.width*0.8
 
-/*
-            Row {
-                anchors.fill:parent
-                anchors.centerIn: parent
-                Label {
-                    color: "ghostwhite" //"#d6d6d6"
-                    //TODO: värvivahetus ainult löögile!
-                    text: "1"
-                    font.bold: true
-                    height: parent.height
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    minimumPointSize: 10
-                    font.pointSize: 200
-                    fontSizeMode: Text.Fit
-                }
-
-                Label {
-                    color: "ghostwhite" //"#d6d6d6"
-                    //TODO: värvivahetus ainult löögile!
-                    text: "2"
-                    font.bold: true
-                    height: parent.height
-                    //anchors.fill: parent
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    minimumPointSize: 10
-                    font.pointSize: 200
-                    fontSizeMode: Text.Fit
-                }
-
-
-
-
-            }
-
-*/
-            Label {
-                visible: true
+            Label { // kind of hack to get right scale of the text
+                visible: false
                 id: beatbarLabel
-                color: "ghostwhite" //"#d6d6d6"
-                //TODO: värvivahetus ainult löögile!
-                text: "11001  12"
+                //color: "ghostwhite" //"#d6d6d6"
+                text: "1  1"
                 font.bold: true
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
@@ -395,9 +359,9 @@ ApplicationWindow {
                 fontSizeMode: Text.Fit
             }
 
-/*            RowLayout {
+            RowLayout {
                 id: beatRow
-                spacing: mainRect.width/8
+                spacing: beatbarLabel.paintedHeight/3
                 anchors.centerIn: parent
                 anchors.fill:parent
 
@@ -405,16 +369,13 @@ ApplicationWindow {
                     id: barLabel
                     color: "ghostwhite" //"#d6d6d6"
                     Layout.fillHeight:  true
-                    Layout.alignment: Qt.AlignCenter
+                    Layout.alignment: Qt.AlignRight//Qt.AlignCenter
                     Layout.minimumHeight: 5
-                    //Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
-                    text: "10101"
+                    text: "0"
                     font.bold: true
-                    //font.pointSize: Math.max(10, Math.min(mainRect.width/5,beatRowContainer.height*0.8 ) )
+                    font.pixelSize: beatbarLabel.paintedHeight*0.8
                     //font.pixelSize: Math.max(20, Math.min(mainRect.width/4,beatRowContainer.height) ) // width/4 seems to fit well 100 10 in all cases...
-                    fontSizeMode: Text.Fit
                 }
 
 
@@ -424,19 +385,15 @@ ApplicationWindow {
                     property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen"]
                     color: colors[Math.min(parseInt(text),6)] // different color for every beat. text must contain the beatnumber
                     Layout.fillHeight:  true
-                    Layout.alignment: Qt.AlignCenter
-                    //Layout.maximumHeight: mainRect.height*0.25
-                    horizontalAlignment: Text.AlignHCenter
+                    Layout.alignment: Qt.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     Layout.minimumHeight: 5
-                    text: "12"
+                    text: "0"
                     font.bold: true
                     font.pixelSize: barLabel.font.pixelSize
-                    //font.pointSize: barLabel.font.pointSize //Math.min(mainRect.width/6, Math.max(10, parent.height*0.5) )
-                    fontSizeMode: Text.Fit
                 }
 
-            } */
+            }
         }
 
 

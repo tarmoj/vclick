@@ -41,6 +41,7 @@ gkBlueBlink init 0
 gSnotification init ""
 gkChannels init 0 ; TODO: think how to send signals to different instruments (channels). Not implemented yet.
 gkNewNotification init 0
+gkVolume init 1
 
 ;; channels
 gkTempo chnexport "tempo",1 ;  is this output? ? maybe safer to set 3?
@@ -52,6 +53,9 @@ gkBlueBlink chnexport "blue",1
 gSnotification chnexport "notification",1
 gkInstrument chnexport "channels",1 ; TODO: think how to send signals to different instruments, comes from "channels" - replace variable name. MAybe: voices
 gkNewNotification chnexport "new_notification",1
+gkVolume chnexport "volume", 1
+
+
 
 ; maybe sring channels to communicate...
 
@@ -216,7 +220,7 @@ instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Fil
 	else
 		aL,aR soundin Sfilename, iskiptime
 	endif
-	aenv linen 1,0.1,p3,0.1
+	aenv linen gkVolume,0.1,p3,0.1
 	outs aL*aenv,aR*aenv 
 endin
 
