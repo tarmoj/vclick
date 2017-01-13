@@ -403,3 +403,8 @@ QString WsServer::getLocalAddress()
 	return address;
 }
 
+void WsServer::runSystemCommand(QString command)
+{
+	system(command.toLocal8Bit());
+}
+

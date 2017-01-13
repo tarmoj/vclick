@@ -371,7 +371,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: barLabel.paintedHeight*0.75 // quite good approximization TEST on mobile devices!
+                    font.pixelSize: barLabel.paintedHeight * 0.75 // quite good approximization TEST on mobile devices! -  THIS IS NOT ADEQUATE, can give different results...
                 }
             }
 

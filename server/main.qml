@@ -4,11 +4,14 @@ import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
 
 ApplicationWindow {
+    id: window
     visible: true
     width: 740
     height: 740
     title: qsTr("eClick server")
     property string version: "0.2.0-beta"
+    property string startCommand: "" // system command run on start for example send OSC message to Reaper
+    property string stopCommand: "" // set in config file, so far no dialog for that...
 
     menuBar: MenuBar {
         Menu {
@@ -51,6 +54,8 @@ ApplicationWindow {
         property alias csoundOptions: csoundOptions.text
         property alias sfdir: sfdirField.text
         property alias volume: volumeSlider.value
+        property alias startCommand: window.startCommand
+        property alias stopCommand: window.stopCommand
     }
 
     Connections {
@@ -358,13 +363,23 @@ ApplicationWindow {
                     onClicked: {
                         cs.start(scoField.text, startBarSpinBox.value)
                         cs.setChannel("volume", volumeSlider.value)
+                        if (startCommand.length > 0) {
+                            console.log("executing command: ", startCommand)
+                            wsServer.runSystemCommand(startCommand)
+                        }
                     }
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("&Stop")
-                    onClicked: cs.stop()
+                    onClicked: {
+                        cs.stop()
+                        if (stopCommand.length > 0) {
+                            console.log("executing command: ", stopCommand)
+                            wsServer.runSystemCommand(stopCommand)
+                        }
+                    }
                 }
 
                 Label {

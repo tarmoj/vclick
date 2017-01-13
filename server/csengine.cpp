@@ -140,7 +140,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	QString sfdir = settings.value("sfdir").toString(); // proabably converting to String and stripping file:/// makes much more sense...
 
 
-	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty()) { // set SFDIR chosen in UI
+	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty() && !csoundOptions.contains("null")) { // set SFDIR chosen in UI
 		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
 		sfdir=sfdir.replace("file:///", "/");
 		qDebug()<<"Set SFDIR to: " << sfdir;

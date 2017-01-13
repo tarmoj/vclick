@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 	//bind object before load
-	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "csound"
+	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "wsSerrver"
 	engine.rootContext()->setContextProperty("cs", csound);
 
 #ifdef Q_OS_LINUX

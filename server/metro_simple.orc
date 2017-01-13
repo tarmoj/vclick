@@ -138,9 +138,10 @@ instr 2, bar ; example i 2 <start> <dur> <beats_in_bar> <fraction of full note (
 			endif
 		endif
 		kBeat += 1
-		if (kBeat>iBeats) then ; Is is sometimes necessary to play 4/8 but start counting from say 3?
-			turnoff ; all beats have been played
-		endif
+; uncommented since eats last subidivision up:		
+;		if (kBeat>iBeats) then ; Is is sometimes necessary to play 4/8 but start counting from say 3?
+;			turnoff ; all beats have been played
+;		endif
 	endif	
 	
 	if (kSubdiv_trig==1 && kBeat_trig==0) then ; only offbeats

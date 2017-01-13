@@ -54,6 +54,7 @@ public:
 	Q_INVOKABLE void setOscAddresses(QString addresses);
 	Q_INVOKABLE QString getOscAddresses();
 	Q_INVOKABLE QString getLocalAddress();
+	Q_INVOKABLE void runSystemCommand(QString command);
 
 Q_SIGNALS:
     void closed();
