@@ -143,6 +143,28 @@ ApplicationWindow {
         }
         anchors.fill: parent
 
+        //Shortcuts
+        focus: true
+        Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
+            if (event.key == Qt.Key_F1) {
+                var name = scoField.text // one of the tanja?.sco files must be loaded
+                scoField.text=name.replace("tanja2.sco", "tanja1.sco")
+                cs.start(scoField.text, startBarSpinBox.value)
+                console.log("Starting: ", name)
+
+            }
+            if (event.key == Qt.Key_F2) {
+                var name = scoField.text // one of the tanja?.sco files must be loaded
+                scoField.text=name.replace("tanja1.sco", "tanja2.sco")
+                cs.start(scoField.text, startBarSpinBox.value)
+                console.log("Starting: ", name)
+            }
+             if (event.key == Qt.Key_F10)
+                 cs.stop()
+
+
+        }
+
         Column {
             id: mainColumn
             spacing: 10

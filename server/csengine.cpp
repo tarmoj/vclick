@@ -29,6 +29,7 @@
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
 	stopNow = false;
+	isRunning = false;
 	cs = NULL;
 	m_orc=":/csound/metro_simple.orc";
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
@@ -120,7 +121,22 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 }
 
 void CsEngine::play(QString scoFile, int startBar) {
-	cs = new Csound();
+//	if (isRunning && cs) {
+//		qDebug()<<"Stopping csound";
+//		cs->Stop();
+//		cs->DestroyMessageBuffer();
+//		delete cs;
+//		cs = NULL;
+//		stopNow = false;
+//		isRunning = false;
+
+
+////		while (isRunning) // VERY BAD CODE - my block here... but should work...
+////			QCoreApplication::processEvents();
+
+//		qDebug()<<"Stopped running Csound instance. Now ready to start.";
+//	}
+	cs = new Csound(); // must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
 	//TODO: options from settings
@@ -168,7 +184,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	}
 
     if (!result ) {
-
+		isRunning = true;
 		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
 		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
@@ -224,7 +240,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	delete cs;
 	cs = NULL;
 	stopNow = false;
-
+	isRunning = false;
 }
 
 void CsEngine::stop() {

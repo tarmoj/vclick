@@ -57,7 +57,7 @@ public slots:
 private:
 	Csound * cs;
 	QString m_sco, m_orc, m_options; // resolve later
-	bool stopNow;
+	bool stopNow, isRunning;
 	QString SFDIR;
 };
 
