@@ -354,7 +354,7 @@ ApplicationWindow {
 
                 Button {
                     id: testScoreButton
-                    text: qsTr("&Test")
+                    text: qsTr("T&est-score")
                     onClicked: scoField.text=":/csound/test.sco"
                 }
             }
@@ -381,7 +381,7 @@ ApplicationWindow {
 
                 Button {
                     id: startButton
-                    text: qsTr("Star&t")
+                    text: qsTr("Sta&rt")
                     onClicked: {
                         cs.start(scoField.text, startBarSpinBox.value)
                         cs.setChannel("volume", volumeSlider.value)

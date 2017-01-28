@@ -50,6 +50,12 @@ CsEngine::~CsEngine()
 
 void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
+	if (isRunning) {
+		stop(); // or is it possible to stop, wait while done and then continue?
+		qDebug()<<"eClick is running. Stopping now. Please press Start again!";
+		sleep(1);
+		//return;
+	}
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
 	//QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
@@ -121,21 +127,6 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 }
 
 void CsEngine::play(QString scoFile, int startBar) {
-//	if (isRunning && cs) {
-//		qDebug()<<"Stopping csound";
-//		cs->Stop();
-//		cs->DestroyMessageBuffer();
-//		delete cs;
-//		cs = NULL;
-//		stopNow = false;
-//		isRunning = false;
-
-
-////		while (isRunning) // VERY BAD CODE - my block here... but should work...
-////			QCoreApplication::processEvents();
-
-//		qDebug()<<"Stopped running Csound instance. Now ready to start.";
-//	}
 	cs = new Csound(); // must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
 	cs->CreateMessageBuffer(1); // also to stdout for debugging
@@ -244,7 +235,10 @@ void CsEngine::play(QString scoFile, int startBar) {
 }
 
 void CsEngine::stop() {
-	stopNow = true;
+	if (isRunning)
+		stopNow = true;
+	else
+		qDebug()<<"eClick server was not running!";
 }
 
 void CsEngine::setChannel(QString channel, double value) {
