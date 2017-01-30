@@ -327,8 +327,8 @@ ApplicationWindow {
 
         RowLayout {
             id: beatRow
-            anchors.top:tempoLabel.bottom
-            anchors.topMargin: 5
+            anchors.top: soundCheckBox.bottom //tempoLabel.bottom
+            //anchors.topMargin: 5
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
@@ -358,7 +358,7 @@ ApplicationWindow {
             Item {
                 id:rightRectangle
                 //color: "pink"
-                height: parent.height
+                height:parent.height
                 width: parent.width*0.47
                 anchors.right: parent.right
 
@@ -371,7 +371,10 @@ ApplicationWindow {
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: barLabel.paintedHeight * 0.75 // quite good approximization TEST on mobile devices! -  THIS IS NOT ADEQUATE, can give different results...
+                    //font.pixelSize: barLabel.paintedHeight * 0.75 // quite good approximization TEST on mobile devices! -  THIS IS NOT ADEQUATE, can give different results...
+                    minimumPointSize: 10
+                    font.pointSize: 200
+                    fontSizeMode: Text.Fit // on some screens this makes beatnumber bigger, since bar may have easily 3 digits, but that is OK
                 }
             }
 

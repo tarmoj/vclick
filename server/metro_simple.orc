@@ -169,7 +169,7 @@ instr 18, countdown ; count-down i 18 0 <dur> <klicks> <channels>  -  given amou
 
 	kBeat_trig metro iMetro_rate ; implies that tempo is constant
 	if (kBeat_trig==1) then	
-		gkBeat = iKlicks - kKlick
+		gkBeat = -(iKlicks - kKlick) ; show as negative numbers -4, -3, -2, -1
 		kKlick += 1
 		if (kKlick==iKlicks) then
 			gkGreenBlink = 1/(gkTempo/60) ; last click blue
