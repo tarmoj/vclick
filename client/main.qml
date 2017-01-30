@@ -327,7 +327,7 @@ ApplicationWindow {
 
         RowLayout {
             id: beatRow
-            anchors.top: soundCheckBox.bottom //tempoLabel.bottom
+            anchors.top: (mainRect.width>mainRect.height) ? tempoLabel.bottom : soundCheckBox.bottom // not to squeeze too much on horizontal layouts
             //anchors.topMargin: 5
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
