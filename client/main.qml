@@ -37,13 +37,12 @@ ApplicationWindow {
     property string version: "0.2.0-beta"
 
 
-
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Menu")
             MenuItem {
                 text: qsTr("Show/Hide &server address")
-                onTriggered: serverRow.visible = !serverRow.visible // messageDialog.show(qsTr("Open action triggered"));
+                onTriggered: serverRow.visible = !serverRow.visible
             }
             MenuItem {
                 text: qsTr("&Restart OSC listener")
@@ -51,7 +50,11 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("&Toggle test leds")
-                onTriggered: testRow.visible = !testRow.visible // messageDialog.show(qsTr("Open action triggered"));
+                onTriggered: testRow.visible = !testRow.visible
+            }
+            MenuItem {
+                text: qsTr("Toggle &delay row")
+                onTriggered: delayRow.visible = !delayRow.visible
             }
             MenuItem {
                 text: qsTr("&About")
@@ -149,6 +152,7 @@ ApplicationWindow {
         active: false
     }
 
+
     Connections {
         target: oscServer
 
@@ -213,6 +217,7 @@ ApplicationWindow {
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
         property alias serverRowVisible: serverRow.visible
+        property alias delay: delaySpinBox.value
     }
 
 
@@ -256,6 +261,24 @@ ApplicationWindow {
             id: soundCheckBox
             checked: false
             text: qsTr("Sound")
+        }
+
+        Row {
+            x:5
+            id: delayRow
+            anchors.top: soundCheckBox.bottom
+            visible: false
+            spacing: 3
+            Label {text: qsTr("Delay (ms): ") }
+            SpinBox {
+                id: delaySpinBox
+                minimumValue: 0
+                maximumValue: 1000
+                stepSize: 1
+                onValueChanged: oscServer.setDelay(value)
+            }
+            Button {text: qsTr("Reset"); onClicked: delaySpinBox.value = 0;  }
+            Button {text: qsTr("Hide"); onClicked: delayRow.visible = false;  }
         }
 
 
@@ -365,7 +388,7 @@ ApplicationWindow {
                 Label {
                     id: beatLabel
                     property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen"]
-                    color: colors[Math.min(parseInt(text),6)] // different color for every beat. text must contain the beatnumber
+                    color: colors[Math.abs(Math.min(parseInt(text)),6)] // different color for every beat. text must contain the beatnumber
                     text: "0"
                     font.bold: true
                     anchors.fill: parent

@@ -25,7 +25,7 @@
 OscHandler::OscHandler(quint16 port, QObject *parent) : QObject(parent)
 {
 	m_server = new QOscServer(port, parent); //TODO: osc port now hardcoded, put into config
-
+	m_delay = 500;
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 }
 
@@ -63,6 +63,12 @@ void OscHandler::restart() // probably does not work
 
 }
 
+void OscHandler::setDelay(int delay)
+{
+	m_delay = delay;
+	qDebug()<<"Setting delay to: "<<delay<<" ms";
+}
+
 void OscHandler::dataIn(QString path, QVariant data)
 {
 	int type = data.type();
@@ -70,42 +76,61 @@ void OscHandler::dataIn(QString path, QVariant data)
 	QList <QVariant> args = data.toList();
 	if (path.startsWith("/metronome/beatbar")) {
 		if (args.length()>=2) {
-			int bar = args[0].toInt();
-			int beat = args[1].toInt();
-			//qDebug()<<"BEATBAR"<<bar<<beat;
-			emit newBeatBar(bar, beat);
+			m_bar = args[0].toInt();
+			m_beat = args[1].toInt();
+			QTimer::singleShot(m_delay, this, SLOT(sendBeatBar()));
 		}
 	}
 
 	if (path.startsWith("/metronome/led")) {
 		if (args.length()>=2) {
-			int led = args[0].toInt();
-			float duration = args[1].toFloat();
+			m_led = args[0].toInt();
+			m_ledDuration = args[1].toFloat();
 			//qDebug()<<"LED"<<led<<duration;
-			emit newLed(led, duration);
+			QTimer::singleShot(m_delay, this, SLOT(sendLed()));
 		}
 	}
 
 	if (path.startsWith("/metronome/tempo")) {
 		if (data.type()==QMetaType::Float){
-			float tempo = data.toFloat();
+			m_tempo = data.toFloat();
 			//qDebug()<<"TEMPO"<<tempo;
-			emit newTempo(tempo);
+			QTimer::singleShot(m_delay, this, SLOT(sendTempo()));
 		}
 	}
 
 	if (path.startsWith("/metronome/notification")) {
 		if (args.length()>=2) {
-			QString message = args[0].toString(); // NB! in some reason punctuation marks like . and ! mess up the messages! better conversion!!! WHY? sometimes duration was 0 if there was . or ! in the message....
-			float duration = args[1].toFloat();
-			emit newMessage(message, duration);
+			m_message = args[0].toString();
+			m_messageDuration = args[1].toFloat();
+			QTimer::singleShot(m_delay, this, SLOT(sendNotification()));
 		} else if (data.type()==QMetaType::QString){
-			QString message = data.toString();
-			//qDebug()<<"MESSAGE: "<<message;
-			emit newMessage(message, 4.0);
+			m_message = data.toString();
+			m_messageDuration = 4.0;
+			QTimer::singleShot(m_delay, this, SLOT(sendNotification()));
 		}
 	}
 
 
+}
+
+void OscHandler::sendBeatBar()
+{
+	emit newBeatBar(m_bar, m_beat);
+}
+
+void OscHandler::sendLed()
+{
+	emit newLed(m_led, m_ledDuration);
+}
+
+void OscHandler::sendTempo()
+{
+	emit newTempo(m_tempo);
+}
+
+void OscHandler::sendNotification()
+{
+	emit newMessage(m_message, m_messageDuration);
 }
 

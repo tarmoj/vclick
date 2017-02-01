@@ -22,6 +22,7 @@
 #define OSCHANDLER_H
 
 #include "qosc/qoscserver.h"
+#include <QTimer>
 
 
 class OscHandler : public QObject
@@ -32,6 +33,7 @@ public:
 	~OscHandler();
 	Q_INVOKABLE QString getLocalAddress();
 	Q_INVOKABLE void restart();
+	Q_INVOKABLE void setDelay(int delay);
 
 signals:
 	void newBeatBar(int bar, int beat);
@@ -45,7 +47,17 @@ public slots:
 
 private:
 	QOscServer * m_server;
+	int m_bar, m_beat, m_led, m_delay;
+	double m_ledDuration;
+	float m_tempo, m_messageDuration;
+	QString m_message;
 
+
+private slots:
+	void sendBeatBar(); // to use timers to be able to set delays to sync with	other timers
+	void sendLed();
+	void sendTempo();
+	void sendNotification();
 };
 
 #endif // OSCHANDLER_H
