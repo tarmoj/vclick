@@ -34,7 +34,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
-    property string version: "0.2.0-beta"
+    property string version: "0.2.0"
 
 
     menuBar: MenuBar {
@@ -281,7 +281,7 @@ ApplicationWindow {
             height: soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
             visible: false
-            z:3
+            z:2
             RowLayout {
                 x:5
                 id: delayRow
@@ -382,6 +382,7 @@ ApplicationWindow {
 
         RowLayout {
             id: beatRow
+            z:3
             anchors.top: (mainRect.width>mainRect.height) ? tempoLabel.bottom : soundCheckBox.bottom // not to squeeze too much on horizontal layouts
             //anchors.topMargin: 5
             anchors.bottom: ledRow.top
