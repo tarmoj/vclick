@@ -49,21 +49,31 @@ ApplicationWindow {
                 onTriggered: oscServer.restart()
             }
             MenuItem {
+                text: qsTr("&Update IP address")
+                onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
+            }
+            MenuItem {
                 text: qsTr("&Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible
             }
             MenuItem {
                 text: qsTr("Toggle &delay row")
-                onTriggered: delayRow.visible = !delayRow.visible
+                onTriggered: delayRect.visible = !delayRect.visible
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK"));
+                onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("E&xit")
                 onTriggered: Qt.quit();
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (delaySpinBox.value>0) {
+            messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
         }
     }
 
@@ -263,22 +273,44 @@ ApplicationWindow {
             text: qsTr("Sound")
         }
 
-        Row {
-            x:5
-            id: delayRow
-            anchors.top: soundCheckBox.bottom
+
+
+        Rectangle {
+            id: delayRect
+            width: parent.width
+            height: soundCheckBox.y+soundCheckBox.height
+            color: "lightgrey"
             visible: false
-            spacing: 3
-            Label {text: qsTr("Delay (ms): ") }
-            SpinBox {
-                id: delaySpinBox
-                minimumValue: 0
-                maximumValue: 1000
-                stepSize: 1
-                onValueChanged: oscServer.setDelay(value)
+            z:3
+            RowLayout {
+                x:5
+                id: delayRow
+                y:5
+                width: (mainRect.width>mainRect.height) ? parent.width/2 : parent.width-5
+                visible: true
+                spacing: 3
+                Label {text: qsTr("Delay (ms): ") }
+                SpinBox {
+                    id: delaySpinBox
+                    minimumValue: 0
+                    maximumValue: 1000
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: 200
+                    Layout.preferredWidth: 90
+                    Layout.minimumWidth: 10
+                    stepSize: 1
+                    onValueChanged: oscServer.setDelay(value)
+                }
+                Button {
+                    //                Layout.fillWidth: true
+                    //                Layout.maximumWidth: 300
+                    //                Layout.minimumWidth: 10
+                    //                Layout.preferredWidth: 100
+                    text: qsTr("Reset");
+                    onClicked: delaySpinBox.value = 0;
+                }
+                Button {text: qsTr("Hide"); onClicked: delayRect.visible = false;  }
             }
-            Button {text: qsTr("Reset"); onClicked: delaySpinBox.value = 0;  }
-            Button {text: qsTr("Hide"); onClicked: delayRow.visible = false;  }
         }
 
 
