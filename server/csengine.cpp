@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QTemporaryFile>
 #include <QSettings>
+#include <QThread>
 
 CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
@@ -53,7 +54,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 	if (isRunning) {
 		stop(); // or is it possible to stop, wait while done and then continue?
 		qDebug()<<"eClick is running. Stopping now. Please press Start again!";
-		sleep(1);
+        QThread::sleep(1);
 		//return;
 	}
 	// check for starting bar number and construct a temporary score with necessary changes:
@@ -129,7 +130,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 void CsEngine::play(QString scoFile, int startBar) {
 	cs = new Csound(); // must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
-	cs->CreateMessageBuffer(1); // also to stdout for debugging
+    cs->CreateMessageBuffer(0); // also to stdout for debugging
 	//TODO: options from settings
 	QSettings settings("eclick","server");
 	QString csoundOptions= settings.value("csoundOptions").toString().simplified() ;
@@ -166,8 +167,8 @@ void CsEngine::play(QString scoFile, int startBar) {
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
 
 	while (cs->GetMessageCnt()>0) { // HOW to get error message here?
-		message += QString(cs->GetFirstMessage()) + "\n";
-		//qDebug()<<"Csound MESSAGE: " << message;
+        message += QString(cs->GetFirstMessage()).simplified() + "\n";
+        qDebug()<<"Csound MESSAGE: " << message;
 		cs->PopFirstMessage();
 	}
 	if (!message.isEmpty()) {
@@ -213,8 +214,8 @@ void CsEngine::play(QString scoFile, int startBar) {
 			}
 
 			if (cs->GetMessageCnt()>0) {
-				message = QString(cs->GetFirstMessage());
-				//qDebug()<<"Csound MESSAGE: " << message;
+                message = QString(cs->GetFirstMessage());
+                //qDebug()<<"Csound MESSAGE: " << message;
 				emit csoundMessage(message.trimmed());
 				cs->PopFirstMessage();
 			}
