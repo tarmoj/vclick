@@ -25,7 +25,7 @@
 OscHandler::OscHandler(quint16 port, QObject *parent) : QObject(parent)
 {
 	m_server = new QOscServer(port, parent); //TODO: osc port now hardcoded, put into config
-	m_delay = 500;
+    m_delay = 0;
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 }
 

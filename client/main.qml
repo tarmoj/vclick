@@ -292,6 +292,7 @@ ApplicationWindow {
                 Label {text: qsTr("Delay (ms): ") }
                 SpinBox {
                     id: delaySpinBox
+                    value: 0
                     minimumValue: 0
                     maximumValue: 1000
                     Layout.fillWidth: true
