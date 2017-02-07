@@ -113,7 +113,8 @@ ApplicationWindow {
     FileDialog {
         id: sfdirDialog
         title: qsTr("Please choose folder of playbacks soundfiles")
-        folder: sfdirField.text
+
+        folder: shortcuts.documents //sfdirField.text
         selectFolder: true
 
         onAccepted: {
@@ -150,7 +151,7 @@ ApplicationWindow {
         //Shortcuts
         focus: true
         Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
-            if (event.key == Qt.Key_F1) {
+            if (event.key == Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
                 var name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja2.sco", "tanja1.sco")
                 cs.start(scoField.text, startBarSpinBox.value)
