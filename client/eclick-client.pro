@@ -43,29 +43,29 @@ HEADERS += \
 	qosc/qoscserver.h \
 	qosc/qosctypes.h
 
-android {
-	sounds.path = /assets
-	sounds.files = sounds/*.wav
-	INSTALLS += sounds
-} else {
-# linux:	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD/$$DESTDIR # to copy sounds to the destination dir
-# win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/sounds/*)" "$$shell_path($$OUT_PWD/release/bin/sounds)"
+#android {
+#	sounds.path = /assets
+#	sounds.files = sounds/*.wav
+#	INSTALLS += sounds
+#} else {
+## linux:	QMAKE_POST_LINK += cp -rf $$PWD/sounds $$OUT_PWD/$$DESTDIR # to copy sounds to the destination dir
+#win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/sounds/*)" "$$shell_path($$OUT_PWD/release/bin/sounds)"
 
-# ei tööta veel... use $$shell_path() http://stackoverflow.com/questions/14938577/convert-unix-path-to-windows-in-qmake-script
-macx {
-    sounds.path = Contents/Resources
-    sounds.files = sounds
-    QMAKE_BUNDLE_DATA += sounds
+## ei tööta veel... use $$shell_path() http://stackoverflow.com/questions/14938577/convert-unix-path-to-windows-in-qmake-script
+#macx {
+#    sounds.path = Contents/Resources
+#    sounds.files = sounds
+#    QMAKE_BUNDLE_DATA += sounds
 
-    }
-}
+#    }
+#}
 
 ios {
     QMAKE_INFO_PLIST = ios/Info.plist
     ios_icon.files = $$files($$PWD/ios/icons/*.png)
     QMAKE_BUNDLE_DATA += ios_icon
-    sounds.files = sounds
-    QMAKE_BUNDLE_DATA += sounds
+    #sounds.files = sounds
+    #QMAKE_BUNDLE_DATA += sounds
     app_launch_images.files = $$PWD/ios/Launch.storyboard #$$files($$PWD/ios/launchimages/LaunchImage*.png) #$$PWD/ios/Launch.xib
     QMAKE_BUNDLE_DATA += app_launch_images
 
