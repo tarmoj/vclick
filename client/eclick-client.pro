@@ -62,7 +62,8 @@ HEADERS += \
 
 ios {
     QMAKE_INFO_PLIST = ios/Info.plist
-    ios_icon.files = $$files($$PWD/ios/icons/*.png)
+    ios_icon.files = $$files($$PWD/ios/icons/AppIcon.appiconset/*.png)
+    ios_icon.files += $$files($$PWD/ios/icons/Itunes*.png)
     QMAKE_BUNDLE_DATA += ios_icon
     #sounds.files = sounds
     #QMAKE_BUNDLE_DATA += sounds
