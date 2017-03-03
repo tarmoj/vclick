@@ -168,7 +168,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 
 	while (cs->GetMessageCnt()>0) { // HOW to get error message here?
         message += QString(cs->GetFirstMessage()).simplified() + "\n";
-        qDebug()<<"Csound MESSAGE: " << message;
+		//qDebug()<<"Csound MESSAGE: " << message;
 		cs->PopFirstMessage();
 	}
 	if (!message.isEmpty()) {

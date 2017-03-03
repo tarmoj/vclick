@@ -131,7 +131,6 @@ ApplicationWindow {
 
 
 
-
     Rectangle {
         id: mainRect
         color: "#3e5501"
@@ -387,9 +386,18 @@ ApplicationWindow {
                 Button {
                     id: startButton
                     text: qsTr("Sta&rt")
+
+                    Timer {
+                        id: setVolumeTimer
+                        repeat: false
+                        interval: 500
+                        onTriggered: cs.setChannel("volume", volumeSlider.value)
+                    }
+
                     onClicked: {
                         cs.start(scoField.text, startBarSpinBox.value)
-                        cs.setChannel("volume", volumeSlider.value)
+                        // set volume somewhat later when Csound will be loaded
+                        setVolumeTimer.start()
                         if (startCommand.length > 0) {
                             console.log("executing command: ", startCommand)
                             wsServer.runSystemCommand(startCommand)
