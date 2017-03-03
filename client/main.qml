@@ -73,7 +73,11 @@ ApplicationWindow {
 
     Component.onCompleted: {
         if (delaySpinBox.value>0) {
-            messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
+            if (Qt.platform.os === "ios") {
+                notification(qsTr("Delay is not 0!"),5)
+            } else {
+                messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
+            }
         }
     }
 
@@ -639,6 +643,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: messageDialog
+        //TODO: on iOs "OK" is not shown and dialog cannot be closed. Perhaps fixed in Qt 5.8
 
         function show(caption) {
             messageDialog.text = caption;
