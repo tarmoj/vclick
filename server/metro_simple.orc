@@ -221,13 +221,14 @@ instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Fil
 	else
 		aL,aR soundin Sfilename, iskiptime
 	endif
-	aenv linen gkVolume,0.1,p3,0.1
+	aenv linen gkVolume,0.01,p3,0.01
 	outs aL*aenv,aR*aenv 
 endin
 
 ;schedule "test",0,-1
 instr 999, test
- 	printf "Bar: %d\n", changed(gkBar), gkBar
+	;printk2 gkVolume
+	printf "Bar: %d\n", changed(gkBar), gkBar
  	printf "Beat: %d\n", changed(gkBeat), gkBeat
 ; 	printf "Tempo: %.3f\n", changed(gkTempo), gkTempo
 ; 	
