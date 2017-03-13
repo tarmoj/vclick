@@ -100,7 +100,7 @@ void WsServer::processTextMessage(QString message)
 		QString senderUrl = pClient->peerAddress().toString();
 		qDebug()<<"Hello from: "<<senderUrl;
 		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
-			QOscClient * target = new QOscClient(pClient->peerAddress(),8008,this); // what if localhost, does it work then?
+            QOscClient * target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
 			if (target) {
 				if (!oscAddresses.contains(senderUrl)) {
 					oscAddresses<<senderUrl;
@@ -312,7 +312,7 @@ void WsServer::createOscClientsList(QString addresses)
 		address = address.simplified();
 		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
 		if (!address.isEmpty()) { // for any case
-			QOscClient * client = new QOscClient(QHostAddress(address), 8008, this);
+            QOscClient * client = new QOscClient(QHostAddress(address), OSCPORT, this);
 			if (client) {
 				m_oscClients<<client; // muuda target oscClient vms
 				oscAddresses<<address;

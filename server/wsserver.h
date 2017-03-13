@@ -13,7 +13,6 @@
 #include <QtMultimedia/QSoundEffect>
 
 
-//#include <lo/lo.h> // for osc // perhaps native OSC class from GoOSC
 /*
 	Copyright (C) 2016 Tarmo Johannes
 	trmjhnns@gmail.com
@@ -39,6 +38,8 @@
 QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
 
+
+#define OSCPORT 87878
 
 class WsServer : public QObject
 {
