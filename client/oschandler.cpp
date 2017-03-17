@@ -52,13 +52,13 @@ QString OscHandler::getLocalAddress()
 	return address;
 }
 
-void OscHandler::restart() // probably does not work
+void OscHandler::restart()
 {
 	qDebug()<<"Stopping";
 	delete m_server;
-	QThread::msleep(1000);
-	m_server = new QOscServer(8008, 0); //TODO: osc port now hardcoded, put into config
-	qDebug()<<"Created again";
+    QThread::msleep(500);
+    m_server = new QOscServer(OSCPORT, 0); //TODO: osc port now hardcoded, put into config
+    qDebug()<<"Created again";
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 
 }

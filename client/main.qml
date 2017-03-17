@@ -166,6 +166,24 @@ ApplicationWindow {
         active: false
     }
 
+    Connections { // To see, if OSC server can be restarted on reopen
+        target: Qt.application
+        onStateChanged: {
+            console.log("Application state: ", Qt.application.state)
+            if(Qt.application.state === Qt.ApplicationActive) {
+                console.log("Active")
+            }
+            if(Qt.application.state === Qt.ApplicationSuspended) {
+                console.log("Suspended")
+            }
+            if(Qt.application.state === Qt.ApplicationHidden) {
+                console.log("Hidden")
+            }
+            if(Qt.application.state === Qt.ApplicationInactive) {
+                console.log("Inactive")
+            }
+        }
+    }
 
     Connections {
         target: oscServer

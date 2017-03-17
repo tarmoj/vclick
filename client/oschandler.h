@@ -24,6 +24,7 @@
 #include "qosc/qoscserver.h"
 #include <QTimer>
 
+#define OSCPORT 87878 // NB! make sure that this is the same as in main.cpp! TODO: use a setting!
 
 class OscHandler : public QObject
 {
