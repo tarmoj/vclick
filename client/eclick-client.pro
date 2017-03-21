@@ -1,6 +1,7 @@
 TEMPLATE = app
 
 QT += qml quick widgets websockets multimedia
+android: QT += androidextras
 
 SOURCES += main.cpp \
     oschandler.cpp \

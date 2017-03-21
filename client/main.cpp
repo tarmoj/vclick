@@ -32,6 +32,12 @@
 
 #define OSCPORT 87878
 
+#ifdef Q_OS_ANDROID
+	#include <QtAndroid>
+	#include <QAndroidJniEnvironment>
+#endif
+
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -39,9 +45,24 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MAC
     app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 #endif
+
 #ifdef Q_OS_IOS
     IosScreen screen;
     screen.setTimerDisabled();
+#endif
+
+#ifdef Q_OS_ANDROID
+	//keep screen on:
+	QAndroidJniObject activity = QtAndroid::androidActivity();
+	if (activity.isValid()) {
+		QAndroidJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
+
+		if (window.isValid()) {
+			const int FLAG_KEEP_SCREEN_ON = 128;
+			window.callMethod<void>("addFlags", "(I)V", FLAG_KEEP_SCREEN_ON);
+		}
+		QAndroidJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
+	}
 #endif
     OscHandler oscServer(OSCPORT);
 	//SettingsHandler settings;
