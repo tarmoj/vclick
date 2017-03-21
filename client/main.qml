@@ -169,9 +169,11 @@ ApplicationWindow {
     Connections { // To see, if OSC server can be restarted on reopen
         target: Qt.application
         onStateChanged: {
-            console.log("Application state: ", Qt.application.state)
             if(Qt.application.state === Qt.ApplicationActive) {
                 console.log("Active")
+                if (Qt.platform.os === "ios") {
+                        oscServer.restart() ;// to make sure it is running
+                }
             }
             if(Qt.application.state === Qt.ApplicationSuspended) {
                 console.log("Suspended")
@@ -360,7 +362,7 @@ ApplicationWindow {
                 Layout.minimumWidth: 80
 
 
-                text: "10.42.0.1"
+                text: "192.168.1.199"
             }
 
             Button {

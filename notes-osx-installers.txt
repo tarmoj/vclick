@@ -14,6 +14,9 @@ cd /Users/xcodeclub/Documents/src/eclick/build-eclick-server-Desktop_Qt_5_6_0_cl
 
 cd /Users/xcodeclub/Documents/src/eclick/build-eclick-server-Desktop_Qt_5_8_0_clang_64bit-Release/bin 
 
+/Users/xcodeclub/Qt/5.8/clang_64/bin/macdeployqt eclick-server.app -qmldir=../../server
+
+
 Sound 6.07
 copy Csound Framework:
 

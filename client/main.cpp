@@ -26,6 +26,10 @@
 #include <QIcon>
 #include <QFont>
 
+#ifdef Q_OS_IOS
+    #include "ios-screen.h"
+#endif
+
 #define OSCPORT 87878
 
 int main(int argc, char *argv[])
@@ -34,6 +38,10 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_MAC
     app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
+#endif
+#ifdef Q_OS_IOS
+    IosScreen screen;
+    screen.setTimerDisabled();
 #endif
     OscHandler oscServer(OSCPORT);
 	//SettingsHandler settings;

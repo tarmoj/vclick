@@ -6,7 +6,7 @@ SOURCES += main.cpp \
     oschandler.cpp \
 	qosc/qoscclient.cpp \
 	qosc/qoscserver.cpp \
-	qosc/qosctypes.cpp
+	qosc/qosctypes.cpp \
 
 RESOURCES += qml.qrc \
     eclick-client.qrc
@@ -14,6 +14,13 @@ RESOURCES += qml.qrc \
 macx: ICON = eclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
 
+ios {
+HEADERS += ios-screen.h
+OBJECTIVE_SOURCES += \
+    ios-screen.mm
+LIBS += -framework UIKit # maybe not necessary, maybe done automatically by Qt...
+
+}
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -41,7 +48,8 @@ HEADERS += \
 	  oschandler.h \
 	qosc/qoscclient.h \
 	qosc/qoscserver.h \
-	qosc/qosctypes.h
+	qosc/qosctypes.h \
+
 
 #android {
 #	sounds.path = /assets
