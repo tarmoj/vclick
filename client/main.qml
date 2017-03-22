@@ -130,7 +130,8 @@ ApplicationWindow {
 
     WebSocket {
         id: socket
-        url: "ws://"+serverAddress.text+":6006/ws"//"ws://192.168.1.199:6006/ws"
+        property string serverIP: "192.168.1.199"
+        url: "ws://"+serverIP+":6006/ws"//"ws://192.168.1.199:6006/ws"
 
         onTextMessageReceived: {
             //console.log("Received message: ",message);
@@ -138,31 +139,19 @@ ApplicationWindow {
         onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             //                             connectButton.enabled = true;
-                             //                             connectButton.text = qsTr("Hello, Server")
-                             //                             notification("Failed!", 1.0);
+                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
-                             //serverAddress.visible = false;
-                             //                             connectButton.text = qsTr("Connected")
-                             //                             connectButton.enabled = false;
-                             settings.serverIP= serverAddress.text//socket.url
+                             settings.serverIP= socket.serverIP //serverAddress.text//socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              socket.active = false; // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
-                             socket.active = false;
-                             //                             serverAddress.visible = true;
-                             //                             connectButton.enabled = true;
-                             //                             connectButton.text = qsTr("Say Hello")
+                             socket.active = false;                             
                          }
                          else if (socket.status == WebSocket.Connecting) {
                              console.log("Socket connecting")
-                             //                             connectButton.enabled = false;
-                             //                             connectButton.text = qsTr("Connecting")
                          }
-
-        //onActiveChanged: console.log("Socket active: ", active)
         active: false
     }
 
@@ -175,15 +164,15 @@ ApplicationWindow {
                         oscServer.restart() ;// to make sure it is running
                 }
             }
-            if(Qt.application.state === Qt.ApplicationSuspended) {
-                console.log("Suspended")
-            }
-            if(Qt.application.state === Qt.ApplicationHidden) {
-                console.log("Hidden")
-            }
-            if(Qt.application.state === Qt.ApplicationInactive) {
-                console.log("Inactive")
-            }
+//            if(Qt.application.state === Qt.ApplicationSuspended) {
+//                console.log("Suspended")
+//            }
+//            if(Qt.application.state === Qt.ApplicationHidden) {
+//                console.log("Hidden")
+//            }
+//            if(Qt.application.state === Qt.ApplicationInactive) {
+//                console.log("Inactive")
+//            }
         }
     }
 
@@ -369,11 +358,14 @@ ApplicationWindow {
                 id: connectButton
                 text: qsTr("Hello, Server")
                 onClicked: {
-                    console.log("Socket state, errorString: ", socket.status, socket.errorString)
+                    //console.log("Socket state, errorString: ", socket.status, socket.errorString)
                     if (!socket.active) {
-                        //socket.url = serverAddress.text
-                        socket.active = true
-                        console.log("Connecting to ",socket.url, socket.status)
+                        if (serverAddress.text==socket.serverIP) {
+                            socket.active = true
+                        } else {
+                            socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+                        }
+                        console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     }
                 }
             }
