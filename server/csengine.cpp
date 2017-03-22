@@ -150,7 +150,13 @@ void CsEngine::play(QString scoFile, int startBar) {
 
 	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty() && !csoundOptions.contains("null")) { // set SFDIR chosen in UI
 		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
-		sfdir=sfdir.replace("file:///", "/");
+
+        // for windows remove the first /
+#ifdef Q_OS_WIN
+        sfdir=sfdir.replace("file:///", ""); // remove also the first /
+#else
+        sfdir=sfdir.replace("file:///", "/");
+#endif
 		qDebug()<<"Set SFDIR to: " << sfdir;
 		QString option = "--env:SFDIR="+ sfdir; // TODO: does it work if path has spaces??
 		cs->SetOption(option.toLocal8Bit().data());
