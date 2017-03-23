@@ -139,7 +139,7 @@ ApplicationWindow {
         onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             notification("Failed!", 1.0);
+                             //notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              settings.serverIP= socket.serverIP //serverAddress.text//socket.url
