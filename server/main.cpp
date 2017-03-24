@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
 
 	app.setWindowIcon(QIcon(":/eclick-server.png"));
 
+#ifdef Q_OS_OSX
+    QString pluginsPath = QApplication::applicationDirPath() + "/../Frameworks/CsoundLib64.framework/Versions/6.0/Resources/Opcodes64";
+    qDebug()<<" Csound plugins in: " << pluginsPath;
+    setenv("OPCODE6DIR64", pluginsPath.toLocal8Bit() ,1);
+#endif
+
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
 #ifdef Q_OS_LINUX
