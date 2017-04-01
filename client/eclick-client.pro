@@ -16,6 +16,7 @@ macx: ICON = eclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
 
 ios {
+CONFIG -= bitcode
 HEADERS += ios-screen.h
 OBJECTIVE_SOURCES += \
     ios-screen.mm

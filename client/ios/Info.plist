@@ -2,99 +2,112 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDisplayName</key>
-	<string>eClick client</string>
-	<key>CFBundleExecutable</key>
-	<string>eclick-client</string>
-	<key>CFBundleGetInfoString</key>
-	<string>Created by Qt/QMake</string>
+        <key>CFBundleDisplayName</key>
+        <string>eClick client</string>
+        <key>CFBundleExecutable</key>
+        <string>eclick-client</string>
+        <key>CFBundleGetInfoString</key>
+        <string>Created by Qt/QMake</string>
+<!--Necessary for iOS 10-->
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Need microphone access for uploading videos</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Need camera access for uploading Images</string>
+        <key>NSLocationUsageDescription</key>
+        <string>Need location access for updating nearby friends</string>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app will use your location to show you cool stuff near you.</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>NeedLibrary access for uploading Images</string>
+
+        <key>ITSAppUsesNonExemptEncryption</key><false/>
+
         <key>CFBundleIcons</key>
         <dict>
-            <key>CFBundlePrimaryIcon</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                <string>Icon-App-20x20@1x.png</string>
-                <string>Icon-App-20x20@2x.png</string>
-                <string>Icon-App-20x20@3x.png</string>
-                <string>Icon-App-29x29@1x.png</string>
-                <string>Icon-App-29x29@2x.png</string>
-                <string>Icon-App-29x29@3x.png</string>
-                <string>Icon-App-40x40@1x.png</string>
-                <string>Icon-App-40x40@2x.png</string>
-                <string>Icon-App-40x40@3x.png</string>
-                <string>Icon-App-57x57@1x.png</string>
-                <string>Icon-App-57x57@2x.png</string>
-                <string>Icon-App-60x60@1x.png</string>
-                <string>Icon-App-60x60@2x.png</string>
-                <string>Icon-App-60x60@3x.png</string>
-                <string>Icon-App-72x72@1x.png</string>
-                <string>Icon-App-72x72@2x.png</string>
-                <string>Icon-App-76x76@1x.png</string>
-                <string>Icon-App-76x76@2x.png</string>
-                <string>Icon-App-76x76@3x.png</string>
-                <string>Icon-App-83.5x83.5@2x.png</string>
-                <string>Icon-Small-50x50@1x.png</string>
-                <string>Icon-Small-50x50@2x.png</string>
-                </array>
-            </dict>
+                <key>CFBundlePrimaryIcon</key>
+                <dict>
+                        <key>CFBundleIconFiles</key>
+                        <array>
+                                <string>Icon-App-20x20@1x.png</string>
+                                <string>Icon-App-20x20@2x.png</string>
+                                <string>Icon-App-20x20@3x.png</string>
+                                <string>Icon-App-29x29@1x.png</string>
+                                <string>Icon-App-29x29@2x.png</string>
+                                <string>Icon-App-29x29@3x.png</string>
+                                <string>Icon-App-40x40@1x.png</string>
+                                <string>Icon-App-40x40@2x.png</string>
+                                <string>Icon-App-40x40@3x.png</string>
+                                <string>Icon-App-57x57@1x.png</string>
+                                <string>Icon-App-57x57@2x.png</string>
+                                <string>Icon-App-60x60@1x.png</string>
+                                <string>Icon-App-60x60@2x.png</string>
+                                <string>Icon-App-60x60@3x.png</string>
+                                <string>Icon-App-72x72@1x.png</string>
+                                <string>Icon-App-72x72@2x.png</string>
+                                <string>Icon-App-76x76@1x.png</string>
+                                <string>Icon-App-76x76@2x.png</string>
+                                <string>Icon-App-76x76@3x.png</string>
+                                <string>Icon-App-83.5x83.5@2x.png</string>
+                                <string>Icon-Small-50x50@1x.png</string>
+                                <string>Icon-Small-50x50@2x.png</string>
+                        </array>
+                </dict>
         </dict>
         <key>CFBundleIcons~ipad</key>
         <dict>
-            <key>CFBundlePrimaryIcon</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                <string>Icon-App-20x20@1x.png</string>
-                <string>Icon-App-20x20@2x.png</string>
-                <string>Icon-App-20x20@3x.png</string>
-                <string>Icon-App-29x29@1x.png</string>
-                <string>Icon-App-29x29@2x.png</string>
-                <string>Icon-App-29x29@3x.png</string>
-                <string>Icon-App-40x40@1x.png</string>
-                <string>Icon-App-40x40@2x.png</string>
-                <string>Icon-App-40x40@3x.png</string>
-                <string>Icon-App-57x57@1x.png</string>
-                <string>Icon-App-57x57@2x.png</string>
-                <string>Icon-App-60x60@1x.png</string>
-                <string>Icon-App-60x60@2x.png</string>
-                <string>Icon-App-60x60@3x.png</string>
-                <string>Icon-App-72x72@1x.png</string>
-                <string>Icon-App-72x72@2x.png</string>
-                <string>Icon-App-76x76@1x.png</string>
-                <string>Icon-App-76x76@2x.png</string>
-                <string>Icon-App-76x76@3x.png</string>
-                <string>Icon-App-83.5x83.5@2x.png</string>
-                <string>Icon-Small-50x50@1x.png</string>
-                <string>Icon-Small-50x50@2x.png</string>
-                </array>
-            </dict>
+                <key>CFBundlePrimaryIcon</key>
+                <dict>
+                        <key>CFBundleIconFiles</key>
+                        <array>
+                                <string>Icon-App-20x20@1x.png</string>
+                                <string>Icon-App-20x20@2x.png</string>
+                                <string>Icon-App-20x20@3x.png</string>
+                                <string>Icon-App-29x29@1x.png</string>
+                                <string>Icon-App-29x29@2x.png</string>
+                                <string>Icon-App-29x29@3x.png</string>
+                                <string>Icon-App-40x40@1x.png</string>
+                                <string>Icon-App-40x40@2x.png</string>
+                                <string>Icon-App-40x40@3x.png</string>
+                                <string>Icon-App-57x57@1x.png</string>
+                                <string>Icon-App-57x57@2x.png</string>
+                                <string>Icon-App-60x60@1x.png</string>
+                                <string>Icon-App-60x60@2x.png</string>
+                                <string>Icon-App-60x60@3x.png</string>
+                                <string>Icon-App-72x72@1x.png</string>
+                                <string>Icon-App-72x72@2x.png</string>
+                                <string>Icon-App-76x76@1x.png</string>
+                                <string>Icon-App-76x76@2x.png</string>
+                                <string>Icon-App-76x76@3x.png</string>
+                                <string>Icon-App-83.5x83.5@2x.png</string>
+                                <string>Icon-Small-50x50@1x.png</string>
+                                <string>Icon-Small-50x50@2x.png</string>
+                        </array>
+                </dict>
         </dict>
-	<key>CFBundleIdentifier</key>
-	<string>client.eclick</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.2.0</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-        <string>2.1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NOTE</key>
-	<string>This file was generated by Qt/QMake.</string>
-	<key>UILaunchStoryboardName</key>
-	<string>Launch</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-
+        <key>CFBundleIdentifier</key>
+        <string>client.eclick</string>
+        <key>CFBundleName</key>
+        <string>eclick-client</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>0.2.0</string>
+        <key>CFBundleSignature</key>
+        <string>????</string>
+        <key>CFBundleVersion</key>
+        <string>2.3</string>
+        <key>LSRequiresIPhoneOS</key>
+        <true/>
+        <key>NOTE</key>
+        <string>This file was generated by Qt/QMake.</string>
+        <key>UILaunchStoryboardName</key>
+        <string>Launch</string>
+        <key>UISupportedInterfaceOrientations</key>
+        <array>
+                <string>UIInterfaceOrientationPortrait</string>
+                <string>UIInterfaceOrientationPortraitUpsideDown</string>
+                <string>UIInterfaceOrientationLandscapeLeft</string>
+                <string>UIInterfaceOrientationLandscapeRight</string>
+        </array>
 </dict>
 </plist>
