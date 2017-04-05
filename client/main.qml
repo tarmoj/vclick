@@ -19,7 +19,7 @@
     02111-1307 USA
 */
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 2.0
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
@@ -37,13 +37,25 @@ ApplicationWindow {
     property string version: "0.2.0"
 
 
-    menuBar: MenuBar {
+
         Menu {
+            id: mainMenu
             title: qsTr("&Menu")
-            MenuItem {
-                text: qsTr("Show/Hide &server address")
-                onTriggered: serverRow.visible = !serverRow.visible
+            CheckBox {
+                id: animationCheckBox
+                checked: true
+                text: qsTr("Animation")
             }
+
+            CheckBox {
+                id: soundCheckBox
+                checked: false
+                text: qsTr("Sound")
+            }
+//            MenuItem {
+//                text: qsTr("Show/Hide &server address")
+//                onTriggered: serverRow.visible = !serverRow.visible
+//            }
             MenuItem {
                 text: qsTr("&Restart OSC listener")
                 onTriggered: oscServer.restart()
@@ -69,7 +81,7 @@ ApplicationWindow {
                 onTriggered: Qt.quit();
             }
         }
-    }
+
 
     Component.onCompleted: {
         if (delaySpinBox.value>0) {
@@ -271,22 +283,35 @@ ApplicationWindow {
         }
         anchors.fill: parent
 
-        CheckBox {
-            x:5; y: 5
-            id: animationCheckBox
-            checked: true
-            text: qsTr("Animation")
+//        CheckBox {
+//            x:5; y: 5
+//            id: animationCheckBox
+//            checked: true
+//            text: qsTr("Animation")
+//        }
+
+//        CheckBox {
+//            x:5;
+//            anchors.top: animationCheckBox.bottom
+//            id: soundCheckBox
+//            checked: false
+//            text: qsTr("Sound")
+//        }
+
+        Image {
+
+            id: menuButton
+            y:5
+            anchors.right: mainRect.right
+            anchors.rightMargin: 5
+            source: "qrc:///config.png"
+            width: 32
+            height: 32
+            MouseArea {anchors.fill: parent; onClicked: mainMenu.open() }
+
+
+
         }
-
-        CheckBox {
-            x:5;
-            anchors.top: animationCheckBox.bottom
-            id: soundCheckBox
-            checked: false
-            text: qsTr("Sound")
-        }
-
-
 
         Rectangle {
             id: delayRect
@@ -306,8 +331,8 @@ ApplicationWindow {
                 SpinBox {
                     id: delaySpinBox
                     value: 0
-                    minimumValue: 0
-                    maximumValue: 1000
+                    //minimumValue: 0
+                    //maximumValue: 1000
                     Layout.fillWidth: true
                     Layout.maximumWidth: 200
                     Layout.preferredWidth: 90
@@ -400,7 +425,7 @@ ApplicationWindow {
         RowLayout {
             id: beatRow
             z:3
-            anchors.top: (mainRect.width>mainRect.height) ? tempoLabel.bottom : soundCheckBox.bottom // not to squeeze too much on horizontal layouts
+            anchors.top: tempoLabel.bottom
             //anchors.topMargin: 5
             anchors.bottom: ledRow.top
             anchors.bottomMargin: 5
