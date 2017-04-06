@@ -338,11 +338,12 @@ ApplicationWindow {
                     from: 0
                     to: 1000
                     Layout.fillWidth: true
-                    Layout.maximumWidth: 200
-                    Layout.preferredWidth: 90
-                    Layout.minimumWidth: 10
+                    Layout.maximumWidth: 400
+                    Layout.preferredWidth: 150
+                    Layout.minimumWidth: 100
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
+                    onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
                 Button {
                     //                Layout.fillWidth: true
