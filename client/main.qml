@@ -34,13 +34,14 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
-    property string version: "0.2.0"
+    property string version: "0.2.0-rc5"
 
 
 
         Menu {
             id: mainMenu
-            title: qsTr("&Menu")
+            title: qsTr("Menu")
+
             CheckBox {
                 id: animationCheckBox
                 checked: true
@@ -57,27 +58,27 @@ ApplicationWindow {
 //                onTriggered: serverRow.visible = !serverRow.visible
 //            }
             MenuItem {
-                text: qsTr("&Restart OSC listener")
+                text: qsTr("Restart OSC listener")
                 onTriggered: oscServer.restart()
             }
             MenuItem {
-                text: qsTr("&Update IP address")
+                text: qsTr("Update IP address")
                 onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
             }
             MenuItem {
-                text: qsTr("&Toggle test leds")
+                text: qsTr("Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible
             }
             MenuItem {
-                text: qsTr("Toggle &delay row")
+                text: qsTr("Toggle delay row")
                 onTriggered: delayRect.visible = !delayRect.visible
             }
             MenuItem {
-                text: qsTr("&About")
+                text: qsTr("About")
                 onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
             }
             MenuItem {
-                text: qsTr("E&xit")
+                text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
         }
@@ -109,7 +110,7 @@ ApplicationWindow {
     }
 
     Timer {
-        id: clearNotification
+        id: clearNotificatiocreatorn
         running: false
         repeat: false
         triggeredOnStart: false
@@ -302,8 +303,10 @@ ApplicationWindow {
 
             id: menuButton
             y:5
-            anchors.right: mainRect.right
-            anchors.rightMargin: 5
+            x:5
+//            anchors.right: mainRect.right
+//            anchors.rightMargin: 5
+
             source: "qrc:///config.png"
             width: 32
             height: 32
@@ -330,9 +333,10 @@ ApplicationWindow {
                 Label {text: qsTr("Delay (ms): ") }
                 SpinBox {
                     id: delaySpinBox
+                    editable: true
                     value: 0
-                    //minimumValue: 0
-                    //maximumValue: 1000
+                    from: 0
+                    to: 1000
                     Layout.fillWidth: true
                     Layout.maximumWidth: 200
                     Layout.preferredWidth: 90
