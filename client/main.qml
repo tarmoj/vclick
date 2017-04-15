@@ -110,7 +110,7 @@ ApplicationWindow {
     }
 
     Timer {
-        id: clearNotificatiocreatorn
+        id: clearNotification
         running: false
         repeat: false
         triggeredOnStart: false
@@ -310,7 +310,7 @@ ApplicationWindow {
             source: "qrc:///config.png"
             width: 32
             height: 32
-            MouseArea {anchors.fill: parent; onClicked: mainMenu.open() }
+            MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
 
 
 
@@ -343,7 +343,7 @@ ApplicationWindow {
                     Layout.minimumWidth: 100
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
-                    onWidthChanged: console.log("SpinboxWidth:",this.width)
+                    //onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
                 Button {
                     //                Layout.fillWidth: true
