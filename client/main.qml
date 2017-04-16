@@ -152,7 +152,7 @@ ApplicationWindow {
         onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: " + socket.errorString)
                              socket.active = false;
-                             //notification("Failed!", 1.0);
+                             notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open")
                              settings.serverIP= socket.serverIP //serverAddress.text//socket.url
@@ -307,7 +307,7 @@ ApplicationWindow {
 //            anchors.right: mainRect.right
 //            anchors.rightMargin: 5
 
-            source: "qrc:///config.png"
+            source: "qrc:///menu.png"
             width: 32
             height: 32
             MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
@@ -431,9 +431,9 @@ ApplicationWindow {
             id: beatRow
             z:3
             anchors.top: tempoLabel.bottom
-            //anchors.topMargin: 5
+            anchors.topMargin: tempoLabel.height
             anchors.bottom: ledRow.top
-            anchors.bottomMargin: 5
+            //anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width*0.98
 
@@ -441,7 +441,7 @@ ApplicationWindow {
                 id:leftRectangle
                 //color: "lightpink"
                 height: parent.height
-                width: parent.width*0.47
+                width: parent.width*0.46
                 anchors.left: parent.left
 
                 Label {
@@ -462,7 +462,7 @@ ApplicationWindow {
                 id:rightRectangle
                 //color: "pink"
                 height:parent.height
-                width: parent.width*0.47
+                width: parent.width*0.46
                 anchors.right: parent.right
 
                 Label {
