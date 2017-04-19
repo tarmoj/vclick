@@ -43,7 +43,7 @@ ApplicationWindow {
             title: qsTr("Menu")
 
             background: Rectangle {
-                    implicitWidth: Math.min(Screen.width, Screen.height)/2
+                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :200
                     implicitHeight: 200
                     color: "#ffffff"
                     border.color: "#353637"
