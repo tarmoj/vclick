@@ -34,13 +34,20 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property string instrument: "none" // TODO: set from menu for different channels
-    property string version: "0.2.0-rc5"
+    property string version: "0.2.0"
 
 
 
         Menu {
             id: mainMenu
             title: qsTr("Menu")
+
+            background: Rectangle {
+                    implicitWidth: Math.min(Screen.width, Screen.height)/2
+                    implicitHeight: 200
+                    color: "#ffffff"
+                    border.color: "#353637"
+                }
 
             CheckBox {
                 id: animationCheckBox
@@ -334,26 +341,35 @@ ApplicationWindow {
                 SpinBox {
                     id: delaySpinBox
                     editable: true
+                    up.indicator.width: delaySpinBox.width/6
+                    down.indicator.width: delaySpinBox.width/6
                     value: 0
                     from: 0
-                    to: 1000
+                    to: 1001
                     Layout.fillWidth: true
-                    Layout.maximumWidth: 400
-                    Layout.preferredWidth: 150
-                    Layout.minimumWidth: 100
+                    Layout.maximumWidth: implicitWidth
+                    Layout.preferredWidth: 100
+                    Layout.minimumWidth: 50
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
                     //onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
                 Button {
-                    //                Layout.fillWidth: true
-                    //                Layout.maximumWidth: 300
-                    //                Layout.minimumWidth: 10
-                    //                Layout.preferredWidth: 100
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+
                     text: qsTr("Reset");
                     onClicked: delaySpinBox.value = 0;
                 }
-                Button {text: qsTr("Hide"); onClicked: delayRect.visible = false;  }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+                    text: qsTr("Hide");
+                    onClicked: delayRect.visible = false;  }
             }
         }
 
