@@ -19,7 +19,7 @@
     02111-1307 USA
 */
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 2.0
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
@@ -37,39 +37,59 @@ ApplicationWindow {
     property string version: "0.2.0"
 
 
-    menuBar: MenuBar {
+
         Menu {
-            title: qsTr("&Menu")
-            MenuItem {
-                text: qsTr("Show/Hide &server address")
-                onTriggered: serverRow.visible = !serverRow.visible
+            id: mainMenu
+            title: qsTr("Menu")
+
+            background: Rectangle {
+                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :200
+                    implicitHeight: 200
+                    color: "#ffffff"
+                    border.color: "#353637"
+                }
+
+            CheckBox {
+                id: animationCheckBox
+                checked: true
+                text: qsTr("Animation")
             }
+
+            CheckBox {
+                id: soundCheckBox
+                checked: false
+                text: qsTr("Sound")
+            }
+//            MenuItem {
+//                text: qsTr("Show/Hide &server address")
+//                onTriggered: serverRow.visible = !serverRow.visible
+//            }
             MenuItem {
-                text: qsTr("&Restart OSC listener")
+                text: qsTr("Restart OSC listener")
                 onTriggered: oscServer.restart()
             }
             MenuItem {
-                text: qsTr("&Update IP address")
+                text: qsTr("Update IP address")
                 onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
             }
             MenuItem {
-                text: qsTr("&Toggle test leds")
+                text: qsTr("Toggle test leds")
                 onTriggered: testRow.visible = !testRow.visible
             }
             MenuItem {
-                text: qsTr("Toggle &delay row")
+                text: qsTr("Toggle delay row")
                 onTriggered: delayRect.visible = !delayRect.visible
             }
             MenuItem {
-                text: qsTr("&About")
+                text: qsTr("About")
                 onTriggered: messageDialog.show(qsTr("<b>eClick client "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
             }
             MenuItem {
-                text: qsTr("E&xit")
+                text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
         }
-    }
+
 
     Component.onCompleted: {
         if (delaySpinBox.value>0) {
@@ -271,22 +291,37 @@ ApplicationWindow {
         }
         anchors.fill: parent
 
-        CheckBox {
-            x:5; y: 5
-            id: animationCheckBox
-            checked: true
-            text: qsTr("Animation")
+//        CheckBox {
+//            x:5; y: 5
+//            id: animationCheckBox
+//            checked: true
+//            text: qsTr("Animation")
+//        }
+
+//        CheckBox {
+//            x:5;
+//            anchors.top: animationCheckBox.bottom
+//            id: soundCheckBox
+//            checked: false
+//            text: qsTr("Sound")
+//        }
+
+        Image {
+
+            id: menuButton
+            y:5
+            x:5
+//            anchors.right: mainRect.right
+//            anchors.rightMargin: 5
+
+            source: "qrc:///menu.png"
+            width: 32
+            height: 32
+            MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
+
+
+
         }
-
-        CheckBox {
-            x:5;
-            anchors.top: animationCheckBox.bottom
-            id: soundCheckBox
-            checked: false
-            text: qsTr("Sound")
-        }
-
-
 
         Rectangle {
             id: delayRect
@@ -305,25 +340,36 @@ ApplicationWindow {
                 Label {text: qsTr("Delay (ms): ") }
                 SpinBox {
                     id: delaySpinBox
+                    editable: true
+                    up.indicator.width: delaySpinBox.width/6
+                    down.indicator.width: delaySpinBox.width/6
                     value: 0
-                    minimumValue: 0
-                    maximumValue: 1000
+                    from: 0
+                    to: 1001
                     Layout.fillWidth: true
-                    Layout.maximumWidth: 200
-                    Layout.preferredWidth: 90
-                    Layout.minimumWidth: 10
+                    Layout.maximumWidth: implicitWidth
+                    Layout.preferredWidth: 100
+                    Layout.minimumWidth: 50
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
+                    //onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
                 Button {
-                    //                Layout.fillWidth: true
-                    //                Layout.maximumWidth: 300
-                    //                Layout.minimumWidth: 10
-                    //                Layout.preferredWidth: 100
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+
                     text: qsTr("Reset");
                     onClicked: delaySpinBox.value = 0;
                 }
-                Button {text: qsTr("Hide"); onClicked: delayRect.visible = false;  }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+                    text: qsTr("Hide");
+                    onClicked: delayRect.visible = false;  }
             }
         }
 
@@ -400,10 +446,10 @@ ApplicationWindow {
         RowLayout {
             id: beatRow
             z:3
-            anchors.top: (mainRect.width>mainRect.height) ? tempoLabel.bottom : soundCheckBox.bottom // not to squeeze too much on horizontal layouts
-            //anchors.topMargin: 5
+            anchors.top: tempoLabel.bottom
+            anchors.topMargin: tempoLabel.height
             anchors.bottom: ledRow.top
-            anchors.bottomMargin: 5
+            //anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width*0.98
 
@@ -411,7 +457,7 @@ ApplicationWindow {
                 id:leftRectangle
                 //color: "lightpink"
                 height: parent.height
-                width: parent.width*0.47
+                width: parent.width*0.46
                 anchors.left: parent.left
 
                 Label {
@@ -432,7 +478,7 @@ ApplicationWindow {
                 id:rightRectangle
                 //color: "pink"
                 height:parent.height
-                width: parent.width*0.47
+                width: parent.width*0.46
                 anchors.right: parent.right
 
                 Label {

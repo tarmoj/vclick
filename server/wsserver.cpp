@@ -115,7 +115,9 @@ void WsServer::processTextMessage(QString message)
 				qDebug()<<"Could not create OSC address to "<<senderUrl;
 			}
 		}
+
         pClient->close(QWebSocketProtocol::CloseCodeNormal);
+
 	}
 
 
