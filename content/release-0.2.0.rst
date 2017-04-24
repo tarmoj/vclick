@@ -11,6 +11,8 @@ eClick 0.2.0 released!
 After lots of work, feedback from users, numerous improvements and changes in code  **eClick version 0.2.0 is out and ready for downloads**.
 
 .. image:: images/screenshot-v0.2.0.png
+    :alt: eClick 0.2.0
+    :target: pages/download.html
    
 `eClick <pages/about.html>`_ is a free wireless visual click-track system for musicians.   
 
