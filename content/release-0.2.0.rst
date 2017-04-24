@@ -18,7 +18,7 @@ After lots of work, feedback from users, numerous improvements and changes in co
 
 Version 0.2.0 seems to be fully functional and ready to use. Nevertheless it needs still more testing - be careful in mission critical situations!
 
-Please `download <pages/getting-download.html>`_, try out and let know how it goes!
+Please `download <pages/download.html>`_, try out and let know how it goes!
 
 See more: `Getting started <pages/getting-started.html>`_
 
