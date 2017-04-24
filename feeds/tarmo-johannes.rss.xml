@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>eClick</title><link>http://tarmoj.github.io/eclick/</link><description></description><atom:link href="http://tarmoj.github.io/eclick/feeds/tarmo-johannes.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 24 Apr 2017 00:00:00 +0300</lastBuildDate><item><title>eClick 0.2.0 is released!</title><link>http://tarmoj.github.io/eclick/release_0.2.0.html</link><description>&lt;p&gt;After lots of work, feedback from users, numerous improvements and changes  &lt;strong&gt;eClick version 0.2.0 is released and ready to download&lt;/strong&gt;.&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>eClick</title><link>http://tarmoj.github.io/eclick/</link><description></description><atom:link href="http://tarmoj.github.io/eclick/feeds/tarmo-johannes.rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 24 Apr 2017 00:00:00 +0300</lastBuildDate><item><title>eClick 0.2.0 released!</title><link>http://tarmoj.github.io/eclick/release_0.2.0.html</link><description>&lt;p&gt;After lots of work, feedback from users, numerous improvements and changes in code  &lt;strong&gt;eClick version 0.2.0 is out and ready for downloads&lt;/strong&gt;.&lt;/p&gt;
 &lt;img alt="" src="images/screenshot-v0.2.0.png" /&gt;
 &lt;p&gt;&lt;a class="reference external" href="pages/about.html"&gt;eClick&lt;/a&gt; is a free wireless visual click-track system for musicians.&lt;/p&gt;
-&lt;p&gt;Version 0.2.0 seems to be fully functional now and ready to use. Nevertheless it needs still more testing - be careful in mission critical situations!&lt;/p&gt;
-&lt;p&gt;Please &lt;a class="reference external" href="pages/getting-download.html"&gt;download&lt;/a&gt; try out and let know how it goes!&lt;/p&gt;
+&lt;p&gt;Version 0.2.0 seems to be fully functional and ready to use. Nevertheless it needs still more testing - be careful in mission critical situations!&lt;/p&gt;
+&lt;p&gt;Please &lt;a class="reference external" href="pages/getting-download.html"&gt;download&lt;/a&gt;, try out and let know how it goes!&lt;/p&gt;
 &lt;p&gt;See more: &lt;a class="reference external" href="pages/getting-started.html"&gt;Getting started&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Read more about improvements from &lt;a class="reference external" href="https://github.com/tarmoj/eclick/blob/master/release_notes/Release%20notes%200.2.0.md"&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;tarmo&lt;/p&gt;
