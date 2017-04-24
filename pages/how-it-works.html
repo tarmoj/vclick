@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/eclick/theme/css/style.css' type="text/css" media="all" />
     <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/eclick/theme/css/highlight.css' type="text/css" media="all" />
-    <link href="http://tarmoj.github.io/eclick/../feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="eClick Full Atom Feed" />
     
 </head>
 
@@ -35,20 +34,87 @@
     <h1>How it works</h1>
     
 
-    <p>This is a bit more techical stuff but probably interesting to many people, who undertand the terms like OSC messages, websockets etc - it may help you to use the system in your own setup, write custom clients (like using Processing, Max MSP or any other OSC aware software).</p>
-<p>I t will be about:</p>
-<ul>
-<li>
-<p>how Csound API is used</p>
-</li>
-<li>
-<p>OSC messages sent</p>
-</li>
-<li>
-<p>possible websocket connection to web-based (html5) clients used in browser</p>
-</li>
-</ul>
-<p>The source code is available at <a href="https://github.com/tarmoj/eclick">https://github.com/tarmoj/eclick</a>. Feel free to study it, improve or develop further or use in some other context! (obeying to GNU GPL license included in the sources).</p>
+    <p>This is a bit more techical stuff but probably interesting to many people, who undertand the terms like OSC messages, websockets etc - it may help you to use the system in your own setup, write custom clients (like using Processing, Max MSP or any other OSC aware software). Feel free to be creative and use eClick as you need!</p>
+<h3>The Client</h3>
+<p>The client is listening to <strong>incoming OSC messages on port 87878</strong>. (It was 8008 for version 0.1.* but must have been changed from version 0.2.0 on).</p>
+<p>The messages' format is:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Types</th>
+<th>Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/metronome/beatbar</td>
+<td>ii</td>
+<td>&lt; bar&gt; &lt; beat&gt;</td>
+</tr>
+<tr>
+<td>/metronome/led</td>
+<td>if</td>
+<td>&lt; led*&gt; &lt; duration&gt;</td>
+</tr>
+<tr>
+<td>/metronome/tempo</td>
+<td>f</td>
+<td>&lt; tempo&gt;</td>
+</tr>
+<tr>
+<td>/metronome/notification</td>
+<td>s</td>
+<td>&lt; message&gt;**</td>
+</tr>
+<tr>
+<td>/metronome/notification</td>
+<td>sf</td>
+<td>&lt; message&gt; &lt; duration&gt;</td>
+</tr>
+</tbody>
+</table>
+<p>The types stand for: i - integer, f- floating point number, s - string.</p>
+<p>* Led numbers: 0 - red, 1 -  green, 2 - blue<br>
+** If no duration given, 4 seconds is taken as default.</p>
+<p>For example (using oscsend on Linux), send following messages to client with IP address 192.168.1.151:</p>
+<div class="highlight"><pre>oscsend 192.168.1.151 87878 /metronome/led if 0 0.5
+
+    - blink red led for 0.5 seconds
+
+oscsend 192.168.1.151 87878 /metronome/beatbar ii 12 4
+
+    - set bar number to 12 and beat to 4
+
+oscsend 192.168.1.151 87878 /metronome/notification s &quot;Are you there?&quot;
+
+    - Send message, will be displayed for 4 seconds.
+</pre></div>
+
+
+<h3>The Server</h3>
+<p>The <strong>eclick Server</strong> is running a websocket server on port 6006. It is used mostly for registering clients (clients send a "hello" websocket message when "Hello, Server" button is pressed), but it can be used also in two other ways:</p>
+<p>It can send out websocket messages about beats, leds etc, when "Send ws" is ticked on the Server window. This way the client can be aslo be web based. In fact I developed the system at first this way - the users don't need a special app but just open one page in their browser. It works but is less stable. These files are not part of the git-project, if you are interested to have a look or try it out, please send me an e-mail.</p>
+<p>Also eClick server can be driven via websockest messages - you can start/stop the playback, send in messages about beats, led blinks, tempo changes etc and the server will send according OSC messages to all registered clients.  This way you can develop your own programs, scipts or web applications that can work together with eClick system according to your better needs.</p>
+<p>The messages expected are strings in following format:</p>
+<div class="highlight"><pre>&quot;start&quot; -  as if &quot;Start&quot; had been pressed on Server. Starting from given bar not implemented yet.
+&quot;stop&quot; -  as if &quot;Stop&quot; had been pressed on Server
+&quot;bar &lt; number&gt;&quot; - set bar number to &quot;number&quot;
+&quot;beat &lt; number&gt;&quot; - set beat number to &quot;number&quot;
+&quot;duration &lt; duration&gt;&quot; -  set duration of either led blink or notification
+&quot;led &lt; number&gt; &quot; - blink led number 0-red|1-green|2-blue for &lt; duration&gt; seconds
+&quot;tempo &lt; tempo&gt;&quot; -  set tempo
+</pre></div>
+
+
+<p>The info can be combined also into one string:</p>
+<div class="highlight"><pre>&quot;bar 10 beat 4 led 1 druation 0.25&quot;
+    -set bar to 10, beat 4, blink green led for 0.25 seconds
+</pre></div>
+
+
+<p><br></p>
+<p>The source code is available at <a href="https://github.com/tarmoj/eclick">https://github.com/tarmoj/eclick</a>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).</p>
 
         </section><!-- #content -->
         <section id="widgets" class="grid col-300 fit" >
@@ -71,7 +137,7 @@
                     Category
                 </div>
                 <ul>
-                        <li><a href="../category/news.html" >News </a></li>
+                        <li><a href="http://tarmoj.github.io/eclick/category/news.html" >News </a></li>
                 </ul>
             </section>
 -->

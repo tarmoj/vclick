@@ -28,21 +28,19 @@ Press **Start** If you see numbers moving on server's screen, the client should 
 
 ##Connect client(s) and server
 
-The server (the central computer) and the clients (player's phones/laptops) **must be IN ONE NETWORK** (the same wifi network or network cables connected to the same router). 
+The server (the central computer) and the clients (player's phones/laptops) **must be IN THE SAME NETWORK** (the same wifi network or network cables connected to the same router). If firewall is enabled also for local network, disable it for local connections. 
 
 * *You ask*: How can I be sure the devices are in one network?
 
-* *Answer*: Look at the IP address on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine.
+* *Answer*: Look at the IP address (My IP) on client's and server's screen. If they look similar, just the ending is different - like 192.168.1.20 and 192.168.1.21 - everything is fine. If you change networks or join wifi network after you have started the app, you can press "Update IP address" in the menu to see the current address.
 
-<br>
 
-_NB! Use a good quality network! Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most certainly suffer. (Also in many public networks the clients are not allowed to connect to each other)._
+_**NB! <font style="color:red">It is crucial to use a good quality network!</font>** Try to keep the wifi router close to all players! Avoid public or overcrowded networks -  the performance will most likely suffer. (Also in many public networks the clients are not allowed to connect to each other). If you use your own wifi router and there is another strong network in the air, make sure that their wifi channels are as far appart as possible (google 'detect wifi channels' to find out how)._
 
-<br>
 
 To connect clients to server there are two possibilities: 
 
-1. Enter the IP address of server to client's **Server address** field and press **Hello, Server**. You should receive a notification "Got you!" on client's screen. _NB! Don't overwrite the beginning nor the ending of the address, it should look like: ws://< IP address >:6006/ws . Sometimes it is necessary to press "Hello" twice._
+1. Enter the IP address of server to client's **Server address** field and press **Hello, Server**. You should receive a notification "Got you!" on client's screen. 
 
 2. Add the clients' addresses to server's field **Clients**, separated by commas. Then press **Update** and the clients on these addresses should be receiving the messages. The server remembers the addresses from last session, you don't need to enter them every time, if the addresses don't change.
 
@@ -56,7 +54,28 @@ To try out, download or copy a simple demo score file (50 bars in 4/4, tempo 60)
 
 How to write or get score files for your specific pieces, see [Score files](score-files.html).
 
+<br>
+###Playing sound files
+
+If you play a piece when there is a backtrack (sound file) like an piece for instruments and electronics/fixed media - you can start it from eClick (since version 0.2.0). You can start also several sound clips on certain moment, if you use the "playfile" command in the score. 
+
+To hear the sound, you need to edit "Csound Options" field in server. The default, `` -odac -+rtaudio=null -d ``  
+has no sound output. The most typical option to use your first sound card is:
+
+``-odac -d``
+
+To use second sound card, write ``-odac1``, for third one ``-odac2`` etc. You can set also more complex parameters, see [Csound Floss Manual](http://write.flossmanuals.net/csound/d-live-audio/) for more info.
+
+After that you must set, in which folder are the sound files (SFDIR). Use the button "Select" to accomplish that. 
+
+Press "Reset" to go back to the soundless default mode, the volume slider and SFDIR field will be hidden again.
 
 
+###If some devices are slower
+
+It can easily happen that you have a modern computer running one client and an old android phone another. Obviously slower devices take more time to process the signals and display numbers or blinking. From version 0.2.0 the is a **"Toggle Delay Row"** option in client's menu. Set the delay time in milliseconds for faster devices to make them click together. Around 100 milliseconds should be noticable change for the eye. 
+
+<img src=../images/delay-row.png width=500 height=200 >
 
 
+Pease take into account that is is normal that there can be slight deviations, especially on Android or iOs devices, depending on other operations in the devices, wifi quality etc. Mostly the deviations are reasonably small. 
