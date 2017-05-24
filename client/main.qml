@@ -33,8 +33,8 @@ ApplicationWindow {
     height: 640
     visible: true
     property real beatLength: 1
-    property string instrument: "none" // TODO: set from menu for different channels
-    property string version: "0.2.0"
+    property int instrument: 0 // TODO: set from menu for different channels
+    property string version: "0.3.0-alpha"
 
 
 
@@ -64,10 +64,15 @@ ApplicationWindow {
 //                text: qsTr("Show/Hide &server address")
 //                onTriggered: serverRow.visible = !serverRow.visible
 //            }
+//            MenuItem {
+//                text: qsTr("Restart OSC listener")
+//                onTriggered: oscServer.restart()
+//            }
             MenuItem {
-                text: qsTr("Restart OSC listener")
-                onTriggered: oscServer.restart()
+                text: qsTr("Set instrument number")
+                onTriggered: instrumentRect.visible = !instrumentRect.visible
             }
+
             MenuItem {
                 text: qsTr("Update IP address")
                 onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
@@ -370,6 +375,60 @@ ApplicationWindow {
                     Layout.preferredWidth: implicitWidth
                     text: qsTr("Hide");
                     onClicked: delayRect.visible = false;  }
+            }
+        }
+
+        Rectangle { // this is same as delayrect - how to copy less code?
+            id: instrumentRect
+            width: parent.width
+            height: soundCheckBox.y+soundCheckBox.height
+            color: "lightgrey"
+            visible: false
+            z:2
+            RowLayout {
+                x:5
+                id: instrumentRow
+                y:5
+                width: (mainRect.width>mainRect.height) ? parent.width/2 : parent.width-5
+                visible: true
+                spacing: 3
+                Label {text: qsTr("Instrument no: ") }
+                SpinBox {
+                    id: instrumentSpinBox
+                    editable: true
+                    up.indicator.width: delaySpinBox.width/6
+                    down.indicator.width: delaySpinBox.width/6
+                    value: 0
+                    from: 0
+                    to: 32
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.preferredWidth: 100
+                    Layout.minimumWidth: 50
+                    stepSize: 1
+                    onValueChanged:  {
+                        console.log("New instrument value: ", value)
+                        instrument = value
+                    }
+
+                    //onWidthChanged: console.log("SpinboxWidth:",this.width)
+                }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+
+                    text: qsTr("Send to server");
+                    onClicked: console.log("should send Hello instrument nr here");
+                }
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: implicitWidth
+                    text: qsTr("Hide");
+                    onClicked: instrumentRect.visible = false;  }
             }
         }
 
