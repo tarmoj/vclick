@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("eClick server")
-    property string version: "0.2.0"
+    property string version: "0.3.0-alfa"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -75,7 +75,10 @@ ApplicationWindow {
 
         onNewTempo: tempoLabel.text = tempo;
 
-        onUpdateOscAddresses: oscAddresses.text = adresses;
+        onUpdateOscAddresses: {
+            oscAddresses.text = adresses;
+            cs.setOscAddresses(oscAddresses.text);
+        }
 
         onCsoundMessage: messageArea.append(message)
 
@@ -203,7 +206,7 @@ ApplicationWindow {
             CheckBox {
                 id: oscCheckBox
                 text: qsTr("Send osc")
-                checked: true
+                checked: false
                 onCheckedChanged: wsServer.setSendOsc(checked);
 
             }
@@ -395,6 +398,7 @@ ApplicationWindow {
                     }
 
                     onClicked: {
+                        cs.setOscAddresses(oscAddresses.text);
                         cs.start(scoField.text, startBarSpinBox.value)
                         // set volume somewhat later when Csound will be loaded
                         setVolumeTimer.start()

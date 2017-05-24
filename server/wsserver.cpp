@@ -43,7 +43,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
 	}
 
-	sendOsc = true;
+	sendOsc = false; // might be necessary to set to tru only if driven by external ws-messages
 	sendWs = false;
 	settings = new QSettings("eclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
@@ -93,12 +93,21 @@ void WsServer::processTextMessage(QString message)
 //		else:
 //			channels = TUTTI
 
-	if (messageParts[0]=="hello") { // comes as "hello <instrument>"
+	if (messageParts[0]=="hello") { // comes as "hello <instrumentnumber>"
 		if (messageParts.length()>1) {
 			QString instrument = messageParts[1]; // for future, check if instrument number has changed
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
+
+		//TODO: how to check if has joined already but channel is different - thing about list and proper OSC address
+		/*
+		int colon = senderUrl.indexOf(":");
+		if (colon==1 || colon==2) { // better do with regexp - if in the beginning one or two digits and ':'
+			senderUrl.remove(0,colon+1);
+		}
+		*/
+
 		qDebug()<<"Hello from: "<<senderUrl;
 		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 
@@ -315,9 +324,6 @@ void WsServer::createOscClientsList(QString addresses)
 {
 	oscAddresses.clear();
 	m_oscClients.clear();
-
-	QString toCompile = "gSclients fillarray ";
-	int clientsCount = 0;
 
 	foreach (QString address, addresses.split(",")) {
 		address = address.simplified();

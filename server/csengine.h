@@ -53,12 +53,14 @@ public slots:
 	void stop();
 	void scoreEvent(QString event);
 	void setSFDIR(QUrl dir);
+	void compileOrc(QString code);
+	void setOscAddresses(QString addresses);
 
 private:
 	Csound * cs;
 	QString m_sco, m_orc, m_options; // resolve later
 	bool stopNow, isRunning;
-	QString SFDIR;
+	QString SFDIR, oscLineToCompile;
 };
 
 #endif // CSENGINE_H
