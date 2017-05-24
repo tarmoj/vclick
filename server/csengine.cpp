@@ -162,16 +162,14 @@ void CsEngine::play(QString scoFile, int startBar) {
 		cs->SetOption(option.toLocal8Bit().data());
 	}
 
-	//cs->SetOption("-odac:system:playback_"); // was: -odac
-	//cs->SetOption("-+rtaudio=jack"); // was: null
-    //QString tempOrcName = QDir::tempPath() + "/temp.orc";
-    QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
-    tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_simple.orc");
-    //bool copyresult=QFile::copy(m_orc,tempOrcName); // works! TODO: korralik ja loogiline kood! m_orc ilmselt mittevajalik...
-    //int result = cs->Compile(tempOrcName.toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+	QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
+	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc.orc"); // WAS: metro_simple.orc
+
 
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
-
+	if (!result && !oscLineToCompile.isEmpty()) {
+		cs->CompileOrc(oscLineToCompile.toLocal8Bit());
+	}
 	while (cs->GetMessageCnt()>0) { // HOW to get error message here?
         message += QString(cs->GetFirstMessage()).simplified() + "\n";
 		//qDebug()<<"Csound MESSAGE: " << message;
@@ -185,8 +183,9 @@ void CsEngine::play(QString scoFile, int startBar) {
 		isRunning = true;
 		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
-		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
+		//QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 		while (cs->PerformKsmps()==0 && !stopNow) {
+			/* don't care abou leds any more, csound send OSC messages
 			for (int i=0;i<3;i++) {
 				MYFLT duration =  getChannel(leds[i]);
 				if (duration>0) {
@@ -195,12 +194,12 @@ void CsEngine::play(QString scoFile, int startBar) {
 					setChannel(leds[i],0); // set to 0 in Csound
 				}
 			}
-
+			*/
 			beat = getChannel("beat");
 			bar = getChannel("bar");
 			if (beat!=oldBeat || bar!=oldBar) {
                 emit newBeatBar( int(bar), round(beat)); // round since sometimes given as 5.2999999
-                qDebug()<<"BAR: "<<int(bar)<< "BEAT: "<<round(beat);
+				//qDebug()<<"BAR: "<<int(bar)<< "BEAT: "<<round(beat);
 				oldBeat = beat; oldBar = bar;
 				// check for tempo changes:
 				tempo = getChannel("tempo");
@@ -210,7 +209,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 					oldTempo = tempo;
 				}
 			}
-
+			/* don't care about notifications any more
 			flagUp = getChannel("new_notification"); // duration > 0 if new message in the string channel
 			if (flagUp>0) {
 				QString notification = getStringChannel("notification");
@@ -218,7 +217,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 				emit newNotification(notification, flagUp);
 				setChannel("new_notification",0);
 			}
-
+			*/
 			if (cs->GetMessageCnt()>0) {
                 message = QString(cs->GetFirstMessage());
                 //qDebug()<<"Csound MESSAGE: " << message;
@@ -287,4 +286,43 @@ void CsEngine::setSFDIR(QUrl dir)
 {
 	SFDIR = (dir.toString().startsWith("file:") ) ? dir.toLocalFile() : dir.path();
 	qDebug()<<"Set SFDIR to: " << SFDIR;
+}
+
+void CsEngine::compileOrc(QString code)
+{
+	if (cs)
+		cs->CompileOrc(code.toLocal8Bit());
+}
+
+void CsEngine::setOscAddresses(QString addresses)
+{
+	oscLineToCompile = "gSclients fillarray ";
+	int clientsCount = 0;
+
+	foreach (QString address, addresses.split(",")) {
+		address = address.simplified();
+		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
+		if (!address.isEmpty()) { // for any case
+			// create string about addresses for Csound and compileit as orchestra
+//			int index = QRegExp("(\\s\\d+):(\\d+)$").indexIn(name); // should I check for port at all?
+//			if (index>0) {
+//				QString port
+//				qDebug()<<"found portnumber: "
+//			}
+			oscLineToCompile += "\"" + address + "\","; //quotes?
+			clientsCount++;
+
+		}
+	}
+	if (clientsCount) {
+		oscLineToCompile.chop(1) ; //remove last ","
+		oscLineToCompile += "\ngiClientsCount init " + QString::number(clientsCount);
+	} else {
+		oscLineToCompile = "giClientsCount init 0";
+	}
+	qDebug()<<"Line to compile: "<<oscLineToCompile;
+	if (cs) {
+		cs->CompileOrc(oscLineToCompile.toLocal8Bit());
+	}
+
 }

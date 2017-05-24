@@ -62,7 +62,8 @@ int main(int argc, char *argv[])
 
 	QObject::connect(csoundThread, &QThread::finished, csound, &CsEngine::deleteLater);
 	QObject::connect(csoundThread, &QThread::finished, csoundThread, &QThread::deleteLater);
-	QObject::connect(&app, SIGNAL(aboutToQuit()), csound, SLOT(stop()) );
+	QObject::connect(&app, SIGNAL(aboutToQuit()), csound, SLOT(stop()) ); // BETTER: closeEvent somwhere, but no MainWindow...
+
 
 	QObject::connect(csound,&CsEngine::newBeatBar, wsServer, &WsServer::handleBeatBar ); // QT5 style of connection
 	QObject::connect(csound,&CsEngine::newLed, wsServer, &WsServer::handleLed );

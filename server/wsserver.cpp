@@ -95,12 +95,15 @@ void WsServer::processTextMessage(QString message)
 
 	if (messageParts[0]=="hello") { // comes as "hello <instrument>"
 		if (messageParts.length()>1) {
-			QString instrument = messageParts[1]; // for future
+			QString instrument = messageParts[1]; // for future, check if instrument number has changed
 		}
 		QString senderUrl = pClient->peerAddress().toString();
+		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
 		qDebug()<<"Hello from: "<<senderUrl;
 		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
-            QOscClient * target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
+
+			//TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
+			QOscClient * target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
 			if (target) {
 				if (!oscAddresses.contains(senderUrl)) {
 					oscAddresses<<senderUrl;
@@ -312,6 +315,10 @@ void WsServer::createOscClientsList(QString addresses)
 {
 	oscAddresses.clear();
 	m_oscClients.clear();
+
+	QString toCompile = "gSclients fillarray ";
+	int clientsCount = 0;
+
 	foreach (QString address, addresses.split(",")) {
 		address = address.simplified();
 		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
@@ -327,6 +334,7 @@ void WsServer::createOscClientsList(QString addresses)
 			}
 		}
 	}
+
 	emit updateOscAddresses(oscAddresses.join(","));
 	qDebug()<<"OSC targets count: " << m_oscClients.count();
 
@@ -366,6 +374,8 @@ void WsServer::setOscAddresses(QString addresses)
 {
 	bool oldvalue = sendOsc;
 	sendOsc = false; // as kind of mutex not to send any osc messages during that time
+
+	// maybe not necessary later:
 	createOscClientsList(addresses);
 
 	if (settings) { // store in settings
