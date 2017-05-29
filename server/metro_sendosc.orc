@@ -247,12 +247,16 @@ instr send ; macroinstrument for sending different OSC messages; p4 -  iwhat, p5
 			ichannel = 0
 		endif
 		SIP strsub gSclients[index], icolonPosition+1, ilength
-		
+		isend = 0
 		if (ichannel>0) then 
 			isend = 1<<(ichannel-1)&ichannels ; bitwise test for the given channel. send if set or if channel 0
 			;print isend
 		endif
-		if (ichannel==0 || isend>0) then 
+		if (ichannel==0 && ichannels==$TUTTI) then
+		    isend = 1
+			;print isend, ichannels
+		endif
+		if (isend>0) then
 			if (iwhat==$BEATBAR) then
 				schedule  "mySendOsc", 0, 1/kr, SIP, "/metronome/beatbar", "ii", p6, p7
 			elseif (iwhat==$LED) then

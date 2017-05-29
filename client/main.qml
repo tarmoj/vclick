@@ -396,14 +396,14 @@ ApplicationWindow {
                 SpinBox {
                     id: instrumentSpinBox
                     editable: true
-                    up.indicator.width: delaySpinBox.width/6
-                    down.indicator.width: delaySpinBox.width/6
+                    up.indicator.width: delaySpinBox.width/5
+                    down.indicator.width: delaySpinBox.width/5
                     value: 0
                     from: 0
                     to: 32
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth
-                    Layout.preferredWidth: 100
+                    Layout.preferredWidth: 60
                     Layout.minimumWidth: 50
                     stepSize: 1
                     onValueChanged:  {
@@ -419,8 +419,10 @@ ApplicationWindow {
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: implicitWidth
 
-                    text: qsTr("Send to server");
-                    onClicked: console.log("should send Hello instrument nr here");
+                    text: qsTr("Update");
+                    onClicked: { console.log("should send Hello instrument nr here");
+                        socket.active = true; // is it enough?
+                    }
                 }
                 Button {
                     Layout.fillWidth: true

@@ -89,10 +89,13 @@ private:
     QList<QWebSocket *> m_clients;
 	bool sendOsc, sendWs;
 	//QList <lo_address> targets;
-	QStringList oscAddresses;
+    QStringList oscAddresses;
+    QHash <QString, int> m_clientsHash;
 	QSettings * settings;
 	QList <QOscClient *> m_oscClients;
 	void createOscClientsList(QString addresses);
+    void createOscClientsList(); // takes data from m_clientsHash
+
 
 	QFile logFile;
 	QTime time;

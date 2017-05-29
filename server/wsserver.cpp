@@ -94,39 +94,52 @@ void WsServer::processTextMessage(QString message)
 //			channels = TUTTI
 
 	if (messageParts[0]=="hello") { // comes as "hello <instrumentnumber>"
-		if (messageParts.length()>1) {
-			QString instrument = messageParts[1]; // for future, check if instrument number has changed
+
+        int instrument = 0;
+        if (messageParts.length()>1) {
+            instrument = messageParts[1].toInt(); // for future, check if instrument number has changed
+            qDebug()<<"Instrument no "<<instrument;
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
+        QOscClient * target = NULL;
+        if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 
-		//TODO: how to check if has joined already but channel is different - thing about list and proper OSC address
-		/*
-		int colon = senderUrl.indexOf(":");
-		if (colon==1 || colon==2) { // better do with regexp - if in the beginning one or two digits and ':'
-			senderUrl.remove(0,colon+1);
-		}
-		*/
+            //TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
+            target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
+            if (target) {
+                if (!oscAddresses.contains(senderUrl)) {
+                    oscAddresses<<senderUrl; // probably not necessary to keep that variable.
+                    //emit updateOscAddresses(oscAddresses.join(","));
+                    m_oscClients << target;
+                    //target->sendData("/metronome/notification", "Got you!" );
+                } else {
+                    qDebug()<<"Adress already registered: "<<senderUrl;
+                    //target->sendData("/metronome/notification", "All fine" );
+                }
+            } else {
+                qDebug()<<"Could not create OSC address to "<<senderUrl;
+            }
+        }
 
-		qDebug()<<"Hello from: "<<senderUrl;
-		if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
+        if (m_clientsHash.contains(senderUrl) && m_clientsHash[senderUrl]==instrument  ) {
+            qDebug()<<"The IP address " << senderUrl << " is already connected" ;
+            if (target) {
+                target->sendData("/metronome/notification", "All fine!" );
+            }
+        } else {
+            qDebug()<<"Something new (either IP, instrument no or both): "<< senderUrl << instrument ;
+            if (!senderUrl.isEmpty()) {
+                m_clientsHash[senderUrl] = instrument; // overwrites, if new instrument, otherwise inserts
+                createOscClientsList();
+            } else {
+                qDebug()<<"SennderUrl empty.";
+            }
+            if (target) {
+                target->sendData("/metronome/notification", "Got you!" );
+            }
+        }
 
-			//TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
-			QOscClient * target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
-			if (target) {
-				if (!oscAddresses.contains(senderUrl)) {
-					oscAddresses<<senderUrl;
-					emit updateOscAddresses(oscAddresses.join(","));
-					m_oscClients << target;
-					target->sendData("/metronome/notification", "Got you!" );
-				} else {
-					qDebug()<<"Adress already registered: "<<senderUrl;
-					target->sendData("/metronome/notification", "All fine" );
-				}
-			} else {
-				qDebug()<<"Could not create OSC address to "<<senderUrl;
-			}
-		}
 
         pClient->close(QWebSocketProtocol::CloseCodeNormal);
 
@@ -320,30 +333,66 @@ void WsServer::setTesting(bool testing)
 
 }
 
-void WsServer::createOscClientsList(QString addresses)
+void WsServer::createOscClientsList(QString addresses) // info from string to hash
 {
-	oscAddresses.clear();
-	m_oscClients.clear();
+    m_clientsHash.clear();
+    int instrument = 0;
+    foreach (QString address, addresses.split(",")) {
+        address = address.simplified();
+        int index = -1;
+        index = QRegExp("(^[0-9]{1,2}):").indexIn(address); // should I check for port at all?
+        if (index>=0) {
 
-	foreach (QString address, addresses.split(",")) {
-		address = address.simplified();
-		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
-		if (!address.isEmpty()) { // for any case
-            QOscClient * client = new QOscClient(QHostAddress(address), OSCPORT, this);
-			if (client) {
-				m_oscClients<<client; // muuda target oscClient vms
-				oscAddresses<<address;
-				//testing
-				client->sendData("/test", address);
-			} else {
-				qDebug()<<"Could not create OSC address to "<<address;
-			}
-		}
-	}
+            instrument = address.split(":")[0].toInt();
+            address = address.split(":")[1];
+            address = (address=="localhost") ? "127.0.0.1" : address;
+            qDebug()<<"Found instreument " << instrument << "for: " << address;
+        } else  {
+            instrument = 0;
+        }
+        if (!address.isEmpty())
+            m_clientsHash[address]=instrument;
+        else
+            qDebug()<<"Address is empty";
+    }
+    createOscClientsList(); // and create OSC clients (for now) and update on UI
+}
 
-	emit updateOscAddresses(oscAddresses.join(","));
-	qDebug()<<"OSC targets count: " << m_oscClients.count();
+void WsServer::createOscClientsList()
+{
+    oscAddresses.clear();
+    m_oscClients.clear();
 
+    QString joinedString;
+
+    foreach (QString address, m_clientsHash.keys()) {
+        address = address.simplified();
+        address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
+        if (m_clientsHash[address]==0) {
+            joinedString += address+",";
+        } else {
+            joinedString += QString::number(m_clientsHash[address])+":"+address+",";
+        }
+
+
+        if (!address.isEmpty()) { // for any case
+            QOscClient * client = new QOscClient(QHostAddress(address), (quint16) OSCPORT, this); // leve it for now -  create addresses but do not send if sendOsc==false
+            if (client) {
+                m_oscClients<<client; // muuda target oscClient vms
+                oscAddresses<<address;
+                //testing
+                client->sendData("/test", address);
+            } else {
+                qDebug()<<"Could not create OSC address to "<<address;
+            }
+        }
+    }
+    if (joinedString.right(1) == "," ) {
+        joinedString.chop(1);
+    }
+
+    emit updateOscAddresses(joinedString);
+    qDebug()<<"OSC targets count: " << m_oscClients.count();
 }
 
 
