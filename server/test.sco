@@ -3,7 +3,7 @@
 ; eClick score - for test and demo
 
 
-#define TUTTI #63#
+#define TUTTI #0#
 #define TEMPO1 #80#
 #define TEMPO2 #52#
 #define BEGIN #9#
