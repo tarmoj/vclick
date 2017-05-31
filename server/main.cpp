@@ -48,6 +48,12 @@ int main(int argc, char *argv[])
     setenv("OPCODE6DIR64", pluginsPath.toLocal8Bit() ,1);
 #endif
 
+#ifdef Q_OS_WIN
+    QString env = "OPCODE6DIR64="+QApplication::applicationDirPath() + "/plugins64";
+    qDebug()<<"putenv " << env;
+    putenv(env.toLocal8Bit() );
+#endif
+
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
 #ifdef Q_OS_LINUX

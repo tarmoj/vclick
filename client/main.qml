@@ -29,6 +29,7 @@ import QtWebSockets 1.0
 
 ApplicationWindow {
     title: qsTr("eClick client")
+    id: app
     width: 480
     height: 640
     visible: true
@@ -184,7 +185,7 @@ ApplicationWindow {
         target: Qt.application
         onStateChanged: {
             if(Qt.application.state === Qt.ApplicationActive) {
-                console.log("Active")
+                //console.log("Active")
                 if (Qt.platform.os === "ios") {
                         oscServer.restart() ;// to make sure it is running
                 }
@@ -261,11 +262,12 @@ ApplicationWindow {
 
     Settings {
         id: settings
-        property alias serverIP: serverAddress.text
+        property alias serverIP:  serverAddress.text
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
         property alias serverRowVisible: serverRow.visible
         property alias delay: delaySpinBox.value
+        property alias instrument: app.instrument
     }
 
 
@@ -325,6 +327,32 @@ ApplicationWindow {
             MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
 
 
+
+        }
+
+        Rectangle {
+            id: instrumentLabelRect
+            border.color: "darkgrey"
+            visible: (instrument>0)
+            radius: 8
+            width: 32
+            height: 32
+            color: "transparent"
+            anchors.top: mainRect.top
+            anchors.topMargin: 5
+            anchors.right: mainRect.right
+            anchors.rightMargin: 5
+            MouseArea {
+                width:parent.width*2; height: parent.height *2
+                anchors.right: parent.right
+                onClicked: instrumentRect.visible = true;
+            }
+
+            Label {
+                anchors.centerIn: parent
+                text: instrument.toString()
+                font.pixelSize: instrumentLabelRect.height*0.8
+            }
 
         }
 
@@ -398,7 +426,7 @@ ApplicationWindow {
                     editable: true
                     up.indicator.width: delaySpinBox.width/5
                     down.indicator.width: delaySpinBox.width/5
-                    value: 0
+                    value: instrument
                     from: 0
                     to: 32
                     Layout.fillWidth: true
@@ -545,7 +573,7 @@ ApplicationWindow {
                 Label {
                     id: beatLabel
                     property var colors: ["white","red","greenyellow", "lightgreen", "green", "darkgreen", "forestgreen"]
-                    color: colors[Math.abs(Math.min(parseInt(text)),6)] // different color for every beat. text must contain the beatnumber
+                    color: colors[Math.min(Math.abs(parseInt(text)),6)] // different color for every beat. text must contain the beatnumber
                     text: "0"
                     font.bold: true
                     anchors.fill: parent
