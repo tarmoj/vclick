@@ -258,7 +258,7 @@ instr send ; macroinstrument for sending different OSC messages; p4 -  iwhat, p5
 		endif
 		if (isend>0) then
 			if (iwhat==$BEATBAR) then
-				schedule  "mySendOsc", 0, 1/kr, SIP, "/metronome/beatbar", "ii", p6, p7
+                                schedule  "mySendOsc", 0, 1/kr, SIP, "/metronome/beatbar", "ii", abs(p6), p7
 			elseif (iwhat==$LED) then
 				schedule  "mySendOsc", 0, 1/kr, SIP, "/metronome/led", "if", p6, p7
 			elseif (iwhat==$TEMPO) then
