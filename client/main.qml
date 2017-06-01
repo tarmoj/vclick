@@ -416,8 +416,8 @@ ApplicationWindow {
             RowLayout {
                 x:5
                 id: instrumentRow
-                y:5
-                width: (mainRect.width>mainRect.height) ? parent.width/2 : parent.width-5
+                y:5                
+                width: (mainRect.width>mainRect.height) ? parent.width*0.75 : parent.width-5
                 visible: true
                 spacing: 3
                 Label {text: qsTr("Instrument no: ") }
@@ -444,12 +444,18 @@ ApplicationWindow {
                 Button {
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth
-                    Layout.minimumWidth: 50
+                    Layout.minimumWidth: 70
                     Layout.preferredWidth: implicitWidth
 
                     text: qsTr("Update");
                     onClicked: { console.log("should send Hello instrument nr here");
-                        socket.active = true; // is it enough?
+                        if (!socket.active) {
+                            if (serverAddress.text==socket.serverIP) {
+                                socket.active = true
+                            } else {
+                                socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+                            }
+                        }
                     }
                 }
                 Button {
@@ -500,7 +506,7 @@ ApplicationWindow {
                         } else {
                             socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
                         }
-                        console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
+                        //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     }
                 }
             }
