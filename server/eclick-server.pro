@@ -60,3 +60,23 @@ DISTFILES += \
 
 #win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/eclick-server.bat)" "$$shell_path($$OUT_PWD/$$DESTDIR/)" # a workaround script for win8 and possibly other versions
 
+macx {
+    first.path = $$PWD
+    first.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD # deployment
+
+    second.path = $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks
+    second.files = /Library/Frameworks/CsoundLib64.framework
+    #second.commands = rm -rf $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/
+    #TODO: remove Resources Java, Luajit, Manual, Opcodes64 enamus...  PD, Python, samples
+    # remove lbCsoundAc, võibolla libcsnd6
+
+    third.path = $$PWD
+    third.commands = install_name_tool -change CsoundLib64.framework/Versions/6.0/CsoundLib64 @rpath/CsoundLib64.framework/Versions/6.0/CsoundLib64 $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/MacOS/eclick-server
+
+    final.path = $$PWD
+    final.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -dmg# deployment
+
+
+    INSTALLS += first third final
+
+}
