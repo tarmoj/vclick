@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>eclick-server.png</file>
+        <file>eyeclick-server.png</file>
     </qresource>
 </RCC>

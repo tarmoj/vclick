@@ -1,4 +1,4 @@
-; orchestra file for eClick clicktrack system
+; orchestra file for eyeClick clicktrack system
 ; Licence: GNU GPL 3.0
 ; (c) Tarmo Johannes 2017, trmjhnns@gmail.com 
 
@@ -98,7 +98,7 @@ instr 2, bar ; example i 2 <start> <dur> <beats_in_bar> <fraction of full note (
 	print iBarno, iFirstBeat
 	gkBar init abs(iBarno) ; since can be aslo negative
 	
-	; double now global and local variables to be able to works with previous version of eClick server (reading global variables as channels)
+	; double now global and local variables to be able to works with previous version of eyeClick server (reading global variables as channels)
 	kbar init abs(iBarno)
 	ichannels=(p8==0) ? $TUTTI : p8 ; in binary form every bit according to one channel; think TUTTI if not set
 	;print ichannels

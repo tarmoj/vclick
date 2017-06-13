@@ -2,19 +2,19 @@
 	Copyright (C) 2016 Tarmo Johannes
 	trmjhnns@gmail.com
 
-	This file is part of eClick.
+	This file is part of eyeClick.
 
-	eClick is free software; you can redistribute it and/or modify it under
+	eyeClick is free software; you can redistribute it and/or modify it under
 	the terms of the GNU GENERAL PUBLIC LICENSE Version 3, published by
 	Free Software Foundation, Inc. <http://fsf.org/>
 
-	eClick is distributed in the hope that it will be useful,
+	eyeClick is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU Lesser General Public
-	License along with eClick; if not, write to the Free Software
+	License along with eyeClick; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 	02111-1307 USA
 */
@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
 
     app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 
-	app.setOrganizationName("eclick"); // for settings
+	app.setOrganizationName("eyeclick"); // for settings
 	app.setApplicationName("server");
 
-	app.setWindowIcon(QIcon(":/eclick-server.png"));
+	app.setWindowIcon(QIcon(":/eyeclick-server.png"));
 
 #ifdef Q_OS_OSX
     QString pluginsPath = QApplication::applicationDirPath() + "/../Frameworks/CsoundLib64.framework/Versions/6.0/Resources/Opcodes64";

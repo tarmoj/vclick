@@ -1,11 +1,11 @@
-# eClick 0.2.0 released
+# eyeClick 0.2.0 released
  
 
 version 0.2.0 introduces lot's of improvements, bug fixes and new features. It seems to be fully functional and ready to use. Nevertheless it needs still more testing -  be careful in mission critical situations!
  
-The source and binaries can be downloaded from: <https://github.com/tarmoj/eclick/releases/tag/0.2.0>.
+The source and binaries can be downloaded from: <https://github.com/tarmoj/eyeclick/releases/tag/0.2.0>.
 
-**eClick Client for iOs** can now be used via TestFlight app for all testers who let know their email address.
+**eyeClick Client for iOs** can now be used via TestFlight app for all testers who let know their email address.
 
 ### New in version 0.2.0:
 
@@ -52,7 +52,7 @@ The folder for sound files (SFDIR) can be set in server. Use "Reset" button to g
 
 ### Plans for further development
 
-*  Rename the software (probably to eyeClick) to avoid possible trademark conflict
+*  Rename the software (probably to eyeyeClick) to avoid possible trademark conflict
 
 * Implement system where different clients can receive different signals.
 

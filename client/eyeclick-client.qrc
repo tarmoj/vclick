@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>eclick-client.png</file>
+        <file>eyeclick-client.png</file>
         <file>sounds/sound1.wav</file>
         <file>sounds/sound2.wav</file>
         <file>sounds/sound3.wav</file>

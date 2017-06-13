@@ -8,7 +8,7 @@ ApplicationWindow {
     visible: true
     width: 740
     height: 740
-    title: qsTr("eClick server")
+    title: qsTr("eyeClick server")
     property string version: "0.3.0-alfa"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
@@ -27,7 +27,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>eClick server "+ version + "</b><br>http://tarmoj.github.io/eclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK and Csound audio engine."));
+                onTriggered: messageDialog.show(qsTr("<b>eyeClick server "+ version + "</b><br>http://tarmoj.github.io/eyeclick<br><br>(c) Tarmo Johannes 2016<br><br>Built using Qt SDK and Csound audio engine."));
             }
             MenuItem {
                 text: qsTr("E&xit")
