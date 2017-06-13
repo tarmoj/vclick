@@ -1,6 +1,6 @@
 
 
-; eyeClick score - for test and demo
+; vClick score - for test and demo
 
 
 #define TUTTI #0#

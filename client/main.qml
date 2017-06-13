@@ -2,19 +2,19 @@
     Copyright (C) 2016 Tarmo Johannes
     trmjhnns@gmail.com
 
-    This file is part of eyeClick.
+    This file is part of vClick.
 
-    eyeClick is free software; you can redistribute it and/or modify it under
+    vClick is free software; you can redistribute it and/or modify it under
     the terms of the GNU GENERAL PUBLIC LICENSE Version 3, published by
     Free Software Foundation, Inc. <http://fsf.org/>
 
-    eyeClick is distributed in the hope that it will be useful,
+    vClick is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
-    License along with eyeClick; if not, write to the Free Software
+    License along with vClick; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
     02111-1307 USA
 */
@@ -28,7 +28,7 @@ import QtMultimedia 5.5
 import QtWebSockets 1.0
 
 ApplicationWindow {
-    title: qsTr("eyeClick client")
+    title: qsTr("vClick client")
     id: app
     width: 480
     height: 640
@@ -88,7 +88,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>eyeClick client "+ version + "</b><br>http://tarmoj.github.io/eyeclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
+                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("Exit")

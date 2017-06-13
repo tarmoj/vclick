@@ -10,9 +10,9 @@ SOURCES += main.cpp \
 	qosc/qosctypes.cpp \
 
 RESOURCES += qml.qrc \
-    eyeclick-client.qrc
+    vclick-client.qrc
 
-macx: ICON = eyeclick-client.icns
+macx: ICON = vclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
 
 ios {

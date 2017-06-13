@@ -2,19 +2,19 @@
 	Copyright (C) 2016 Tarmo Johannes
 	trmjhnns@gmail.com
 
-	This file is part of eyeClick.
+	This file is part of vClick.
 
-	eyeClick is free software; you can redistribute it and/or modify it under
+	vClick is free software; you can redistribute it and/or modify it under
 	the terms of the GNU GENERAL PUBLIC LICENSE Version 3, published by
 	Free Software Foundation, Inc. <http://fsf.org/>
 
-	eyeClick is distributed in the hope that it will be useful,
+	vClick is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU Lesser General Public
-	License along with eyeClick; if not, write to the Free Software
+	License along with vClick; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 	02111-1307 USA
 */
@@ -32,7 +32,7 @@ QT_USE_NAMESPACE
 
 WsServer::WsServer(quint16 port, QObject *parent) :
     QObject(parent),
-	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("eyeClickServer"),
+	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
                                             QWebSocketServer::NonSecureMode, this)),
 	m_clients(), m_oscClients()
 {
@@ -45,7 +45,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 
 	sendOsc = false; // might be necessary to set to tru only if driven by external ws-messages
 	sendWs = false;
-	settings = new QSettings("eyeclick","server"); // TODO platform independent
+	settings = new QSettings("vclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
 
 	testing = false;
@@ -147,7 +147,7 @@ void WsServer::processTextMessage(QString message)
 
 
 	if (messageParts[0]=="start") {
-		qDebug()<<"Remote call to start eyeClick";
+		qDebug()<<"Remote call to start vClick";
 		QString scoreFile;
 		if (messageParts.length()>1) {
 			scoreFile = messageParts[1]; // for future
@@ -157,7 +157,7 @@ void WsServer::processTextMessage(QString message)
 	}
 
 	if (messageParts[0]=="stop") {
-		qDebug()<<"Remote call to stop eyeClick";
+		qDebug()<<"Remote call to stop vClick";
 		emit stop(); // message to QML to set the scorename and start Csound
 
 	}
@@ -320,12 +320,12 @@ void WsServer::setTesting(bool testing)
 
 	if (testing) {
 		// logfile for testing
-//		logFile.setFileName("eyeclick-server.log");
+//		logFile.setFileName("vclick-server.log");
 //		if (!logFile.open(QIODevice::WriteOnly)) {
 //			qDebug()<<"Error in creating logFile";
 //		}
 		time.start();
-		sound.setSource(QUrl("file:///home/tarmo/tarmo/programm/qt-projects/eyeClick/client/sounds/sound2.wav")); //TODO - put into resource, if you are going to distribute it
+		sound.setSource(QUrl("file:///home/tarmo/tarmo/programm/qt-projects/vClick/client/sounds/sound2.wav")); //TODO - put into resource, if you are going to distribute it
 		//sound.play();
 
 	}

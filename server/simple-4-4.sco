@@ -1,4 +1,4 @@
-; eyeClick score template								
+; vClick score template								
 								
 								
 ;count-down 								
