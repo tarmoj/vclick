@@ -326,7 +326,7 @@ ApplicationWindow {
                     tooltip: qsTr("To send messages to client in the same computer")
                     onClicked: {
                         if (oscAddresses.text.indexOf("127.0.0.1")<0 ) {
-                            oscAddresses.text += ",localhost ";
+                            oscAddresses.text += ",127.0.0.1 ";
                             wsServer.setOscAddresses(oscAddresses.text)
                         }
 
