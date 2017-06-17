@@ -391,6 +391,14 @@ void WsServer::createOscClientsList()
         joinedString.chop(1);
     }
 
+
+	if (settings) { // store in settings with port numbers
+		if (joinedString.isEmpty()  ) // allow also stroring empty addresses line, but avoid invalid value.
+			settings->setValue("oscaddresses", "");
+		else
+			settings->setValue("oscaddresses", joinedString);
+	}
+
     emit updateOscAddresses(joinedString);
     qDebug()<<"OSC targets count: " << m_oscClients.count();
 }
@@ -433,12 +441,13 @@ void WsServer::setOscAddresses(QString addresses)
 	// maybe not necessary later:
 	createOscClientsList(addresses);
 
+	/*
 	if (settings) { // store in settings
 		if (addresses=="none" ||  oscAddresses.isEmpty()  ) // allow also stroring empty addresses line, but avoid invalid value.
 			settings->setValue("oscaddresses", "");
 		else
 			settings->setValue("oscaddresses", oscAddresses);
-	}
+	} */
 	sendOsc = oldvalue;
 }
 
