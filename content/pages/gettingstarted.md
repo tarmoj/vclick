@@ -12,7 +12,9 @@ You need to get two programs to work together - the server and client(s).
 
 <img src=../images/eclick-client.png width=64 > **The client** is the app marked with green icon. It receives the messages from server and displays the beats and other info to player(s). You can have numerous clients connected to the server, ie the server sends the same signals to all players. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).
 
-###First steps: 
+<br>
+
+### First steps: 
 
 1) Donwload server to your computer (see [Downloads](download.html) )
 
@@ -26,7 +28,8 @@ Press **Start** If you see numbers moving on server's screen, the client should 
 
 <br><br>
 
-##Connect client(s) and server
+<a name="connect">
+## Connect client(s) and server
 
 The server (the central computer) and the clients (player's phones/laptops) **must be IN THE SAME NETWORK** (the same wifi network or network cables connected to the same router). If firewall is enabled also for local network, disable it for local connections. 
 
@@ -45,6 +48,7 @@ To connect clients to server there are two possibilities:
 2. Add the clients' addresses to server's field **Clients**, separated by commas. Then press **Update** and the clients on these addresses should be receiving the messages. The server remembers the addresses from last session, you don't need to enter them every time, if the addresses don't change.
 
 <br>
+<a name="playing">
 ### Playing a piece
 
 The rest is easy - load a score file on the server with definitions of time signatures, tempos etc and press **Start**. You can also enter from which bar you want to start (useful from rehearsing).
@@ -54,8 +58,8 @@ To try out, download or copy a simple demo score file (50 bars in 4/4, tempo 60)
 
 How to write or get score files for your specific pieces, see [Score files](score-files.html).
 
-<br>
-###Playing sound files
+<br><a name="soundfiles">
+### Playing sound files
 
 If you play a piece when there is a backtrack (sound file) like an piece for instruments and electronics/fixed media - you can start it from eClick (since version 0.2.0). You can start also several sound clips on certain moment, if you use the "playfile" command in the score. 
 
@@ -70,8 +74,9 @@ After that you must set, in which folder are the sound files (SFDIR). Use the bu
 
 Press "Reset" to go back to the soundless default mode, the volume slider and SFDIR field will be hidden again.
 
-
-###If some devices are slower
+<br>
+<a name="delay">
+### If some devices are slower
 
 It can easily happen that you have a modern computer running one client and an old android phone another. Obviously slower devices take more time to process the signals and display numbers or blinking. From version 0.2.0 the is a **"Toggle Delay Row"** option in client's menu. Set the delay time in milliseconds for faster devices to make them click together. Around 100 milliseconds should be noticable change for the eye. 
 
@@ -79,3 +84,15 @@ It can easily happen that you have a modern computer running one client and an o
 
 
 Pease take into account that is is normal that there can be slight deviations, especially on Android or iOs devices, depending on other operations in the devices, wifi quality etc. Mostly the deviations are reasonably small. 
+
+
+<a name="multichannel">
+### Different info cor different players
+
+Since version 0.3.0 it is possible to send individual messages for players, including also different meters, subdivisions,  notifications etc. It may help to play complex polyrhythms or even different tempos can be encoded to the score (in relatoion to basic tempo).
+
+The differences must be encoded in the score [ See about scores ].  
+
+To set the voice or instrument number of the player open Menu->Set Intrument Number and using the + and - arrows choose to which voice you belong. The list (like 1- flute, 2- clarinet etc) should come with the score. After setting the number, you must let know also the server about the chamnge -  press "Update" or "Hello, Server" again. If you get message "Got you!" -  everything is fine.
+
+
