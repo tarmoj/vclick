@@ -87,12 +87,14 @@ Pease take into account that is is normal that there can be slight deviations, e
 
 
 <a name="multichannel">
-### Different info cor different players
+### Different info for different players
 
 Since version 0.3.0 it is possible to send individual messages for players, including also different meters, subdivisions,  notifications etc. It may help to play complex polyrhythms or even different tempos can be encoded to the score (in relatoion to basic tempo).
 
 The differences must be encoded in the score [ See about scores ].  
 
 To set the voice or instrument number of the player open Menu->Set Intrument Number and using the + and - arrows choose to which voice you belong. The list (like 1- flute, 2- clarinet etc) should come with the score. After setting the number, you must let know also the server about the chamnge -  press "Update" or "Hello, Server" again. If you get message "Got you!" -  everything is fine.
+
+TODO: screenshots, video.
 
 

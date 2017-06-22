@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'Tarmo Johannes'
-SITENAME = u'eClick'
-SITEURL = 'http://tarmoj.github.io/eclick'
+SITENAME = u'vClick'
+SITEURL = 'http://tarmoj.github.io/vclick'
 SITE_URL = SITEURL
 
 TIMEZONE = 'Europe/Tallinn'

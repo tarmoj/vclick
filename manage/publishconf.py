@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.curdir)
 from pelicanconf import *
 
-SITEURL = 'http://tarmoj.github.io/eclick'
+SITEURL = 'http://tarmoj.github.io/vclick'
 SITE_URL = SITEURL
 RELATIVE_URLS = True
 
