@@ -28,7 +28,7 @@ Press **Start** If you see numbers moving on server's screen, the client should 
 
 <br><br>
 
-<a name="connect">
+<a name="connect"></a>
 ## Connect client(s) and server
 
 The server (the central computer) and the clients (player's phones/laptops) **must be IN THE SAME NETWORK** (the same wifi network or network cables connected to the same router). If firewall is enabled also for local network, disable it for local connections. 
@@ -48,7 +48,7 @@ To connect clients to server there are two possibilities:
 2. Add the clients' addresses to server's field **Clients**, separated by commas. Then press **Update** and the clients on these addresses should be receiving the messages. The server remembers the addresses from last session, you don't need to enter them every time, if the addresses don't change.
 
 <br>
-<a name="playing">
+<a name="playing"></a>
 ### Playing a piece
 
 The rest is easy - load a score file on the server with definitions of time signatures, tempos etc and press **Start**. You can also enter from which bar you want to start (useful from rehearsing).
@@ -75,7 +75,7 @@ After that you must set, in which folder are the sound files (SFDIR). Use the bu
 Press "Reset" to go back to the soundless default mode, the volume slider and SFDIR field will be hidden again.
 
 <br>
-<a name="delay">
+<a name="delay"></a>
 ### If some devices are slower
 
 It can easily happen that you have a modern computer running one client and an old android phone another. Obviously slower devices take more time to process the signals and display numbers or blinking. From version 0.2.0 the is a **"Toggle Delay Row"** option in client's menu. Set the delay time in milliseconds for faster devices to make them click together. Around 100 milliseconds should be noticable change for the eye. 
@@ -86,7 +86,7 @@ It can easily happen that you have a modern computer running one client and an o
 Pease take into account that is is normal that there can be slight deviations, especially on Android or iOs devices, depending on other operations in the devices, wifi quality etc. Mostly the deviations are reasonably small. 
 
 
-<a name="multichannel">
+<a name="multichannel"></a>
 ### Different info for different players
 
 Since version 0.3.0 it is possible to send individual messages for players, including also different meters, subdivisions,  notifications etc. It may help to play complex polyrhythms or even different tempos can be encoded to the score (in relatoion to basic tempo).
