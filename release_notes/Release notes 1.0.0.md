@@ -1,69 +1,41 @@
 # vClick 1.0.0 released
  
 
-The first post-beta version is ready! It is based closely on version 0.3.0 but the changes are described more in detail here.
+The first "production ready" version is out! It is based closely on version 0.3.0, the changes are described more in detail here.
  
-The source and binaries can be downloaded from: <https://github.com/tarmoj/vclick/releases/tag/1.0.0>.
+The source and binaries can be downloaded from: <https://github.com/tarmoj/vclick/releases/tag/v1.0.0>.
 
 **vClick Client for iOs** can now be installed from [App Store](https://itunes.apple.com/us/app/vclick-client/id1247820434?mt=8).
 
 **vClick Client for Android** is available from [Google Play](https://play.google.com/store/apps/details?id=org.vclick.client).
 
 
+**NB!** This software was called **eClick** before version 0.3.0, now it is **vClick** for "visual click-track system"
 
-### New in version 0.2.0:
 
-* Configurable sound output, if score uses "playfile" commands. Most typical options for sound in "Csound Options" field is: 
+### New in version 1.0.0:
 
-``-odac -d``  
+* Implemented multichannel support -  OSC messages are (ususally) sent from Csound, not WsServer classs. The latter can be enabled, if used together with reading Jack or driven by external Websocket messages.
 
-The folder for sound files (SFDIR) can be set in server. Use "Reset" button to go back into soundless mode (server).
+Different players (or instruments/voices) can receive different signals (times, subdivisions, notifications etc). In Client there is option "Set instrument number" in menu, in Server the voice can be added as <number>: before the client's IP address like
 
-* Lot's of improvements to iOs look and building system
+``2:192.168.1.109``  
 
-* Android and iOs -  keep screen always open.
+In the score the channels' (voices') prarameter must be set as bitwise sum of the voices:  1-  voice 1, 2- voice 2, 4 -  voice 3, 8 -  voice 4 etc. 
 
-* Many improvements for better layout, automatic scaling of bar/beat numbers to fit.
+NB! Use 0 for TUTTI (sent to everyone).
 
-* Possibility to set delay to sync with slower devices (client, Menu->Toggle delay row).
+Up to 32 voices can be used.
 
-* "Update IP address"  in menu (if network has been changed) -  both client and server
 
-* Added possibility to run a system command on start/stop (server) - commands are set in server's configuration file as rows startCommand="" and stopCommand=""
+* Server -  sending Websocket and server's OSC is disabled by default, can be enabled from menu. 
 
-* NB! changed client's **OSC port to 87878** (to avoid possible port usage conflict on iOs) -  **this makes it incompatible with version 0.1.*!!!**
 
-* Went over to QtQuick Controls 2.0 (requires Qt 5.7 or later) for better menu placement, cross platform font sizes and more (client, not used in Windows version yet).
 
 ### Fixes
 
-* Fixed missing subdivision click (blue led)
+* Better connection routins, also from "Update" instrument number in Client.
 
-* Put back colors for different beat numbers
+* Store voice numbers of clients in Server's settings
 
-* iOs -  fixed automatic restarting of OSC listener after standby, screen close or similar (works also after phone call :) )
-
-* Fixed occasional crashes on starting/stopping repeatedly (server)
-
-* Better conditions in .pro file to build on Windows
-
-* Fixed setting volume before playback
-
-* Fixed need to press "Connect" twice sometimes (client). Shows notification "Failed", if there no connection.
-
-
-
-
-### Plans for further development
-
-*  Rename the software (probably to eyvClick) to avoid possible trademark conflict
-
-* Implement system where different clients can receive different signals.
-
-* Dialog to select serveral scorefiles and set shortcuts to start them, if piece needs to be performed in multiple sections.
-
-* Configurable OSC port number (both server and client)
-
-* Release the version 1.0 to Google Play (android) and Apple Store
-
- 
+* Avoide extra permissions (Camera, Record_Voice) in Android build.
