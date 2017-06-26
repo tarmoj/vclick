@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/csound">
-        <file>metro_simple.orc</file>
         <file>test.sco</file>
         <file>metro_sendosc.orc</file>
     </qresource>

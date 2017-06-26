@@ -17,10 +17,19 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Menu")
             MenuItem {
-                text: qsTr("&Settings")
-                enabled: false
-                //onTriggered: // messageDialog.show(qsTr("Open action triggered"));
+                id: wsMenu
+                checkable: true
+                text: qsTr("Enable Websocket signals")
+                onCheckedChanged: wsCheckBox.enabled = checked
             }
+
+            MenuItem {
+                id: oscMenu
+                checkable: true
+                text: qsTr("Enable server's OSC")
+                onCheckedChanged: oscCheckBox.enabled = checked
+            }
+
             MenuItem {
                 text: qsTr("&Update IP address")
                 onTriggered:  ipLabel.text = qsTr("My IP: ")+ wsServer.getLocalAddress()
@@ -53,6 +62,8 @@ ApplicationWindow {
         property alias scoreFile:  scoField.text
         property alias sendWs: wsCheckBox.checked
         property alias sendOsc: oscCheckBox.checked
+        property alias wsMenu: wsMenu.checked
+        property alias oscMenu: oscMenu.checked
         property alias readFromJack: jackCheckBox.checked
         property alias lastScorePath: fileDialog.folder
         property alias csoundOptions: csoundOptions.text
@@ -198,14 +209,16 @@ ApplicationWindow {
 
             CheckBox {
                 id: wsCheckBox
-                text: qsTr("Send ws")
+                enabled: false
+                text: qsTr("Send WS signals")
                 checked: false
                 onCheckedChanged: wsServer.setSendWs(checked);
             }
 
             CheckBox {
                 id: oscCheckBox
-                text: qsTr("Send osc")
+                enabled: false
+                text: qsTr("Send server's OSC signals")
                 checked: false
                 onCheckedChanged: wsServer.setSendOsc(checked);
 

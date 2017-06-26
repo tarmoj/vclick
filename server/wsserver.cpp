@@ -218,7 +218,7 @@ void WsServer::socketDisconnected()
 
 void WsServer::handleBeatBar(int bar, int beat)
 {
-	qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
+	//qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
 	// for testing:
 	int now, difference=0;
@@ -297,7 +297,7 @@ void WsServer::handleNotification(QString message, float duration)
 void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
 	//tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
-	qDebug()<<"Tempo: "<<tempo;
+	//qDebug()<<"Tempo: "<<tempo;
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
 			//QList<QVariant> data;
