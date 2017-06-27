@@ -10,7 +10,7 @@ You need to get two programs to work together - the server and client(s).
 
 
 
-<img src=../images/eclick-client.png width=64 > **The client** is the app marked with green icon. It receives the messages from server and displays the beats and other info to player(s). You can have numerous clients connected to the server, ie the server sends the same signals to all players. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).
+<img src=../images/eclick-client.png width=64 > **The client** is the app marked with green icon. It receives the signals from server and displays the beats and other info to player(s). You can have numerous clients connected to the server, ie the server sends the same signals to all players. Since version 0.3.0 the score can be programmed to send also different info to certain players, if needed. It is most convenient to have clients running in smartphones or tablests but laptops or computers are also great (in fact they work better :) ).
 
 <br>
 
@@ -43,7 +43,7 @@ _**NB! <font style="color:red">It is crucial to use a good quality network!</fon
 
 To connect clients to server there are two possibilities: 
 
-1. Enter the IP address of server to client's **Server address** field and press **Hello, Server**. You should receive a notification "Got you!" on client's screen. 
+1. Enter the IP address of server (like 192.168.1.220) to client's **Server address** field and press **Hello, Server**. You should receive a notification "Got you!" on client's screen. 
 
 2. Add the clients' addresses to server's field **Clients**, separated by commas. Then press **Update** and the clients on these addresses should be receiving the messages. The server remembers the addresses from last session, you don't need to enter them every time, if the addresses don't change.
 
@@ -58,10 +58,10 @@ To try out, download or copy a simple demo score file (50 bars in 4/4, tempo 60)
 
 How to write or get score files for your specific pieces, see [Score files](score-files.html).
 
-<br><a name="soundfiles">
+<br><a name="soundfiles"></a>
 ### Playing sound files
 
-If you play a piece when there is a backtrack (sound file) like an piece for instruments and electronics/fixed media - you can start it from eClick (since version 0.2.0). You can start also several sound clips on certain moment, if you use the "playfile" command in the score. 
+If you play a piece when there is a backtrack (sound file) like an piece for instruments and electronics/fixed media - you can start it from vClick (since version 0.2.0). You can start also several sound clips on certain moment, if you use the "playfile" command in the score. 
 
 To hear the sound, you need to edit "Csound Options" field in server. The default, `` -odac -+rtaudio=null -d ``  
 has no sound output. The most typical option to use your first sound card is:
@@ -72,6 +72,8 @@ To use second sound card, write ``-odac1``, for third one ``-odac2`` etc. You ca
 
 After that you must set, in which folder are the sound files (SFDIR). Use the button "Select" to accomplish that. 
 
+<img src=../images/server-sound.png width=500 >
+
 Press "Reset" to go back to the soundless default mode, the volume slider and SFDIR field will be hidden again.
 
 <br>
@@ -80,7 +82,7 @@ Press "Reset" to go back to the soundless default mode, the volume slider and SF
 
 It can easily happen that you have a modern computer running one client and an old android phone another. Obviously slower devices take more time to process the signals and display numbers or blinking. From version 0.2.0 the is a **"Toggle Delay Row"** option in client's menu. Set the delay time in milliseconds for faster devices to make them click together. Around 100 milliseconds should be noticable change for the eye. 
 
-<img src=../images/delay-row.png width=500 height=200 >
+<img src=../images/delay-row.png width=500 >
 
 
 Pease take into account that is is normal that there can be slight deviations, especially on Android or iOs devices, depending on other operations in the devices, wifi quality etc. Mostly the deviations are reasonably small. 
@@ -89,12 +91,21 @@ Pease take into account that is is normal that there can be slight deviations, e
 <a name="multichannel"></a>
 ### Different info for different players
 
-Since version 0.3.0 it is possible to send individual messages for players, including also different meters, subdivisions,  notifications etc. It may help to play complex polyrhythms or even different tempos can be encoded to the score (in relatoion to basic tempo).
+Since version 0.3.0 it is possible to send individual messages for players, including  different meters, subdivisions,  notifications etc. It may help to play complex polyrhythms or even different tempos can be encoded to the score (in relatoion to basic tempo).
 
-The differences must be encoded in the score [ See about scores ].  
+The differences must be encoded in the score [see notes](score-files.html#multichannel).  
 
-To set the voice or instrument number of the player open Menu->Set Intrument Number and using the + and - arrows choose to which voice you belong. The list (like 1- flute, 2- clarinet etc) should come with the score. After setting the number, you must let know also the server about the chamnge -  press "Update" or "Hello, Server" again. If you get message "Got you!" -  everything is fine.
+To set the voice or instrument number of the player open Menu->Set Intrument Number and using the + and - arrows choose to which voice you belong. 
 
-TODO: screenshots, video.
+<img src=../images/set-instrument.png width=500 >
 
+
+To open this menu you can click also on the instrument number in upper right corner, if it set.
+
+After any change you must press "Update" or "Hello, Server" to let also server know about your choice.If you get message "Got you!" -  everything is fine.
+
+
+Alternately you can set the voice number also in server at client's IP addresses row, adding <voice number>: before the IP address, like _2:192.168.1.15_  , then press "Update" on server to activate the change. 
+
+How the voices are used is set in the score. The list (like 1- flute, 2- clarinet etc) should come with the score. 
 

@@ -34,8 +34,8 @@
     <h1>Score files</h1>
     
 
-    <p><em>You ask:</em> How can I play a certain piece with eClick system? How does eClick know when to send the the beats? How is the "click-track" done?</p>
-<p>eClick needs a special score where everything is defined. It is a plain text file, written in standard Csound score syntax. The  file has usually .sco ending.</p>
+    <p><em>You ask:</em> How can I play a certain piece with vClick system? How does vClick know when to send the the beats? How is the "click-track" done?</p>
+<p>vClick needs a special score where everything is defined. It is a plain text file, written in standard Csound score syntax. The  file has usually .sco ending.</p>
 <p>You can study <a href="https://csound.github.io/docs/manual/ScoreTop.html">Csound score syntax</a> and the demo scores:</p>
 <p><a href="https://github.com/tarmoj/eclick/blob/master/server/simple-4-4.sco">https://github.com/tarmoj/eclick/blob/master/server/simple-4-4.sco</a> (simple 4/4 for 50 bars)</p>
 <p><a href="https://github.com/tarmoj/eclick/blob/master/server/test.sco">https://github.com/tarmoj/eclick/blob/master/server/test.sco</a> (the test score included also in server by default)</p>
@@ -44,14 +44,27 @@
 <p><br></p>
 <h3>Order the score</h3>
 <p>Please send the musical score in pdf to me at <a href="mailto:trmjhnns@gmail.com">trmjhnns ae gmail com</a>.</p>
-<p>I will have a look and if the piece is possible to transcribe I will write a eClick score according to it and send it back. We must be in good contact meanwhile, of course, to get all details  - like durations of fermatas  etc etc - right.
+<p>I will have a look and if the piece is possible to transcribe I will write a vClick score according to it and send it back. We must be in good contact meanwhile, of course, to get all details  - like durations of fermatas  etc etc - right.
 <br></p>
 <h4>How much does it cost?</h4>
 <p>A simple score - 50 €</p>
 <p>Medium or more complex score - 100 €</p>
 <p>Very long or complex score or special rewrite for the server software (like having many clictracks going in different tempos) - let's agree.</p>
 <p>I will let you know after seeing the score.</p>
-<p>Feel free to share the eClick scores or find other people who can help with transcribing the scores.</p>
+<p>Feel free to share the vClick scores or find other people who can help with transcribing the scores.</p>
+<p><br>
+<a name="multichannel"></a></p>
+<h4>Notes on multichannel scorel lines</h4>
+<p>Since version 0.3.0 you can send different information to different players</p>
+<p>Say the flutist want its bar subdivided 3+3+2 but clarinet 2+3+3 or you want players to help with different polyrhythms or send different notifications to different players. You can do it.</p>
+<p>To set to which player (which channel) the signal is sent, you must set the "channel" parameter in score lines. 0 means TUTTI - send to everybody, otherwise it should be bitwise sum of the voices you want to send the signal to: 1st voice - 1, 2nd voice - 2, 3rd voice - 4, 4st - 8 etc. Up to 32 different voices can be used.</p>
+<p>For example:</p>
+<div class="highlight"><pre>i   2   0   4   4   4   2   1   21 ; send 4/4 subidivided in 2, bar number 1 to voices 1, 3 and 5 (1+4+16) 
+</pre></div>
+
+
+<div class="highlight"><pre>i   &quot;notification&quot;  0   2   &quot;You are 1!&quot;    1 ; send notification to voice 1
+</pre></div>
 
         </section><!-- #content -->
         <section id="widgets" class="grid col-300 fit" >
