@@ -21,6 +21,8 @@ It is supposed to be fully functional and ready to use, including multichannel m
 
 **vClick Client for iOs** can now be installed from `App Store <https://itunes.apple.com/us/app/vclick-client/id1247820434?mt=8>`_
 
+*Currently the App Store install is disabled since my developer license expired and I have personally no interest to pay any more for Apple. If you care, please consider a donation I could renew the devloper account. Or use another operating system.*
+
 **vClick Client for Android** is available from `Google Play <https://play.google.com/store/apps/details?id=org.vclick.client>`_
 
 
