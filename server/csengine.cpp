@@ -76,13 +76,17 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 			}
 			if (line.startsWith("i 2") || line.startsWith("i2") ) { // TODO: OR starts with i \"bar\"
 				QStringList fields = line.split(" ");
-				int barno = fields[7].toInt(); // NB! does not work, if 'i2'
-				if (barno==startBar) {
-					qDebug()<<"Found bar "<<barno;
-					startTime = fields[2].toFloat();
-					qDebug()<<"Starts at: " << startTime;
+                if (fields.count()>=7) {
+                    int barno = fields[7].toInt(); // NB! does not work, if 'i2'
+                    if (barno==startBar) {
+                        qDebug()<<"Found bar "<<barno;
+                        startTime = fields[2].toFloat();
+                        qDebug()<<"Starts at: " << startTime;
 
-				}
+                    }
+                } else {
+                    qDebug()<<"There must be at least 7 fields in the scoreline: "<<line;
+                }
 			}
 
 		}
