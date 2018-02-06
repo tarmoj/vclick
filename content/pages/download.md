@@ -44,4 +44,3 @@ Since version 1.0.0 vClick client is available at  [Google Play](https://play.go
 
 Since version 1.0.0 vClick client is available at  [App Store](https://itunes.apple.com/us/app/vclick-client/id1247820434?mt=8)
 
-_Currently the App Store install is disabled since my developer license expired and I have personally no interest to pay any more for Apple. If you care, please consider a donation I could renew the devloper account. Or use another operating system. Or build it yourself from sourcecode -  you need Qt for iOs and XCode intalled in your Mac to do it._
