@@ -70,4 +70,4 @@ The info can be combined also into one string:
 
 <br>
 
-The source code is available at <https://github.com/tarmoj/eclick>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).
+The source code is available at <https://github.com/tarmoj/vclick>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).

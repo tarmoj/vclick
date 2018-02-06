@@ -1,7 +1,7 @@
 Title: Getting started
 Date: 2016-05-31 10:20
 sortorder: 3
-Category: Pages
+Category: pages
 
 You need to get two programs to work together - the server and client(s).
 

@@ -33,7 +33,7 @@ PLUGINS = [
      'pelican_youtube',
  ]
 
-STATIC_PATHS = ['images']
+STATIC_PATHS = ['images', 'scores']
 
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
@@ -50,6 +50,7 @@ MENUITEMS = (
     ('Getting started', SITEURL+'/pages/getting-started.html'),
     ('How it works', SITEURL+'/pages/how-it-works.html'),
     ('Score files', SITEURL+'/pages/score-files.html'),
+    ('Library of scores', SITEURL+'/pages/score-library.html'),
     ('Contribute', SITEURL+'/pages/contribute.html'),
     ('Contact', SITEURL+'/pages/contact.html')
 )
