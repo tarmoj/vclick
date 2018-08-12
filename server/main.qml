@@ -1,4 +1,4 @@
-import QtQuick 2.3
+import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("vClick server")
-    property string version: "1.0.0"
+    property string version: "1.0.1"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -164,24 +164,32 @@ ApplicationWindow {
         //Shortcuts
         focus: true
         Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
-            if (event.key == Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
+            if (event.key === Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
                 var name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja2.sco", "tanja1.sco")
                 cs.start(scoField.text, startBarSpinBox.value)
                 console.log("Starting: ", name)
 
             }
-            if (event.key == Qt.Key_F2) {
+            if (event.key === Qt.Key_F2) {
                 var name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja1.sco", "tanja2.sco")
                 cs.start(scoField.text, startBarSpinBox.value)
                 console.log("Starting: ", name)
             }
-             if (event.key == Qt.Key_F10)
+             if (event.key === Qt.Key_F10)
                  cs.stop()
+
+             if (event.key === Qt.Key_Backspace   || event.key === Qt.Key_Escape ) {
+                 stopButton.clicked()
+             }
 
 
         }
+
+        Keys.onEnterPressed: startButton.clicked()
+
+        Keys.onBacktabPressed: consol.log("Backspace")
 
         Column {
             id: mainColumn
