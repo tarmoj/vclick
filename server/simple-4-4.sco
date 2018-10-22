@@ -4,7 +4,7 @@
 ;count-down 								
 								
 								
-#define TUTTI  #63#								
+#define TUTTI  #0#								
 #define TEMPO1 #60#								
 #define REPTEMPO #$TEMPO1# ; REPTEMPO for setting tempo for countdown (if starts from section in another tempo)								
 #define BEGIN #5#								
@@ -86,7 +86,7 @@ i	2	196	4	4	4	0	50
 								
 ; CUES								
 								
-;i	"playfile"	5	999	"filename with full path or relative path to server"	0	; t1		
+i	"playfile"	0	999	"test.wav"	0	; t1		
 								
 								
 								
