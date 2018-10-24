@@ -3,7 +3,7 @@
 ; (c) Tarmo Johannes 2017, trmjhnns@gmail.com 
 
 sr = 44100 
-ksmps = 32
+ksmps = 128
 nchnls = 2
 0dbfs = 1
 
@@ -123,7 +123,7 @@ instr 2, bar ; example i 2 <start> <dur> <beats_in_bar> <fraction of full note (
 		gkBeat = kBeat
 		schedkwhen kBeat_trig,0,0,"send",0,0,$BEATBAR, ichannels, iBarno,kBeat
 		if (changed(gkTempo)==1) then 
-			event "i","send",0,0,$TEMPO, ichannels, gkTempo,0
+			;event "i","send",0,0,$TEMPO, ichannels, gkTempo,0 ; why is this sent every bar?
 		endif
 		
 		

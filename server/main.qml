@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("vClick server")
-    property string version: "1.0.1"
+    property string version: "1.0.2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -164,6 +164,9 @@ ApplicationWindow {
         //Shortcuts
         focus: true
         Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
+
+            console.log(event.key)
+
             if (event.key === Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
                 var name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja2.sco", "tanja1.sco")
