@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "1.0.0"
+    property string version: "1.0.1"
 
 
 
@@ -322,8 +322,8 @@ ApplicationWindow {
 //            anchors.rightMargin: 5
 
             source: "qrc:///menu.png"
-            width: 32
-            height: 32
+            width: height//32
+            height: tempoLabel.height //32
             MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
 
 
@@ -335,8 +335,8 @@ ApplicationWindow {
             border.color: "darkgrey"
             visible: (instrument>0)
             radius: 8
-            width: 32
-            height: 32
+            width: height
+            height: tempoLabel.height
             color: "transparent"
             anchors.top: mainRect.top
             anchors.topMargin: 5
@@ -367,22 +367,22 @@ ApplicationWindow {
                 x:5
                 id: delayRow
                 y:5
-                width: (mainRect.width>mainRect.height) ? parent.width/2 : parent.width-5
+                width: parent.width //(mainRect.width>mainRect.height) ? parent.width/2 : parent.width-5
                 visible: true
                 spacing: 3
                 Label {text: qsTr("Delay (ms): ") }
                 SpinBox {
                     id: delaySpinBox
                     editable: true
-                    up.indicator.width: delaySpinBox.width/6
-                    down.indicator.width: delaySpinBox.width/6
+                    up.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : up.indicator.implicitWidth
+                    down.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : down.indicator.implicitWidth
                     value: 0
                     from: 0
                     to: 1001
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth
                     Layout.preferredWidth: 100
-                    Layout.minimumWidth: 50
+                    Layout.minimumWidth: 60
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
                     //onWidthChanged: console.log("SpinboxWidth:",this.width)
@@ -402,7 +402,10 @@ ApplicationWindow {
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: implicitWidth
                     text: qsTr("Hide");
-                    onClicked: delayRect.visible = false;  }
+                    onClicked: delayRect.visible = false;
+                }
+
+                Item { Layout.fillWidth: true}
             }
         }
 
@@ -417,15 +420,19 @@ ApplicationWindow {
                 x:5
                 id: instrumentRow
                 y:5                
-                width: (mainRect.width>mainRect.height) ? parent.width*0.75 : parent.width-5
+                width: parent.width //(mainRect.width>mainRect.height) ? parent.width*0.75 : parent.width-5
                 visible: true
                 spacing: 3
-                Label {text: qsTr("Instrument no: ") }
+                Label {
+                    text: qsTr("Instrument no: ");
+                    Layout.fillWidth: true;
+                    Layout.maximumWidth: implicitWidth
+                }
                 SpinBox {
                     id: instrumentSpinBox
                     editable: true
-                    up.indicator.width: delaySpinBox.width/5
-                    down.indicator.width: delaySpinBox.width/5
+                    up.indicator.width:    delaySpinBox.up.indicator.width
+                    down.indicator.width: delaySpinBox.down.indicator.width
                     value: instrument
                     from: 0
                     to: 32
@@ -464,8 +471,12 @@ ApplicationWindow {
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: implicitWidth
                     text: qsTr("Hide");
-                    onClicked: instrumentRect.visible = false;  }
+                    onClicked: instrumentRect.visible = false;
+                }
+
+                Item { Layout.fillWidth: true}
             }
+
         }
 
 
