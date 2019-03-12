@@ -44,7 +44,7 @@ ApplicationWindow {
             title: qsTr("Menu")
 
             background: Rectangle {
-                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :200
+                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :250
                     implicitHeight: 200
                     color: "#ffffff"
                     border.color: "#353637"
@@ -298,36 +298,15 @@ ApplicationWindow {
         }
         anchors.fill: parent
 
-//        CheckBox {
-//            x:5; y: 5
-//            id: animationCheckBox
-//            checked: true
-//            text: qsTr("Animation")
-//        }
-
-//        CheckBox {
-//            x:5;
-//            anchors.top: animationCheckBox.bottom
-//            id: soundCheckBox
-//            checked: false
-//            text: qsTr("Sound")
-//        }
-
         Image {
 
             id: menuButton
             y:5
             x:5
-//            anchors.right: mainRect.right
-//            anchors.rightMargin: 5
-
             source: "qrc:///menu.png"
-            width: height//32
-            height: tempoLabel.height //32
+            width: height
+            height: tempoLabel.height
             MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
-
-
-
         }
 
         Rectangle {
@@ -374,14 +353,14 @@ ApplicationWindow {
                 SpinBox {
                     id: delaySpinBox
                     editable: true
-                    up.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : up.indicator.implicitWidth
-                    down.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : down.indicator.implicitWidth
+                    //up.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : up.indicator.implicitWidth
+                    //down.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : down.indicator.implicitWidth
                     value: 0
                     from: 0
                     to: 1001
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
-                    Layout.preferredWidth: 100
+                    Layout.maximumWidth: implicitWidth *1.5
+                    Layout.preferredWidth: implicitWidth
                     Layout.minimumWidth: 60
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
@@ -389,7 +368,7 @@ ApplicationWindow {
                 }
                 Button {
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth * 1.5
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: implicitWidth
 
@@ -398,7 +377,7 @@ ApplicationWindow {
                 }
                 Button {
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth * 1.5
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: implicitWidth
                     text: qsTr("Hide");
@@ -431,14 +410,14 @@ ApplicationWindow {
                 SpinBox {
                     id: instrumentSpinBox
                     editable: true
-                    up.indicator.width:    delaySpinBox.up.indicator.width
-                    down.indicator.width: delaySpinBox.down.indicator.width
+                    //up.indicator.width:    delaySpinBox.up.indicator.width
+                    //down.indicator.width: delaySpinBox.down.indicator.width
                     value: instrument
                     from: 0
                     to: 32
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
-                    Layout.preferredWidth: 60
+                    Layout.maximumWidth: implicitWidth*1.5
+                    Layout.preferredWidth: implicitWidth
                     Layout.minimumWidth: 50
                     stepSize: 1
                     onValueChanged:  {
@@ -450,7 +429,7 @@ ApplicationWindow {
                 }
                 Button {
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth*1.5
                     Layout.minimumWidth: 70
                     Layout.preferredWidth: implicitWidth
 
@@ -467,9 +446,9 @@ ApplicationWindow {
                 }
                 Button {
                     Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth * 1.5
                     Layout.minimumWidth: 50
-                    Layout.preferredWidth: implicitWidth
+                    Layout.preferredWidth: 60//implicitWidth
                     text: qsTr("Hide");
                     onClicked: instrumentRect.visible = false;
                 }

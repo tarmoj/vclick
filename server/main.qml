@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("vClick server")
-    property string version: "1.0.2"
+    property string version: "1.0.3"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -65,6 +65,7 @@ ApplicationWindow {
         property alias wsMenu: wsMenu.checked
         property alias oscMenu: oscMenu.checked
         property alias readFromJack: jackCheckBox.checked
+        property alias timeCodeHack: timeCodeCheckBox.checked
         property alias lastScorePath: fileDialog.folder
         property alias csoundOptions: csoundOptions.text
         property alias sfdir: sfdirField.text
