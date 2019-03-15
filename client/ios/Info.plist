@@ -77,11 +77,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.1</string>
+	<string>1.2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -99,6 +99,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>NeedLibrary access for uploading Images</string>
 	<key>UILaunchStoryboardName</key>
+	<string>Launch</string>
+	<key>UIMainStoryboardFile</key>
 	<string>Launch</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

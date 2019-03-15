@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "1.0.1"
+    property string version: "2.0.0" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -279,21 +279,20 @@ ApplicationWindow {
         id: mainRect
         gradient: Gradient {
             GradientStop {
-                position: 0
-                color: "#ffffff"
-            }
-
-            GradientStop {
-                position: 0.262
-                color: "#000000"
+                position: 0.00;
+                color: "#a9a9a9";
             }
             GradientStop {
-                position: 0.837
-                color: "#000000"
+                position: 0.26;
+                color: "#000000";
             }
             GradientStop {
-                position: 1
-                color: "#a9a9a9"
+                position: 0.84;
+                color: "#000000";
+            }
+            GradientStop {
+                position: 1.00;
+                color: "#a9a9a9";
             }
         }
         anchors.fill: parent

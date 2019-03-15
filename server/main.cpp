@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
+    //app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("server");

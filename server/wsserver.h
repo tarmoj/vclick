@@ -39,7 +39,7 @@ QT_FORWARD_DECLARE_CLASS(QWebSocketServer)
 QT_FORWARD_DECLARE_CLASS(QWebSocket)
 
 
-#define OSCPORT 87878
+#define OSCPORT 57878
 
 class WsServer : public QObject
 {

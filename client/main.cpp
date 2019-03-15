@@ -30,7 +30,7 @@
     #include "ios-screen.h"
 #endif
 
-#define OSCPORT 87878
+#define OSCPORT 57878
 
 #ifdef Q_OS_ANDROID
 	#include <QtAndroid>

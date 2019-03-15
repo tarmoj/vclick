@@ -13,7 +13,7 @@ nchnls = 2
 #define BLUE #2#
 #define TUTTI #0xFFFF# ; now 32 bits set to 1; think how to do it better...
 
-#define OSCPORT #87878#
+#define OSCPORT #57878#
 
 #define BEATBAR #0#
 #define LED #1#
@@ -284,14 +284,14 @@ instr mySendOsc
 	if (strcmp(Stype,"sf")==0) then ; notification
 		Smessage strget p7
 		idur = p8
-		OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
 	elseif (strcmp(Stype,"f")==0) then ; tempo
 		itempo = p7
-		OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, itempo
-	else ; beatbar and led send two bumbers
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, itempo
+        else ; beatbar and led send two bumbers
 		ip1 = p7
 		ip2 = p8
-		OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, ip1, ip2
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, ip1, ip2
 	endif
 		
 endin
