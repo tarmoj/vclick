@@ -425,6 +425,7 @@ ApplicationWindow {
                     onClicked: {
                         cs.setOscAddresses(oscAddresses.text);
                         cs.start(scoField.text, startBarSpinBox.value)
+                        messageArea.text = ""
                         // set volume somewhat later when Csound will be loaded
                         setVolumeTimer.start()
                         if (startCommand.length > 0) {

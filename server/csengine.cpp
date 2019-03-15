@@ -242,6 +242,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	cs = NULL;
 	stopNow = false;
 	isRunning = false;
+	tempOrcFile->deleteLater();
 }
 
 void CsEngine::stop() {
