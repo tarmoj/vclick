@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("vClick server")
-    property string version: "1.0.3"
+    property string version: "2.0.0-alpha"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -152,12 +152,11 @@ ApplicationWindow {
         gradient: Gradient {
             GradientStop {
                 position: 0.00;
-                color: "#b3f50a";
+                color: "#56bb32";
             }
-
             GradientStop {
                 position: 1.00;
-                color: "#ffffff";
+                color: "#e6f992";
             }
         }
         anchors.fill: parent
