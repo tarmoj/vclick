@@ -31,6 +31,8 @@
 	#include "jackreader.h"
 #endif
 
+#define OSC_PORT 57878
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
 #endif
 
 	WsServer *wsServer;
-	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021
+	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021	
 #ifdef Q_OS_LINUX
 	JackReader *jackReader = new JackReader();  // started from qml
 #endif
@@ -64,6 +66,7 @@ int main(int argc, char *argv[])
 	QThread * csoundThread = new QThread();
 	CsEngine * csound = new CsEngine();
 	csound->moveToThread(csoundThread);
+
 
 
 	QObject::connect(csoundThread, &QThread::finished, csound, &CsEngine::deleteLater);
@@ -75,9 +78,11 @@ int main(int argc, char *argv[])
 	QObject::connect(csound,&CsEngine::newLed, wsServer, &WsServer::handleLed );
 	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
 	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
-
 	QObject::connect(csound,&CsEngine::csoundMessage, wsServer, &WsServer::csoundMessage );
 
+	QObject::connect(wsServer ,&WsServer::newOscPort, csound, &CsEngine::setOscPort );
+
+	wsServer->setOscPort(87878);
 	csoundThread->start();
 
 	// QML engine and connections

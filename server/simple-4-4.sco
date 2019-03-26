@@ -1,6 +1,5 @@
-; vClick score template								
-								
-								
+; vClick score template							
+							
 ;count-down 								
 								
 								
@@ -28,7 +27,8 @@ i 	1	0	0	$TEMPO1	0	0	; set the tempo
 								
 ;ADVANCE		; do not change by hand!						
 ; a 0 0.01 < beats>								
-								
+
+							
 ; times bar by bar								
 ;i	instrnr	start	duration	number of beats	part of the whole note	subdivision	bar number	instruments
 i	2	0	4	4	4	0	1	$TUTTI

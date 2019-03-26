@@ -55,12 +55,14 @@ public slots:
 	void setSFDIR(QUrl dir);
 	void compileOrc(QString code);
 	void setOscAddresses(QString addresses);
+	void setOscPort(int port);
 
 private:
 	Csound * cs;
 	QString m_sco, m_orc, m_options; // resolve later
 	bool stopNow, isRunning;
 	QString SFDIR, oscLineToCompile;
+	int oscPort;
 };
 
 #endif // CSENGINE_H

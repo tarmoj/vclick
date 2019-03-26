@@ -66,6 +66,7 @@ Q_SIGNALS:
 	void newTempo(QString tempo);
 	void updateOscAddresses(QString adresses);
 	void csoundMessage(QString message); // since qml and sending object must live in the same thread
+	void newOscPort(int port);
 
 	void start(QString scoreFile); // if started by remote
 	void stop();
@@ -83,6 +84,7 @@ public Q_SLOTS:
 	void handleTempo(double tempo); // TODO: change to double/float
 
 	void setTesting(bool testing);
+	void setOscPort(int port);
 
 private:
     QWebSocketServer *m_pWebSocketServer;
@@ -101,6 +103,7 @@ private:
 	QTime time;
 	QSoundEffect sound;
 	bool testing;
+	int oscPort;
 
 
 };

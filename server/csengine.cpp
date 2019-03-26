@@ -31,9 +31,10 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 {
 	stopNow = false;
 	isRunning = false;
-	cs = NULL;
+	cs = nullptr;
 	m_orc=":/csound/metro_simple.orc";
 	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
+	oscPort = 58787;
 }
 
 CsEngine::~CsEngine()
@@ -239,7 +240,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	}
 	cs->DestroyMessageBuffer();
 	delete cs;
-	cs = NULL;
+	cs = nullptr;
 	stopNow = false;
 	isRunning = false;
 	tempOrcFile->deleteLater();
@@ -309,12 +310,7 @@ void CsEngine::setOscAddresses(QString addresses)
 		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
 		if (!address.isEmpty()) { // for any case
 			// create string about addresses for Csound and compileit as orchestra
-//			int index = QRegExp("(\\s\\d+):(\\d+)$").indexIn(name); // should I check for port at all?
-//			if (index>0) {
-//				QString port
-//				qDebug()<<"found portnumber: "
-//			}
-			oscLineToCompile += "\"" + address + "\","; //quotes?
+			oscLineToCompile += "\"" + address + "\",";
 			clientsCount++;
 
 		}
@@ -325,9 +321,16 @@ void CsEngine::setOscAddresses(QString addresses)
 	} else {
 		oscLineToCompile = "giClientsCount init 0";
 	}
+	oscLineToCompile += QString("\ngiOscPort init %1\n").arg(oscPort);
 	qDebug()<<"Line to compile: "<<oscLineToCompile;
 	if (cs) {
 		cs->CompileOrc(oscLineToCompile.toLocal8Bit());
 	}
 
+}
+
+void CsEngine::setOscPort(int port)
+{
+	qDebug() << "Set oscPort in Csound to: " << port;
+	oscPort = port;
 }

@@ -1,6 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.2
-import QtQuick.Dialogs 1.2
+import QtQuick.Dialogs  1.2
 import Qt.labs.settings 1.0
 
 ApplicationWindow {
@@ -38,10 +38,26 @@ ApplicationWindow {
                 text: qsTr("&About")
                 onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016, 2017<br><br>Built using Qt SDK and Csound audio engine."));
             }
+             Label { text: "UUS RIDA"}
             MenuItem {
                 text: qsTr("E&xit")
                 onTriggered: Qt.quit();
             }
+
+
+
+            /*
+            Row {
+                spacing: 2
+                Label {text: qsTr("OSC port:")}
+                SpinBox {
+                    id: oscPortSpinbox;
+                    maximumValue: 100000 // to enable very large complex bar numbers like 10101
+                    minimumValue: 1025
+                    value: 58787
+                }
+                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 58787 }
+            } */
         }
     }
 

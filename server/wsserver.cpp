@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 Tarmo Johannes
+	Copyright (C) 2016-2019 Tarmo Johannes
 	trmjhnns@gmail.com
 
 	This file is part of vClick.
@@ -43,10 +43,11 @@ WsServer::WsServer(quint16 port, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
 	}
 
-	sendOsc = false; // might be necessary to set to tru only if driven by external ws-messages
+	sendOsc = false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
 	sendWs = false;
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
+	oscPort = settings->value("oscPort", 57878).toInt();
 
 	testing = false;
 
@@ -106,7 +107,7 @@ void WsServer::processTextMessage(QString message)
         if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 
             //TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
-            target = new QOscClient(pClient->peerAddress(),OSCPORT,this); // what if localhost, does it work then?
+			target = new QOscClient(pClient->peerAddress(),oscPort,this); // what if localhost, does it work then?
             if (target) {
                 if (!oscAddresses.contains(senderUrl)) {
                     oscAddresses<<senderUrl; // probably not necessary to keep that variable.
@@ -333,6 +334,15 @@ void WsServer::setTesting(bool testing)
 
 }
 
+void WsServer::setOscPort(int port) {
+	oscPort = port;
+	qDebug() << Q_FUNC_INFO << port;
+	if (settings) {
+		settings->setValue("oscPort", oscPort);
+	}
+	emit newOscPort(oscPort);
+}
+
 void WsServer::createOscClientsList(QString addresses) // info from string to hash
 {
     m_clientsHash.clear();
@@ -376,7 +386,7 @@ void WsServer::createOscClientsList()
 
 
         if (!address.isEmpty()) { // for any case
-            QOscClient * client = new QOscClient(QHostAddress(address), (quint16) OSCPORT, this); // leve it for now -  create addresses but do not send if sendOsc==false
+			QOscClient * client = new QOscClient(QHostAddress(address), (quint16) oscPort, this); // leve it for now -  create addresses but do not send if sendOsc==false
             if (client) {
                 m_oscClients<<client; // muuda target oscClient vms
                 oscAddresses<<address;
