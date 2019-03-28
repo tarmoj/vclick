@@ -82,12 +82,13 @@ int main(int argc, char *argv[])
 
 	QObject::connect(wsServer ,&WsServer::newOscPort, csound, &CsEngine::setOscPort );
 
-	wsServer->setOscPort(87878);
+	//wsServer->setOscPort(87878);
 	csoundThread->start();
 
 	// QML engine and connections
 
     QQmlApplicationEngine engine;
+	//QQuickStyle::setStyle("Material");
 	//bind object before load
 	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "wsSerrver"
 	engine.rootContext()->setContextProperty("cs", csound);

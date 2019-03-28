@@ -4,6 +4,7 @@ TEMPLATE = app
 QT += qml quick widgets network websockets
 QT += multimedia #for testing
 
+
 linux: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers

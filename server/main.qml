@@ -1,7 +1,9 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.2
-import QtQuick.Dialogs  1.2
+import QtQuick.Window 2.2
+import QtQuick.Controls 2.2 //1.2
+import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
+import Qt.labs.platform 1.0
 
 ApplicationWindow {
     id: window
@@ -9,13 +11,34 @@ ApplicationWindow {
     width: 740
     height: 740
     title: qsTr("vClick server")
-    property string version: "2.0.0-alpha"
+    property string version: "2.0.0-alpha2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
-    menuBar: MenuBar {
+
+
+    header: ToolBar {
+        Button {text:"Menu"; onClicked: mainMenu.open()}
         Menu {
-            title: qsTr("&Menu")
+            //minimumWidth: 350
+            //width: 350
+            id: mainMenu
+            title: qsTr("Menu")
+
+            Label { text: qsTr("Clients' OSC port:") }
+            Row { // Not shown with Qt.labs.platform...
+                spacing: 4
+                SpinBox {
+                    id: oscPortSpinbox;
+                    editable: true
+                    to: 100000 // to enable very large complex bar numbers like 10101
+                    from: 1025
+                    value: 58787
+                }
+                Button { text: qsTr("Set"); onClicked: wsServer.setOscPort(oscPortSpinbox.value) }
+                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
+            }
+
             MenuItem {
                 id: wsMenu
                 checkable: true
@@ -31,33 +54,19 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Update IP address")
+                text: qsTr("Update IP address")
                 onTriggered:  ipLabel.text = qsTr("My IP: ")+ wsServer.getLocalAddress()
             }
             MenuItem {
-                text: qsTr("&About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016, 2017<br><br>Built using Qt SDK and Csound audio engine."));
+                text: qsTr("About")
+                onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2019<br><br>Built using Qt SDK and Csound audio engine."));
             }
-             Label { text: "UUS RIDA"}
+
             MenuItem {
-                text: qsTr("E&xit")
+                text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
 
-
-
-            /*
-            Row {
-                spacing: 2
-                Label {text: qsTr("OSC port:")}
-                SpinBox {
-                    id: oscPortSpinbox;
-                    maximumValue: 100000 // to enable very large complex bar numbers like 10101
-                    minimumValue: 1025
-                    value: 58787
-                }
-                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 58787 }
-            } */
         }
     }
 
@@ -88,6 +97,11 @@ ApplicationWindow {
         property alias volume: volumeSlider.value
         property alias startCommand: window.startCommand
         property alias stopCommand: window.stopCommand
+        property alias oscPort: oscPortSpinbox.value // don't need save the setting in wsServer any more now
+    }
+
+    Component.onCompleted: {
+        wsServer.setOscPort(oscPortSpinbox.value)
     }
 
     Connections {
@@ -146,7 +160,7 @@ ApplicationWindow {
         title: qsTr("Please choose folder of playbacks soundfiles")
 
         folder: shortcuts.documents //sfdirField.text
-        selectFolder: true
+        //selectFolder: true
 
         onAccepted: {
             console.log("You chose: " + folder)
@@ -182,16 +196,16 @@ ApplicationWindow {
         Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
             console.log(event.key)
-
+            var name;
             if (event.key === Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
-                var name = scoField.text // one of the tanja?.sco files must be loaded
+                name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja2.sco", "tanja1.sco")
                 cs.start(scoField.text, startBarSpinBox.value)
                 console.log("Starting: ", name)
 
             }
             if (event.key === Qt.Key_F2) {
-                var name = scoField.text // one of the tanja?.sco files must be loaded
+                name = scoField.text // one of the tanja?.sco files must be loaded
                 scoField.text=name.replace("tanja1.sco", "tanja2.sco")
                 cs.start(scoField.text, startBarSpinBox.value)
                 console.log("Starting: ", name)
@@ -202,8 +216,6 @@ ApplicationWindow {
              if (event.key === Qt.Key_Backspace   || event.key === Qt.Key_Escape ) {
                  stopButton.clicked()
              }
-
-
         }
 
         Keys.onEnterPressed: startButton.clicked()
@@ -356,14 +368,14 @@ ApplicationWindow {
 
                 Button {
                     id: editOscButton
-                    text: qsTr("&Update")
+                    text: qsTr("Update")
                     onClicked: wsServer.setOscAddresses(oscAddresses.text);
                 }
 
                 Button {
                     id: addLocalhostButton
                     text: qsTr("+ this computer")
-                    tooltip: qsTr("To send messages to client in the same computer")
+                    //tooltip: qsTr("To send messages to client in the same computer")
                     onClicked: {
                         if (oscAddresses.text.indexOf("127.0.0.1")<0 ) {
                             oscAddresses.text += ",127.0.0.1 ";
@@ -395,13 +407,13 @@ ApplicationWindow {
 
                 Button {
                     id: loadButton
-                    text: qsTr("&Load")
+                    text: qsTr("Load")
                     onClicked: fileDialog.visible=true
                 }
 
                 Button {
                     id: testScoreButton
-                    text: qsTr("T&est-score")
+                    text: qsTr("Test-score")
                     onClicked: scoField.text=":/csound/test.sco"
                 }
             }
@@ -420,15 +432,16 @@ ApplicationWindow {
 
                 SpinBox {
                     id: startBarSpinBox
+                    editable: true
                     width: label2.width*1.25 // most likely enough to hold 999999
-                    maximumValue: 1000000 // to enable very large complex bar numbers like 10101
-                    minimumValue: 1
+                    to: 1000000 // to enable very large complex bar numbers like 10101
+                    from: 1
 //                    onEditingFinished: cs.start(scoField.text, startBarSpinBox.value )
                 }
 
                 Button {
                     id: startButton
-                    text: qsTr("Sta&rt")
+                    text: qsTr("Start")
 
                     Timer {
                         id: setVolumeTimer
@@ -452,7 +465,7 @@ ApplicationWindow {
 
                 Button {
                     id: stopButton
-                    text: qsTr("&Stop")
+                    text: qsTr("Stop")
                     onClicked: {
                         cs.stop()
                         if (stopCommand.length > 0) {
@@ -473,8 +486,8 @@ ApplicationWindow {
                     id: volumeSlider
                     visible: volumeLabel.visible
                     value: 1
-                    minimumValue: 0
-                    maximumValue: 1.5
+                    from: 0
+                    to:  1.5
                     onValueChanged: cs.setChannel("volume", value)
                 }
             }

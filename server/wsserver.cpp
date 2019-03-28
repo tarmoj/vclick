@@ -337,9 +337,9 @@ void WsServer::setTesting(bool testing)
 void WsServer::setOscPort(int port) {
 	oscPort = port;
 	qDebug() << Q_FUNC_INFO << port;
-	if (settings) {
+/*	if (settings) { // not needed any more -  value stored in qml
 		settings->setValue("oscPort", oscPort);
-	}
+	} */
 	emit newOscPort(oscPort);
 }
 
