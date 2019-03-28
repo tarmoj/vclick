@@ -1,9 +1,9 @@
-import QtQuick 2.5
+import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2 //1.2
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
-import Qt.labs.platform 1.0
+//import Qt.labs.platform 1.0
 
 ApplicationWindow {
     id: window
@@ -21,7 +21,7 @@ ApplicationWindow {
         Button {text:"Menu"; onClicked: mainMenu.open()}
         Menu {
             //minimumWidth: 350
-            //width: 350
+            width: 350
             id: mainMenu
             title: qsTr("Menu")
 
