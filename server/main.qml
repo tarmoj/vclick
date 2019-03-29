@@ -17,7 +17,7 @@ ApplicationWindow {
 
 
 
-    header: ToolBar {
+    header: Row {
         Button {text:"Menu"; onClicked: mainMenu.open()}
         Menu {
             //minimumWidth: 350
@@ -141,7 +141,7 @@ ApplicationWindow {
         id: fileDialog
         title: qsTr("Please choose score for metronome")
         nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
-        //folder: "file://"
+        folder: shortcuts.documents //"file://"
         onAccepted: {
             scoField.text = fileUrl
             var basename = fileUrl.toString()
@@ -160,7 +160,7 @@ ApplicationWindow {
         title: qsTr("Please choose folder of playbacks soundfiles")
 
         folder: shortcuts.documents //sfdirField.text
-        //selectFolder: true
+        selectFolder: true
 
         onAccepted: {
             console.log("You chose: " + folder)
@@ -176,8 +176,9 @@ ApplicationWindow {
 
 
 
-    Rectangle {
+    Item {
         id: mainRect
+        /*
         color: "#3e5501"
         gradient: Gradient {
             GradientStop {
@@ -189,13 +190,14 @@ ApplicationWindow {
                 color: "#e6f992";
             }
         }
+        */
         anchors.fill: parent
 
         //Shortcuts
         focus: true
         Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
-            console.log(event.key)
+            //console.log(event.key)
             var name;
             if (event.key === Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
                 name = scoField.text // one of the tanja?.sco files must be loaded

@@ -2,10 +2,10 @@ TEMPLATE = app
 #TARGET += "vClickServer"
 
 QT += qml quick widgets network websockets
-QT += multimedia #for testing
+#QT += multimedia #for testing
 
 
-linux: INCLUDEPATH += /usr/local/include/csound
+linux:!android:: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
@@ -23,7 +23,7 @@ SOURCES += main.cpp \
     qosc/qoscserver.cpp \
     qosc/qosctypes.cpp
 
-linux: SOURCES += jackreader.cpp
+linux:!android: SOURCES += jackreader.cpp
 
 RESOURCES += qml.qrc \
     cs.qrc \
@@ -42,16 +42,31 @@ HEADERS += \
     qosc/qoscserver.h \
     qosc/qosctypes.h
 
-linux: HEADERS +=  jackreader.h
+linux:!android: HEADERS +=  jackreader.h
 
 win32: LIBS += -L "$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put linsndfile-1.dll and csound64.dll here
-linux|win32: LIBS += -lcsound64
-linux: LIBS += -ljack
+linux:!android:|win32: LIBS += -lcsound64
+linux:!android: LIBS += -ljack
 
 mac: {
 LIBS += -F/Library/Frameworks/ -framework CsoundLib64
 INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 # NB! copy libs from CsoundLib64.framework/libs to vclick-server bundle ? perhaps in release bundle step?
+}
+
+
+android {
+  INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library
+  HEADERS += AndroidCsound.hpp
+  LIBS +=  -L/home/tarmo/src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/ -lcsoundandroid -lsndfile -lc++_shared -loboe
+}
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+	ANDROID_EXTRA_LIBS = \
+		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so \
+		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so \
+		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so \
+		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
 }
 
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH)
