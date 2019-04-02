@@ -4,8 +4,9 @@ TEMPLATE = app
 QT += qml quick widgets network websockets
 #QT += multimedia #for testing
 
+linux:!android:exists(/usr/lib64/libjack.so): DEFINES += USE_JACK
 
-linux:!android:: INCLUDEPATH += /usr/local/include/csound
+linux|android: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
@@ -56,6 +57,7 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 
 
 android {
+  QT += androidextras
   INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library
   HEADERS += AndroidCsound.hpp
   LIBS +=  -L/home/tarmo/src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/ -lcsoundandroid -lsndfile -lc++_shared -loboe
@@ -63,16 +65,23 @@ android {
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 	ANDROID_EXTRA_LIBS = \
-		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so \
-		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so \
-		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so \
-		$$PWD/../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
+		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so \
+		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so \
+		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so \
+		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
 }
 
-message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH)
+message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES)
 
 DISTFILES += \
-    winicon.rc
+    winicon.rc \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
 
 #win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/vclick-server.bat)" "$$shell_path($$OUT_PWD/$$DESTDIR/)" # a workaround script for win8 and possibly other versions
 
@@ -96,3 +105,5 @@ macx {
     INSTALLS += first third  final #final don't forget second!!!
 
 }
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

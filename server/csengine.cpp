@@ -133,7 +133,12 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 }
 
 void CsEngine::play(QString scoFile, int startBar) {
-	cs = new Csound(); // must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
+#ifdef Q_OS_ANDROID
+	cs = new AndroidCsound();
+#else
+	cs = new Csound();
+#endif
+	// must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
     cs->CreateMessageBuffer(0); // also to stdout for debugging
 	//TODO: options from settings
@@ -186,13 +191,13 @@ void CsEngine::play(QString scoFile, int startBar) {
 
     if (!result ) {
 		isRunning = true;
-		MYFLT bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
-		MYFLT oldTempo=0, oldBar=-1, oldBeat=-1;
+		double bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
+		double oldTempo=0, oldBar=-1, oldBeat=-1;
 		//QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 		while (cs->PerformKsmps()==0 && !stopNow) {
 			/* don't care abou leds any more, csound send OSC messages
 			for (int i=0;i<3;i++) {
-				MYFLT duration =  getChannel(leds[i]);
+				double duration =  getChannel(leds[i]);
 				if (duration>0) {
 					emit newLed(i,duration);
 					qDebug()<<leds[i].toUpper()<<": " <<duration;
@@ -263,7 +268,7 @@ void CsEngine::setChannel(QString channel, double value) {
 double CsEngine::getChannel(QString channel)
 {
 	if (cs) {
-		MYFLT value = cs->GetChannel(channel.toLocal8Bit());
+		double value = cs->GetChannel(channel.toLocal8Bit());
 		//	if (value>0)
 		//		qDebug()<<"channel: "<<channel << " value: "<<value;
 		return value;

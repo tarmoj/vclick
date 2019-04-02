@@ -49,8 +49,6 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	createOscClientsList(getOscAddresses());
 	oscPort = settings->value("oscPort", 57878).toInt();
 
-	testing = false;
-
 }
 
 
@@ -223,25 +221,11 @@ void WsServer::handleBeatBar(int bar, int beat)
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
 	// for testing:
 	int now, difference=0;
-	if (testing) {
-		//logFile.write("\nRegularity in one OSC call: \n"); // empty line before next event
-		now = time.elapsed(); // TODO - mõõda ka eelmise löögi kaugusest!
-		sound.play();
-	}
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
-			// for testing
-			if (testing) {
-				difference = time.elapsed()-now;
-				if (difference>1) qDebug()<< "DIFFERENCE IN OSC CALL (in ms): " << difference;
-				QString logLine = QString::number(time.elapsed()-now)+ "\n";
-				now = time.elapsed();
-				//logFile.write(logLine.toLocal8Bit());
-			}
-
 		}
 	}
 	if (sendWs) {
@@ -315,24 +299,6 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 	}
 }
 
-void WsServer::setTesting(bool testing)
-{
-	qDebug()<<"SET TESTING: "<<testing;
-
-	if (testing) {
-		// logfile for testing
-//		logFile.setFileName("vclick-server.log");
-//		if (!logFile.open(QIODevice::WriteOnly)) {
-//			qDebug()<<"Error in creating logFile";
-//		}
-		time.start();
-		sound.setSource(QUrl("file:///home/tarmo/tarmo/programm/qt-projects/vClick/client/sounds/sound2.wav")); //TODO - put into resource, if you are going to distribute it
-		//sound.play();
-
-	}
-	this->testing = testing;
-
-}
 
 void WsServer::setOscPort(int port) {
 	oscPort = port;

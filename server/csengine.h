@@ -23,7 +23,12 @@
 
 #include <QObject>
 #include <QUrl>
-#include "csound.hpp"
+
+#ifdef Q_OS_ANDROID
+	#include "AndroidCsound.hpp"
+#else
+	#include <csound.hpp>
+#endif
 
 
 class CsEngine : public QObject
@@ -34,7 +39,7 @@ public:
 	~CsEngine();
 
 	//Q_INVOKABLE void setOrcSco(QString orc, QString sco);
-	Q_INVOKABLE MYFLT getChannel(QString channel);
+	Q_INVOKABLE double getChannel(QString channel);
 	Q_INVOKABLE QString getStringChannel(QString channel);
 
 signals:
@@ -46,7 +51,7 @@ signals:
 	void csoundMessage(QString message);
 
 public slots:
-	void setChannel(QString channel, MYFLT value);
+	void setChannel(QString channel, double value);
 
 	void start(QUrl scoFile, int startBar);
 	void play(QString scoFile, int startBar);
@@ -58,7 +63,11 @@ public slots:
 	void setOscPort(int port);
 
 private:
-	Csound * cs;
+#ifdef Q_OS_ANDROID
+	AndroidCsound  *cs ;
+#else
+	Csound  *cs;
+#endif
 	QString m_sco, m_orc, m_options; // resolve later
 	bool stopNow, isRunning;
 	QString SFDIR, oscLineToCompile;

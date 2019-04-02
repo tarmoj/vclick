@@ -27,15 +27,35 @@
 #include <QIcon>
 #include <QFont>
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_ANDROID
+
+#include <QtAndroidExtras/QtAndroid>
+
+bool checkPermission() { // requires >= Qt 5.10
+	QtAndroid::PermissionResult r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+	if(r == QtAndroid::PermissionResult::Denied) {
+		QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
+		r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+		if(r == QtAndroid::PermissionResult::Denied) {
+			 return false;
+		}
+   }
+   return true;
+}
+#endif
+
+#ifdef USE_JACK
 	#include "jackreader.h"
 #endif
 
 #define OSC_PORT 57878
 
+
+
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // maybe bad for destop?
+	QApplication app(argc, argv);
 
     //app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 
@@ -56,9 +76,13 @@ int main(int argc, char *argv[])
     putenv(env.toLocal8Bit() );
 #endif
 
+#ifdef Q_OS_ANDROID
+	checkPermission();
+#endif
+
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021	
-#ifdef Q_OS_LINUX
+#ifdef USE_JACK
 	JackReader *jackReader = new JackReader();  // started from qml
 #endif
 
@@ -93,7 +117,7 @@ int main(int argc, char *argv[])
 	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "wsSerrver"
 	engine.rootContext()->setContextProperty("cs", csound);
 
-#ifdef Q_OS_LINUX
+#ifdef USE_JACK
 	engine.rootContext()->setContextProperty("jackReader", jackReader);
 	QObject::connect(jackReader, SIGNAL(newBeatBar(int,int)), wsServer, SLOT(handleBeatBar(int,int)) );
 	QObject::connect(jackReader, SIGNAL(newLed(int,float)), wsServer, SLOT(handleLed(int,float))) ;

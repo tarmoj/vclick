@@ -10,7 +10,6 @@
 
 #include <QFile>
 #include <QTime>
-#include <QtMultimedia/QSoundEffect>
 
 
 /*
@@ -83,7 +82,6 @@ public Q_SLOTS:
 	void handleNotification(QString message, float duration=4);
 	void handleTempo(double tempo); // TODO: change to double/float
 
-	void setTesting(bool testing);
 	void setOscPort(int port);
 
 private:
@@ -101,8 +99,6 @@ private:
 
 	QFile logFile;
 	QTime time;
-	QSoundEffect sound;
-	bool testing;
 	int oscPort;
 
 
