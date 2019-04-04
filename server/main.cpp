@@ -78,6 +78,9 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_ANDROID
 	checkPermission();
+	QString pluginsPath = QApplication::applicationDirPath() + "/lib/";
+	qDebug()<<" Csound plugins in: " << pluginsPath;
+	setenv("OPCODE6DIR64", pluginsPath.toLocal8Bit() ,1);
 #endif
 
 	WsServer *wsServer;

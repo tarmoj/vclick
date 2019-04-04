@@ -136,6 +136,30 @@ ApplicationWindow {
 
     }
 
+    // necessary for android
+    FilePicker {
+        id: filePicker
+        visible: false //showFileDialog
+        anchors.fill: parent
+        anchors.margins: 10
+        lastFolder: fileDialog.folder
+        //color: "green"
+        z: 10
+
+        onFileSelected: {
+            scoField.text = fileURL
+            var basename = fileURL.toString()
+            basename = basename.slice(0, basename.lastIndexOf("/")+1)
+            fileDialog.folder = basename
+            visible = false
+        }
+        onHidePressed: visible = false
+        onClearPressed: { // not necessary actually
+            //qmlContent.source = ""; // unload content
+            scoField.text = ""
+        }
+    }
+
 
     FileDialog {
         id: fileDialog
@@ -158,6 +182,7 @@ ApplicationWindow {
     FileDialog {
         id: sfdirDialog
         title: qsTr("Please choose folder of playbacks soundfiles")
+
 
         folder: shortcuts.documents //sfdirField.text
         selectFolder: true
@@ -421,7 +446,13 @@ ApplicationWindow {
                     Button {
                         id: loadButton
                         text: qsTr("Load")
-                        onClicked: fileDialog.visible=true
+                        onClicked: {
+                            if (Qt.platform.os==="android" ) {
+                                filePicker.visible = true
+                            } else {
+                                fileDialog.visible=true
+                            }
+                        }
                     }
 
                     Button {
@@ -503,6 +534,55 @@ ApplicationWindow {
                         to:  1.5
                         onValueChanged: cs.setChannel("volume", value)
                     }
+                }
+
+                Row {
+                    id: timeRow // if to just show time  like 0:0. 0:1 etc
+                    spacing: 5
+
+                    Label { text: qsTr("Time from:") }
+
+//                    Frame {
+//                              id: frame
+//                              padding: 0
+//                              height: 40
+//                              //anchors.centerIn: parent
+
+
+//                              Row {
+//                                  id: row
+//                                  height: 40
+
+//                                  Tumbler {
+//                                      id: hoursTumbler
+//                                      model: 12
+//                                      visibleItemCount: 1
+
+//                                  }
+
+//                                  Tumbler {
+//                                      id: minutesTumbler
+//                                      model: 60
+//                                      visibleItemCount: 1
+//                                  }
+
+////                                  Tumbler {
+////                                      id: secondsTumbler
+////                                      model: 60
+////                                  }
+//                              }
+//                          }
+
+
+                    //TextField {id: startTimeField; text:"00:00" } // better some kind of time widget
+
+                    Button {
+                        id: startTimeButton
+                        text: qsTr("Start")
+
+                    }
+
+
                 }
 
                 Row {

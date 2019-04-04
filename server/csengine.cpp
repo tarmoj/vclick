@@ -173,7 +173,11 @@ void CsEngine::play(QString scoFile, int startBar) {
 	}
 
 	QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
+#ifdef Q_OS_ANDROID
+	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc_android.orc"); // WAS: metro_simple.orc // make it work!
+# else
 	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc.orc"); // WAS: metro_simple.orc
+#endif
 
 
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
@@ -268,9 +272,9 @@ void CsEngine::setChannel(QString channel, double value) {
 double CsEngine::getChannel(QString channel)
 {
 	if (cs) {
-		double value = cs->GetChannel(channel.toLocal8Bit());
-		//	if (value>0)
-		//		qDebug()<<"channel: "<<channel << " value: "<<value;
+		double value = cs->GetChannel(channel.toLocal8Bit()); // value is
+//		if (channel=="tempo")
+//				qDebug()<<"channel: "<<channel << " value: "<<value;
 		return value;
 	} else
 		return -1;

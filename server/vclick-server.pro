@@ -65,10 +65,11 @@ android {
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 	ANDROID_EXTRA_LIBS = \
-		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so \
-		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so \
-		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so \
-		$$PWD/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
+        /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so \
+        /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so \
+        /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so \
+        /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so \
+        $$PWD/../../../../../src/csound-android-6.12.0/pluginlibs/libOSC/libs/armeabi-v7a/libOSC.so
 }
 
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES)
