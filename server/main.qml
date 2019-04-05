@@ -539,46 +539,36 @@ ApplicationWindow {
                 Row {
                     id: timeRow // if to just show time  like 0:0. 0:1 etc
                     spacing: 5
+                    height:50
 
                     Label { text: qsTr("Time from:") }
 
-//                    Frame {
-//                              id: frame
-//                              padding: 0
-//                              height: 40
-//                              //anchors.centerIn: parent
 
 
-//                              Row {
-//                                  id: row
-//                                  height: 40
+                    Tumbler {
+                        id: minutesTumbler
+                        model: 60
+                        visibleItemCount: 3
+                        height: parent.height
 
-//                                  Tumbler {
-//                                      id: hoursTumbler
-//                                      model: 12
-//                                      visibleItemCount: 1
+                    }
 
-//                                  }
+                    Label {text:":"}
 
-//                                  Tumbler {
-//                                      id: minutesTumbler
-//                                      model: 60
-//                                      visibleItemCount: 1
-//                                  }
+                    Tumbler {
+                        id: secondsTumbler
+                        model: 60
+                        visibleItemCount: 3
+                        height: parent.height
+                    }
 
-////                                  Tumbler {
-////                                      id: secondsTumbler
-////                                      model: 60
-////                                  }
-//                              }
-//                          }
-
-
-                    //TextField {id: startTimeField; text:"00:00" } // better some kind of time widget
 
                     Button {
                         id: startTimeButton
                         text: qsTr("Start")
+                        onClicked: {
+                            console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
+                        }
 
                     }
 
