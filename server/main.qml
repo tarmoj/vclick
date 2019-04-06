@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2 //1.2
+import QtQuick.Layouts 1.2
 import QtQuick.Dialogs 1.2
 import Qt.labs.settings 1.0
 //import Qt.labs.platform 1.0
@@ -477,7 +478,7 @@ ApplicationWindow {
                     SpinBox {
                         id: startBarSpinBox
                         editable: true
-                        //width: label2.width*1.25 // most likely enough to hold 999999
+                        width: 150
                         to: 1000000 // to enable very large complex bar numbers like 10101
                         from: 1
                         //                    onEditingFinished: cs.start(scoField.text, startBarSpinBox.value )
@@ -536,30 +537,38 @@ ApplicationWindow {
                     }
                 }
 
-                Row {
+                RowLayout {
                     id: timeRow // if to just show time  like 0:0. 0:1 etc
                     spacing: 5
-                    height:50
+
 
                     Label { text: qsTr("Time from:") }
 
 
+                    Frame {
 
-                    Tumbler {
-                        id: minutesTumbler
-                        model: 60
-                        visibleItemCount: 3
-                        height: parent.height
+                        RowLayout {
+                            spacing: 2
 
-                    }
 
-                    Label {text:":"}
+                            Tumbler {
+                                id: minutesTumbler
+                                model: 60
+                                visibleItemCount: 3
+                                Layout.preferredHeight: 50
 
-                    Tumbler {
-                        id: secondsTumbler
-                        model: 60
-                        visibleItemCount: 3
-                        height: parent.height
+                            }
+
+                            Label {text:":"}
+
+                            Tumbler {
+                                id: secondsTumbler
+                                model: 60
+                                visibleItemCount: 3
+                                Layout.preferredHeight: 50
+                            }
+                        }
+
                     }
 
 
@@ -570,6 +579,15 @@ ApplicationWindow {
                             console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
                         }
 
+                    }
+
+                    Button {
+                        id: resetTimeButton
+                        text: qsTr("Reset")
+                        onClicked: {
+                            minutesTumbler.currentIndex = 0
+                            secondsTumbler.currentIndex = 0
+                        }
                     }
 
 
