@@ -212,14 +212,14 @@ endin
 
 instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Files Must be stereo. p4- file name. p5 - start position in second. If p3==999, use file length, otherwise given p3; p6 -  send also timecode (new in v2)
 	Sfilename strget p4
-	
+	iskiptime = p5
+
 	; TODO: safety check for non-stereo files!
 	if (filevalid(Sfilename)==1) then
 		;prints Sfilename
 		if (p3==999) then ; 999 signals that use the file length
 			p3 filelen Sfilename 
-		endif
-		iskiptime = p5
+		endif		
 		if (strindex(Sfilename ,".mp3")>0) then
 			aL,aR mp3in Sfilename,iskiptime	
 		else

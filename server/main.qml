@@ -360,7 +360,7 @@ ApplicationWindow {
                 }
 
                 Row {
-                    id: soundFilesRow
+                    id: soundFilesFolderRow
                     spacing: 5
                     visible: volumeLabel.visible // don't show if there is no audio output. volumeLabel checks that
 
@@ -542,7 +542,7 @@ ApplicationWindow {
                     spacing: 5
 
 
-                    Label { text: qsTr("Time from:") }
+                    Label { text: qsTr("Count time from:") }
 
 
                     Frame {
@@ -571,12 +571,18 @@ ApplicationWindow {
 
                     }
 
+                    CheckBox {
+                        id: countdown
+                        checked: true
+                        text: qsTr("Countdown")
+                    }
 
                     Button {
                         id: startTimeButton
                         text: qsTr("Start")
                         onClicked: {
                             console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
+                            cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, soundFile.text )
                         }
 
                     }
@@ -590,6 +596,28 @@ ApplicationWindow {
                         }
                     }
 
+                }
+
+                RowLayout {
+                    id: soundFileRow
+                    spacing: 5
+
+                    Label {text:qsTr("Play soundfile: ")}
+
+                    TextField  {
+                        id: soundFile;
+                        text: "/home/tarmo/muusika/Raba_ea.wav"
+                    }
+
+                    Button {
+                        text: qsTr("Load")
+                        //TODO
+                    }
+
+                    Button {
+                        text: qsTr("Clear")
+                        onClicked: soundFile.text = ""
+                    }
 
                 }
 

@@ -33,7 +33,7 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 	isRunning = false;
 	cs = nullptr;
 	m_orc=":/csound/metro_simple.orc";
-	QObject::connect(this, SIGNAL(startPlaying(QString, int)), this, SLOT(play(QString, int)));
+	QObject::connect(this, SIGNAL(startPlaying(QString)), this, SLOT(play(QString)));
 	oscPort = 58787;
 }
 
@@ -49,6 +49,36 @@ CsEngine::~CsEngine()
 //	m_orc=orc; m_sco=sco;
 //}
 
+
+void CsEngine::startTime(int startSecond,bool countDown, QString soundFile)
+{
+
+	QString score;
+	if (countDown) {
+		score += R"(
+#define TUTTI  #0#
+i "countdown" 0 4 4 $TUTTI
+i "notification" 3 1  "READY"
+s
+	)";
+	}
+
+	// playfile instrument in Csound: instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Files Must be stereo.  If p3==999, use file length, otherwise given p3; p4- file name. p5 - start position in seconds. p6 -  send also timecode (new in v2)
+
+	score += QString("\ni \"playfile\" 0 86400 \"%1\" %2 1 ; for sending just timecode\n ").arg(soundFile).arg(startSecond);
+
+	qDebug()<< "Score file for playfile instrument: " << score;
+	QString tempName = QDir::tempPath() + "/temp.sco";
+	QFile tempFile(tempName);
+	if (tempFile.open(QFile::WriteOnly  |QFile::Text) ) {
+		tempFile.write(score.toLocal8Bit().data());
+		qDebug()<<"TEMP file: "<<tempFile.fileName();
+		tempFile.close();
+	}
+
+	emit startPlaying(tempName); // TODO: name of temporary file!
+
+}
 
 void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
@@ -122,7 +152,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 			tempFile.close();
 		}
 
-        emit startPlaying(tempName, startBar); // TODO: name of temporary file!
+		emit startPlaying(tempName);
 	}
     else {
         qDebug()<<"Could not open file "<<scoFile;
@@ -132,7 +162,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 }
 
-void CsEngine::play(QString scoFile, int startBar) {
+void CsEngine::play(QString scoFile) {
 #ifdef Q_OS_ANDROID
 	cs = new AndroidCsound();
 #else
@@ -141,7 +171,7 @@ void CsEngine::play(QString scoFile, int startBar) {
 	// must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
     cs->CreateMessageBuffer(0); // also to stdout for debugging
-	//TODO: options from settings
+	// options from settings
 	QSettings settings("vclick","server");
 	QString csoundOptions= settings.value("csoundOptions").toString().simplified() ;
 	if (csoundOptions.isEmpty()) {

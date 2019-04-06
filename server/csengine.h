@@ -43,7 +43,7 @@ public:
 	Q_INVOKABLE QString getStringChannel(QString channel);
 
 signals:
-	void startPlaying(QString scoFile, int startBar);
+	void startPlaying(QString scoFile);
 	void newBeatBar(int bar, int beat);
 	void newLed(int ledNumber, float duration);
 	void newNotification(QString message, float duration);
@@ -54,7 +54,7 @@ public slots:
 	void setChannel(QString channel, double value);
 
 	void start(QUrl scoFile, int startBar);
-	void play(QString scoFile, int startBar);
+	void play(QString scoFile);
 	void stop();
 	void scoreEvent(QString event);
 	void setSFDIR(QUrl dir);
@@ -62,6 +62,7 @@ public slots:
 	void setOscAddresses(QString addresses);
 	void setOscPort(int port);
 
+	void startTime(int startSecond, bool countDown = true, QString soundFile = "");
 private:
 #ifdef Q_OS_ANDROID
 	AndroidCsound  *cs ;
