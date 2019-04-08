@@ -218,7 +218,11 @@ instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Fil
 	if (filevalid(Sfilename)==1) then
 		;prints Sfilename
 		if (p3==999) then ; 999 signals that use the file length
-			p3 filelen Sfilename 
+			if (strindex(Sfilename ,".mp3")>0) then
+				p3 mp3len Sfilename
+			else
+				p3 filelen Sfilename
+			endif
 		endif		
 		if (strindex(Sfilename ,".mp3")>0) then
 			aL,aR mp3in Sfilename,iskiptime	

@@ -137,6 +137,12 @@ ApplicationWindow {
 
     }
 
+    function getBasename(url) {
+        var basename = url.toString()
+        basename = basename.slice(0, basename.lastIndexOf("/")+1)
+        return basename
+    }
+
     // necessary for android
     FilePicker {
         id: filePicker
@@ -149,16 +155,10 @@ ApplicationWindow {
 
         onFileSelected: {
             scoField.text = fileURL
-            var basename = fileURL.toString()
-            basename = basename.slice(0, basename.lastIndexOf("/")+1)
-            fileDialog.folder = basename
+            fileDialog.folder = getBasename(fileURL)
             visible = false
         }
         onHidePressed: visible = false
-        onClearPressed: { // not necessary actually
-            //qmlContent.source = ""; // unload content
-            scoField.text = ""
-        }
     }
 
 
@@ -169,10 +169,25 @@ ApplicationWindow {
         folder: shortcuts.documents //"file://"
         onAccepted: {
             scoField.text = fileUrl
-            var basename = fileUrl.toString()
-            basename = basename.slice(0, basename.lastIndexOf("/")+1)
-            folder = basename
-            console.log("You chose: " + fileUrl + " in folder: " + basename)
+            folder = getBasename(fileUrl)
+        }
+        onRejected: {
+            visible = false;
+        }
+    }
+
+    // TODO: FilePicker for next ones.. Rewrite with condition.. to OS
+
+    FileDialog {
+        id: sfdirDialog
+        title: qsTr("Please choose folder of playbacks soundfiles")
+
+        folder: shortcuts.documents //sfdirField.text
+        selectFolder: true
+
+        onAccepted: {
+            console.log("You chose: " + folder)
+            sfdirField.text = folder
         }
         onRejected: {
             console.log("Canceled")
@@ -181,23 +196,17 @@ ApplicationWindow {
     }
 
     FileDialog {
-        id: sfdirDialog
-        title: qsTr("Please choose folder of playbacks soundfiles")
-
-
-        folder: shortcuts.documents //sfdirField.text
-        selectFolder: true
-
+        id: soundFileDialog
+        title: qsTr("Please choose sound file")
+        nameFilters: [ "Audio files (*.wav *.aif *.aiff *.mp3 *.ogg *.flac)", "All files (*)" ]
+        folder: shortcuts.documents //"file://"
         onAccepted: {
-            console.log("You chose: " + folder)
-            sfdirField.text = folder
-            //cs.setSFDIR(folder);
+            soundFile.text = fileUrl.toString().replace("file://", "")
+            folder = getBasename(fileUrl)
         }
         onRejected: {
-            console.log("Canceled")
             visible = false;
         }
-
     }
 
 
@@ -212,19 +221,7 @@ ApplicationWindow {
 
         Item {
             id: mainRect
-            /*
-        color: "#3e5501"
-        gradient: Gradient {
-            GradientStop {
-                position: 0.00;
-                color: "#56bb32";
-            }
-            GradientStop {
-                position: 1.00;
-                color: "#e6f992";
-            }
-        }
-        */
+
             anchors.fill: parent
 
             //Shortcuts
@@ -232,8 +229,9 @@ ApplicationWindow {
             Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
                 //console.log(event.key)
+/*              this is spesific for Tanja's piece.
                 var name;
-                if (event.key === Qt.Key_F1 || ((event.key == Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
+                if (event.key === Qt.Key_F1 || ((event.key === Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
                     name = scoField.text // one of the tanja?.sco files must be loaded
                     scoField.text=name.replace("tanja2.sco", "tanja1.sco")
                     cs.start(scoField.text, startBarSpinBox.value)
@@ -246,6 +244,7 @@ ApplicationWindow {
                     cs.start(scoField.text, startBarSpinBox.value)
                     console.log("Starting: ", name)
                 }
+                */
                 if (event.key === Qt.Key_F10)
                     cs.stop()
 
@@ -611,6 +610,7 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Load")
+                        onClicked: soundFileDialog.visible = true
                         //TODO
                     }
 

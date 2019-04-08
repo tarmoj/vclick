@@ -64,8 +64,8 @@ s
 	}
 
 	// playfile instrument in Csound: instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Files Must be stereo.  If p3==999, use file length, otherwise given p3; p4- file name. p5 - start position in seconds. p6 -  send also timecode (new in v2)
-
-	score += QString("\ni \"playfile\" 0 86400 \"%1\" %2 1 ; for sending just timecode\n ").arg(soundFile).arg(startSecond);
+	int duration = soundFile.isEmpty() ? 86400 : 999 ; // 24 hours if no file, otherwise 999 sets p3 in Csound to file length
+	score += QString("\ni \"playfile\" 0 %1 \"%2\" %3 1 ; for sending just timecode\n ").arg(duration).arg(soundFile).arg(startSecond);
 
 	qDebug()<< "Score file for playfile instrument: " << score;
 	QString tempName = QDir::tempPath() + "/temp.sco";
