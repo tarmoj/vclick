@@ -35,6 +35,7 @@ public:
 	Q_INVOKABLE QString getLocalAddress();
 	Q_INVOKABLE void restart();
 	Q_INVOKABLE void setDelay(int delay);
+	Q_INVOKABLE void setPort(quint16 port);
 
 signals:
 	void newBeatBar(int bar, int beat);
@@ -52,6 +53,7 @@ private:
 	double m_ledDuration;
 	float m_tempo, m_messageDuration;
 	QString m_message;
+	quint16 m_port;
 
 
 private slots:

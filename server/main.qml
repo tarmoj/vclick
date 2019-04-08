@@ -12,7 +12,7 @@ ApplicationWindow {
     width: 740
     height: 820
     title: qsTr("vClick server")
-    property string version: "2.0.0-alpha2"
+    property string version: "2.0.0-beta1"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -351,6 +351,7 @@ ApplicationWindow {
                         width: 400
                         placeholderText: qsTr("Csound options")
                         text: "-odac -+rtaudio=null -d"
+
                     }
 
                     Button {

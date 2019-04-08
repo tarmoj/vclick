@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2016 Tarmo Johannes
+    Copyright (C) 2016-2019 Tarmo Johannes
     trmjhnns@gmail.com
 
     This file is part of vClick.
@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.0.0-alfa" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.0.0-beta1" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -44,11 +44,25 @@ ApplicationWindow {
             title: qsTr("Menu")
 
             background: Rectangle {
-                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :250
+                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :350
                     implicitHeight: 200
                     color: "#ffffff"
                     border.color: "#353637"
                 }
+
+            Label { text: qsTr("OSC port:") }
+            Row { // Not shown with Qt.labs.platform...
+                spacing: 4
+                SpinBox {
+                    id: oscPortSpinbox;
+                    editable: true
+                    to: 100000 // to enable very large complex bar numbers like 10101
+                    from: 1025
+                    value: 57878
+                }
+                Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
+                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
+            }
 
             CheckBox {
                 id: animationCheckBox
@@ -105,6 +119,7 @@ ApplicationWindow {
                 messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
             }
         }
+        oscServer.setPort(oscPortSpinbox.value)
     }
 
 
@@ -268,12 +283,9 @@ ApplicationWindow {
         property alias serverRowVisible: serverRow.visible
         property alias delay: delaySpinBox.value
         property alias instrument: app.instrument
+        property alias oscPort: oscPortSpinbox.value
     }
 
-
-    //    Component.onCompleted: {
-    //        socket.active = true;
-    //    }
 
     Rectangle {
         id: mainRect

@@ -24,7 +24,8 @@
 
 OscHandler::OscHandler(quint16 port, QObject *parent) : QObject(parent)
 {
-	m_server = new QOscServer(port, parent); //TODO: osc port now hardcoded, put into config
+	m_port = port;
+	m_server = new QOscServer(m_port, parent); //TODO: osc port now hardcoded, put into config
     m_delay = 0;
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 }
@@ -57,7 +58,7 @@ void OscHandler::restart()
 	qDebug()<<"Stopping";
 	delete m_server;
     QThread::msleep(500);
-    m_server = new QOscServer(OSCPORT, 0); //TODO: osc port now hardcoded, put into config
+	m_server = new QOscServer(m_port, nullptr);
     qDebug()<<"Created again";
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 
@@ -69,9 +70,15 @@ void OscHandler::setDelay(int delay)
 	qDebug()<<"Setting delay to: "<<delay<<" ms";
 }
 
+void OscHandler::setPort(quint16 port)
+{
+	m_port = port;
+	restart();
+}
+
 void OscHandler::dataIn(QString path, QVariant data)
 {
-	int type = data.type();
+	//int type = static_cast<int>(data.type());
 	//qDebug() << "OscHandler::dataIn " << path << " " << data<<type;
 	QList <QVariant> args = data.toList();
 	if (path.startsWith("/metronome/beatbar")) {
@@ -85,7 +92,7 @@ void OscHandler::dataIn(QString path, QVariant data)
 	if (path.startsWith("/metronome/led")) {
 		if (args.length()>=2) {
 			m_led = args[0].toInt();
-			m_ledDuration = args[1].toFloat();
+			m_ledDuration = static_cast<double>(args[1].toFloat());
 			//qDebug()<<"LED"<<led<<duration;
 			QTimer::singleShot(m_delay, this, SLOT(sendLed()));
 		}
