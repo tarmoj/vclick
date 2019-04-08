@@ -10,7 +10,7 @@ ApplicationWindow {
     id: window
     visible: true
     width: 740
-    height: 740
+    height: 820
     title: qsTr("vClick server")
     property string version: "2.0.0-alpha2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
@@ -99,6 +99,9 @@ ApplicationWindow {
         property alias startCommand: window.startCommand
         property alias stopCommand: window.stopCommand
         property alias oscPort: oscPortSpinbox.value // don't need save the setting in wsServer any more now
+        property alias soundFile: soundFile.text
+        property alias soundFileFolder: soundFileDialog.folder
+        property alias countDownActive: countdown.checked
     }
 
     Component.onCompleted: {
@@ -214,7 +217,7 @@ ApplicationWindow {
     Flickable {
         id: flickable1
         contentWidth: 740
-        contentHeight: 740
+        contentHeight: 820 // how to set it properly?
         anchors.fill: parent
         anchors.margins: 6
         clip: true
@@ -580,8 +583,10 @@ ApplicationWindow {
                         id: startTimeButton
                         text: qsTr("Start")
                         onClicked: {
+                            // TODO: check if rtaudio=null in settings, print warning!
                             console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
-                            cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, soundFile.text )
+                            cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
+                            // TODO: set volume OR: use one Start button for score/time
                         }
 
                     }
@@ -601,22 +606,23 @@ ApplicationWindow {
                     id: soundFileRow
                     spacing: 5
 
-                    Label {text:qsTr("Play soundfile: ")}
+                    CheckBox {id:playSoundfile; text:qsTr("Play soundfile")}
 
                     TextField  {
                         id: soundFile;
-                        text: "/home/tarmo/muusika/Raba_ea.wav"
+                        enabled: playSoundfile.checked
                     }
 
                     Button {
                         text: qsTr("Load")
                         onClicked: soundFileDialog.visible = true
-                        //TODO
+                        enabled: playSoundfile.checked
                     }
 
                     Button {
                         text: qsTr("Clear")
                         onClicked: soundFile.text = ""
+                        enabled: playSoundfile.checked
                     }
 
                 }
@@ -670,7 +676,10 @@ ApplicationWindow {
                     id: view
                     //anchors.fill: parent
                     height: (mainColumn.y+mainColumn.height)-y
+                    //anchors.bottom: parent.bottom
+                    //anchors.bottomMargin: 6
                     width: parent.width
+                    clip: true
 
 
                     TextArea {
@@ -679,6 +688,7 @@ ApplicationWindow {
                         readOnly: true
                         font.pointSize: 8
                         font.family: "Courier"
+                        //anchors.fill:  parent
                         //height: (mainColumn.y+mainColumn.height)-y
                         //width: parent.width
                         text:"Csound messages"
