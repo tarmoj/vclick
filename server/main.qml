@@ -34,7 +34,7 @@ ApplicationWindow {
                     editable: true
                     to: 100000 // to enable very large complex bar numbers like 10101
                     from: 1025
-                    value: 58787
+                    value: 57878
                 }
                 Button { text: qsTr("Set"); onClicked: wsServer.setOscPort(oscPortSpinbox.value) }
                 Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
