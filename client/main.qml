@@ -101,6 +101,10 @@ ApplicationWindow {
                 onTriggered: delayRect.visible = !delayRect.visible
             }
             MenuItem {
+                text: qsTr("Toggle remote control")
+                onTriggered: controlRect.visible = !controlRect.visible
+            }
+            MenuItem {
                 text: qsTr("About")
                 onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
             }
@@ -185,7 +189,7 @@ ApplicationWindow {
                              console.log("Socket open")
                              settings.serverIP= socket.serverIP //serverAddress.text//socket.url
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
-                             socket.active = false; // and close socket
+                             // socket.active = false; // do not for remote control  // and close socket
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;                             
@@ -462,6 +466,75 @@ ApplicationWindow {
                     Layout.preferredWidth: 60//implicitWidth
                     text: qsTr("Hide");
                     onClicked: instrumentRect.visible = false;
+                }
+
+                Item { Layout.fillWidth: true}
+            }
+
+        }
+
+        Rectangle { // this is same as delayrect - how to copy less code?
+            id: controlRect
+            width: parent.width
+            height: 60 //soundCheckBox.y+soundCheckBox.height
+            color: "lightgrey"
+            visible: false
+            z:2
+            RowLayout {
+                x:5
+                id: controlRow
+                y:5
+                width: parent.width
+                visible: true
+                spacing: 3
+
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth*1.5
+                    Layout.minimumWidth: 70
+                    Layout.preferredWidth: implicitWidth
+                    enabled: !socket.active
+                    text: socket.active ?  qsTr("Connected")  : qsTr("Connect");
+                    onClicked: {
+                        if (!socket.active) {
+                            if (serverAddress.text==socket.serverIP) {
+                                socket.active = true
+                            } else {
+                                socket.serverIP = serverAddress.text
+                            }
+                        }
+                    }
+                }
+
+
+
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth * 1.5
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: 60//implicitWidth
+                    text: qsTr("Start");
+                    enabled: socket.active
+                    onClicked: socket.sendTextMessage("start");
+                }
+
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth * 1.5
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: 60//implicitWidth
+                    text: qsTr("Stop");
+                    enabled: socket.active
+                    onClicked: socket.sendTextMessage("stop");
+                }
+
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth * 1.5
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: 60//implicitWidth
+                    text: qsTr("Hide");
+                    onClicked: controlRect.visible = false;
                 }
 
                 Item { Layout.fillWidth: true}

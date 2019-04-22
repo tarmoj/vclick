@@ -101,7 +101,7 @@ void WsServer::processTextMessage(QString message)
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
-        QOscClient * target = NULL;
+		QOscClient * target = nullptr;
         if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 
             //TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
@@ -132,7 +132,7 @@ void WsServer::processTextMessage(QString message)
                 m_clientsHash[senderUrl] = instrument; // overwrites, if new instrument, otherwise inserts
                 createOscClientsList();
             } else {
-                qDebug()<<"SennderUrl empty.";
+				qDebug()<<"SenderUrl empty.";
             }
             if (target) {
                 target->sendData("/metronome/notification", "Got you!" );
@@ -140,7 +140,7 @@ void WsServer::processTextMessage(QString message)
         }
 
 
-        pClient->close(QWebSocketProtocol::CloseCodeNormal);
+		// pClient->close(QWebSocketProtocol::CloseCodeNormal); // do not close for remote control
 
 	}
 
@@ -220,7 +220,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 	//qDebug()<<"Bar: "<<bar<<" Beat: "<<beat;
 	emit newBeatBar(bar, beat); // necessary, since QML reads only signals from wsServer
 	// for testing:
-	int now, difference=0;
+//	int now, difference=0;
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
 			QList<QVariant> data;

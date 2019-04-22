@@ -129,11 +129,7 @@ ApplicationWindow {
         onCsoundMessage: messageArea.append(message)
 
         onStart: {
-            if (scoreFile!="")  { // better check!
-                scoField.text = scoreFile;
-                startBarSpinBox.value = 1 // TODO: from parameter
-                cs.start(scoField.text, startBarSpinBox.value)
-            }
+            startButton.clicked()
         }
 
         onStop: cs.stop()
@@ -276,7 +272,7 @@ ApplicationWindow {
 
                 Label {
                     id: clientsLabel
-                    visible: wsCheckBox.checked
+                    visible: true //wsCheckBox.checked
                     text: qsTr("WS clients: ")
                 }
 
