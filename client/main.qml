@@ -581,6 +581,8 @@ ApplicationWindow {
                             socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
                         }
                         //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
+                    } else {
+                        socket.sendTextMessage("hello "+instrument)
                     }
                 }
             }
