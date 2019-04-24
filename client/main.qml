@@ -350,11 +350,13 @@ ApplicationWindow {
 
         }
 
+
+        // TODO: one rect, different Rowlayouts rect.visible = comp1.visble || comp2.visible || comp3.visible
         Rectangle {
             id: delayRect
             width: parent.width
-            height: soundCheckBox.y+soundCheckBox.height
-            color: "lightgrey"
+            height: delaySpinBox.height * 1.5
+            color: "#F0d4e1e3"
             visible: false
             z:2
             RowLayout {
@@ -406,7 +408,7 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: instrumentRect
             width: parent.width
-            height: soundCheckBox.y+soundCheckBox.height
+            height: instrumentSpinBox.height * 1.5
             color: "lightgrey"
             visible: false
             z:2
@@ -476,7 +478,7 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: controlRect
             width: parent.width
-            height: 60 //soundCheckBox.y+soundCheckBox.height
+            height: controlConnectedButton.height*1.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
             visible: false
             z:2
@@ -489,6 +491,7 @@ ApplicationWindow {
                 spacing: 3
 
                 Button {
+                    id: controlConnectedButton
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth*1.5
                     Layout.minimumWidth: 70
