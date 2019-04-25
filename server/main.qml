@@ -208,6 +208,106 @@ ApplicationWindow {
         }
     }
 
+    // List view to arrange several files
+
+    ListModel {
+        id: scoreFilesModel
+
+        ListElement {
+            url: ":/csound/test.sco"
+        }
+
+    }
+
+    Rectangle {
+        id: fileList
+
+        height: parent.height *0.9
+        width: parent.width * 0.8
+        anchors.centerIn: parent
+        color: "#ee827d7d"
+        radius: Math.min(10, height*0.1)
+        z: 3
+        ListView {
+            id: scoreFilesList
+            anchors.fill: parent
+            anchors.margins: 10
+            clip: true
+            model: scoreFilesModel
+
+            header: Row {
+                //width: fileList.width
+                anchors.margins: 10
+
+                RoundButton {
+                    text: "+"
+                    onClicked: {
+                        scoreFilesModel.append({"url":":/csound/test.sco"});
+                    }
+                }
+
+                RoundButton {
+                    text: "\u2a2f" // Unicode Character for cross
+                    onClicked: fileList.visible = false
+                }
+
+            }
+
+            delegate: Component {
+                RowLayout {
+                    spacing: 10
+                    width: parent.width
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+
+                    TextField {
+                        id: urlField
+                        text: url
+                        Layout.fillWidth: true
+                        background: Rectangle { color: scoreFilesList.currentIndex == index ? "#F0A0A0A0" : "transparent" }
+
+                    }
+                    RoundButton {
+                        text: qsTr("\u2713") // select
+                        onClicked: {
+                            url = urlField.text
+                            scoreFilesList.currentIndex = index
+                            // later (maybe): emit a signal
+                            scoField.text = url
+                        }
+
+                    }
+                    RoundButton {
+                        text: qsTr("\u21ba") // load
+                        onClicked: {
+                            fileListDialog.open()
+                        }
+                        FileDialog {
+                            id: fileListDialog
+                            title: qsTr("Please choose score for metronome")
+                            nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
+                            folder: shortcuts.documents //"file://"
+                            onAccepted: {
+                                urlField.text = fileUrl
+                                folder = getBasename(fileUrl)
+                            }
+                            onRejected: {
+                                visible = false;
+                            }
+                        }
+                    }
+
+                    RoundButton {
+                        text: qsTr("\u2a2f") // remove
+                        onClicked: scoreFilesModel.remove(index)
+                    }
+                }
+            }
+
+            onCurrentIndexChanged: console.log("List index: ", currentIndex)
+        }
+    }
+
 
 
     Flickable {
@@ -430,10 +530,13 @@ ApplicationWindow {
                     height: 30
                     spacing: 5
 
+
                     Label {
                         id: fileLabel
                         text: qsTr("Score file: ")
                     }
+
+
 
                     TextField {
                         id: scoField
@@ -441,6 +544,11 @@ ApplicationWindow {
                         placeholderText: qsTr("score file")
                         text: ":/csound/test.sco";
 
+                    }
+
+                    Button {
+                        text: qsTr("Select")
+                        onClicked: fileList.visible = true
                     }
 
                     Button {
