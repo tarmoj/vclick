@@ -85,13 +85,6 @@ void WsServer::processTextMessage(QString message)
 
     QStringList messageParts = message.split(" ");
 
-	// python serverist:
-
-//	if 'channels' in mess_array:
-//			channels = int(mess_array[mess_array.index("channels")+1]) #TODO: catch exception if not int
-//		else:
-//			channels = TUTTI
-
 	if (messageParts[0]=="hello") { // comes as "hello <instrumentnumber>"
 
         int instrument = 0;
@@ -160,6 +153,20 @@ void WsServer::processTextMessage(QString message)
 		emit stop(); // message to QML to set the scorename and start Csound
 
 	}
+
+	if (messageParts[0]=="scoreIndex") {
+		int index = messageParts[1].toInt();
+		qDebug()<<"Remote set score index " << index;
+		emit newScoreIndex(index); // message to QML to set the active score if there are several
+
+	}
+
+	if (messageParts[0]=="startBar") {
+		int startBar = messageParts[1].toInt();
+		qDebug()<<"Remote set score index " << startBar;
+		emit newStartBar(startBar);
+	}
+
 
 	int bar = -1, beat = -1, led = -1;
 	float duration = 0;

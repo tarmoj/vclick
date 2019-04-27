@@ -134,6 +134,10 @@ ApplicationWindow {
 
         onStop: cs.stop()
 
+        onNewScoreIndex: scoreFilesList.setIndex(index)
+
+        onNewStartBar: startBarSpinBox.value = startBar
+
     }
 
     function getBasename(url) {
@@ -217,10 +221,13 @@ ApplicationWindow {
             url: ":/csound/test.sco"
         }
 
+        Component.onCompleted:
+            scoreFilesModel.set(0, {"url": scoField.text})
+
     }
 
     Rectangle {
-        id: fileList
+        id: fileListRect
 
         height: parent.height *0.9
         width: parent.width * 0.8
@@ -230,13 +237,27 @@ ApplicationWindow {
         z: 3
         ListView {
             id: scoreFilesList
+
+            function setIndex(index) {
+
+                if (index>=0 && index < scoreFilesModel.count) {
+                    scoreFilesList.currentIndex = index;
+                    scoField.text = scoreFilesModel.get(index).url
+                } else {
+                    console.log("Listmodel index out of range")
+                }
+
+            }
+
+
+
             anchors.fill: parent
             anchors.margins: 10
             clip: true
             model: scoreFilesModel
 
             header: Row {
-                //width: fileList.width
+                //width: fileListRect.width
                 anchors.margins: 10
 
                 RoundButton {
@@ -248,7 +269,7 @@ ApplicationWindow {
 
                 RoundButton {
                     text: "\u2a2f" // Unicode Character for cross
-                    onClicked: fileList.visible = false
+                    onClicked: fileListRect.visible = false
                 }
 
             }
@@ -271,9 +292,7 @@ ApplicationWindow {
                         text: qsTr("\u2713") // select
                         onClicked: {
                             url = urlField.text
-                            scoreFilesList.currentIndex = index
-                            // later (maybe): emit a signal
-                            scoField.text = url
+                            scoreFilesList.setIndex(index)
                         }
 
                     }
@@ -286,10 +305,15 @@ ApplicationWindow {
                             id: fileListDialog
                             title: qsTr("Please choose score for metronome")
                             nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
-                            folder: shortcuts.documents //"file://"
+                            folder: "file://home/tarmo/tarmo/csound/metronome/scores"  // TODO: lastFolder
                             onAccepted: {
                                 urlField.text = fileUrl
                                 folder = getBasename(fileUrl)
+                                // TODO: set also in fileModel
+                                url = fileUrl.toString()
+                                console.log("index: ", index, "url", url)
+                                // temporary:
+                                //fileDialog.folder = folder
                             }
                             onRejected: {
                                 visible = false;
@@ -328,22 +352,15 @@ ApplicationWindow {
             Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
                 //console.log(event.key)
-/*              this is spesific for Tanja's piece.
-                var name;
+
                 if (event.key === Qt.Key_F1 || ((event.key === Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
-                    name = scoField.text // one of the tanja?.sco files must be loaded
-                    scoField.text=name.replace("tanja2.sco", "tanja1.sco")
-                    cs.start(scoField.text, startBarSpinBox.value)
-                    console.log("Starting: ", name)
+
 
                 }
                 if (event.key === Qt.Key_F2) {
-                    name = scoField.text // one of the tanja?.sco files must be loaded
-                    scoField.text=name.replace("tanja1.sco", "tanja2.sco")
-                    cs.start(scoField.text, startBarSpinBox.value)
-                    console.log("Starting: ", name)
+
                 }
-                */
+
                 if (event.key === Qt.Key_F10)
                     cs.stop()
 
@@ -484,7 +501,7 @@ ApplicationWindow {
 
 
 
-                Row {
+                RowLayout {
                     id: oscRow
                     width: parent.width
                     //height: 30
@@ -497,7 +514,8 @@ ApplicationWindow {
 
                     TextField {
                         id: oscAddresses
-                        width: 400
+                        Layout.preferredWidth: 400
+                        Layout.fillWidth: true
                         placeholderText: qsTr("OSC addresses")
                         text: wsServer.getOscAddresses();
 
@@ -520,6 +538,14 @@ ApplicationWindow {
                                 wsServer.setOscAddresses(oscAddresses.text)
                             }
 
+                        }
+                    }
+
+                    Button {
+                        text: qsTr("Clear")
+                        onClicked: {
+                            oscAddresses.text = "";
+                            wsServer.setOscAddresses("")
                         }
                     }
                 }
@@ -548,10 +574,11 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Select")
-                        onClicked: fileList.visible = true
+                        onClicked: fileListRect.visible = true
                     }
 
                     Button {
+                        visible: false
                         id: loadButton
                         text: qsTr("Load")
                         onClicked: {
@@ -564,10 +591,15 @@ ApplicationWindow {
                     }
 
                     Button {
+                        visible: false
                         id: testScoreButton
                         text: qsTr("Test-score")
                         onClicked: scoField.text=":/csound/test.sco"
                     }
+
+                    RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
+                    RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
+                    RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
                 }
 
                 Row {

@@ -69,6 +69,8 @@ Q_SIGNALS:
 
 	void start(QString scoreFile); // if started by remote
 	void stop();
+	void newScoreIndex(int index);
+	void newStartBar(int startBar);
 
 private Q_SLOTS:
     void onNewConnection();
