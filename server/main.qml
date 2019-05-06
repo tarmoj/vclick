@@ -235,6 +235,7 @@ ApplicationWindow {
         color: "#ee827d7d"
         radius: Math.min(10, height*0.1)
         z: 3
+        visible: false
         ListView {
             id: scoreFilesList
 
@@ -354,11 +355,15 @@ ApplicationWindow {
                 //console.log(event.key)
 
                 if (event.key === Qt.Key_F1 || ((event.key === Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
-
+                    scoreFilesList.setIndex(0)
 
                 }
                 if (event.key === Qt.Key_F2) {
+                    scoreFilesList.setIndex(1)
+                }
 
+                if (event.key === Qt.Key_F3) {
+                    scoreFilesList.setIndex(3)
                 }
 
                 if (event.key === Qt.Key_F10)

@@ -19,7 +19,7 @@
     02111-1307 USA
 */
 import QtQuick 2.4
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
@@ -478,71 +478,127 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: controlRect
             width: parent.width
-            height: controlConnectedButton.height*1.5 //soundCheckBox.y+soundCheckBox.height
+            height: controlConnectedButton.height*2.2 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
-            visible: false
+            visible: true//false
             z:2
-            RowLayout {
-                x:5
-                id: controlRow
-                y:5
-                width: parent.width
-                visible: true
-                spacing: 3
+            Column {
+                anchors.fill: parent
+                RowLayout {
 
-                Button {
-                    id: controlConnectedButton
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth*1.5
-                    Layout.minimumWidth: 70
-                    Layout.preferredWidth: implicitWidth
-                    enabled: !socket.active
-                    text: socket.active ?  qsTr("Connected")  : qsTr("Connect");
-                    onClicked: {
-                        if (!socket.active) {
-                            if (serverAddress.text==socket.serverIP) {
-                                socket.active = true
-                            } else {
-                                socket.serverIP = serverAddress.text
+                    id: controlRow
+
+                    width: parent.width
+                    visible: true
+                    spacing: 5
+
+                    Button {
+                        id: controlConnectedButton
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: implicitWidth*1.5
+                        Layout.minimumWidth: 70
+                        Layout.preferredWidth: implicitWidth
+                        enabled: !socket.active
+                        text: socket.active ?  qsTr("Connected")  : qsTr("Connect");
+                        onClicked: {
+                            if (!socket.active) {
+                                if (serverAddress.text==socket.serverIP) {
+                                    socket.active = true
+                                } else {
+                                    socket.serverIP = serverAddress.text
+                                }
                             }
                         }
                     }
+
+
+
+                    Button {
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: implicitWidth * 1.5
+                        Layout.minimumWidth: 50
+                        Layout.preferredWidth: 60//implicitWidth
+                        text: qsTr("Start");
+                        enabled: socket.active
+                        onClicked: socket.sendTextMessage("start");
+                    }
+
+                    Button {
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: implicitWidth * 1.5
+                        Layout.minimumWidth: 50
+                        Layout.preferredWidth: 60//implicitWidth
+                        text: qsTr("Stop");
+                        enabled: socket.active
+                        onClicked: socket.sendTextMessage("stop");
+                    }
+
+                    Button {
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: implicitWidth * 1.5
+                        Layout.minimumWidth: 50
+                        Layout.preferredWidth: 60//implicitWidth
+                        text: qsTr("Hide");
+                        onClicked: controlRect.visible = false;
+                    }
+
+                    Item { Layout.fillWidth: true}
                 }
-
-
-
-                Button {
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth * 1.5
-                    Layout.minimumWidth: 50
-                    Layout.preferredWidth: 60//implicitWidth
-                    text: qsTr("Start");
+                RowLayout {
+                    width: parent.width
+                    spacing: 5
                     enabled: socket.active
-                    onClicked: socket.sendTextMessage("start");
-                }
 
-                Button {
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth * 1.5
-                    Layout.minimumWidth: 50
-                    Layout.preferredWidth: 60//implicitWidth
-                    text: qsTr("Stop");
-                    enabled: socket.active
-                    onClicked: socket.sendTextMessage("stop");
-                }
+                    SpinBox {
+                        id: startBarSpinBox
+                        editable: true
+//                        Layout.maximumWidth: 150
+//                        Layout.fillWidth: true
+                        from: 1
+                        to: 1000000 // to enable very large complex bar numbers like 10101
 
-                Button {
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: implicitWidth * 1.5
-                    Layout.minimumWidth: 50
-                    Layout.preferredWidth: 60//implicitWidth
-                    text: qsTr("Hide");
-                    onClicked: controlRect.visible = false;
-                }
+                    }
+                    RoundButton {
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                         Layout.preferredWidth: Layout.preferredHeight
+                        text: qsTr("S"); // set
+                        onClicked: socket.sendTextMessage("startBar " + startBarSpinBox.value)
+                    }
+                    RoundButton {
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                        Layout.preferredWidth: Layout.preferredHeight
+                        text: qsTr("R"); // reset
+                        onClicked: {
+                            startBarSpinBox.value = 1
+                            socket.sendTextMessage("startBar " + startBarSpinBox.value)
+                        }
+                    }
 
-                Item { Layout.fillWidth: true}
+                    Label { text: qsTr("Score:")}
+
+                    // for setting active index
+                    RoundButton {
+                        text: "1";
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                        Layout.preferredWidth: Layout.preferredHeight
+                        onClicked: socket.sendTextMessage("scoreIndex 0")
+                    }
+                    RoundButton {
+                        text: "2";
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                        Layout.preferredWidth: Layout.preferredHeight
+                        onClicked: socket.sendTextMessage("scoreIndex 1")
+                    }
+                    RoundButton {
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                        Layout.preferredWidth: Layout.preferredHeight
+                        text: "3";
+                        onClicked: socket.sendTextMessage("scoreIndex 2")
+                    }
+
+                    Item { Layout.fillWidth: true}
+                }
             }
-
         }
 
 

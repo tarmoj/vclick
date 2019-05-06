@@ -56,6 +56,7 @@ public slots:
 	void start(QUrl scoFile, int startBar);
 	void play(QString scoFile);
 	void stop();
+    void pause();
 	void scoreEvent(QString event);
 	void setSFDIR(QUrl dir);
 	void compileOrc(QString code);

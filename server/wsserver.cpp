@@ -158,13 +158,21 @@ void WsServer::processTextMessage(QString message)
 		int index = messageParts[1].toInt();
 		qDebug()<<"Remote set score index " << index;
 		emit newScoreIndex(index); // message to QML to set the active score if there are several
+		bool oldSendOsc = sendOsc;
+		sendOsc = true;
+		handleNotification(QString("Score %1").arg(index + 1), 2);
+		sendOsc = oldSendOsc;
 
 	}
 
 	if (messageParts[0]=="startBar") {
 		int startBar = messageParts[1].toInt();
-		qDebug()<<"Remote set score index " << startBar;
+		qDebug()<<"Remote set startbar" << startBar;
 		emit newStartBar(startBar);
+		bool oldSendOsc = sendOsc;
+		sendOsc = true;
+		handleNotification(QString("Bar %1").arg(startBar), 2);
+		sendOsc = oldSendOsc;
 	}
 
 

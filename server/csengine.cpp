@@ -289,7 +289,14 @@ void CsEngine::stop() {
 	if (isRunning)
 		stopNow = true;
 	else
-		qDebug()<<"vClick server was not running!";
+        qDebug()<<"vClick server was not running!";
+}
+
+void CsEngine::pause()
+{
+    if (cs) {
+
+    }
 }
 
 void CsEngine::setChannel(QString channel, double value) {
