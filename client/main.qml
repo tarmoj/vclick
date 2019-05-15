@@ -478,12 +478,13 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: controlRect
             width: parent.width
-            height: controlConnectedButton.height*2.2 //soundCheckBox.y+soundCheckBox.height
+            height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
             visible: true//false
             z:2
             Column {
                 anchors.fill: parent
+                spacing:10
                 RowLayout {
 
                     id: controlRow
