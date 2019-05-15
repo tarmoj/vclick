@@ -15,7 +15,6 @@ ApplicationWindow {
     property string version: "2.0.0-beta2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
-    property string lastFolder: ""
 
 
     header: Row {
@@ -104,6 +103,7 @@ ApplicationWindow {
         property alias countDownActive: countdown.checked
         property alias scoreFiles: scoreFilesModel.scoreFiles
         property alias lastScoreIndex: scoreFilesList.currentIndex
+        property alias useTime: useTime.checked
     }
 
     Component.onCompleted: {
@@ -224,17 +224,14 @@ ApplicationWindow {
             url: ":/csound/test.sco"
         }
 
-       onDataChanged: {
-           var helper = "";
-           for (var i=0; i< count; i++) {
-//               var element =  JSON.stringify(scoreFilesModel.get(i))
-//               console.log(element)
-               if (i>0) helper += ";"
-               helper += scoreFilesModel.get(i).url;
-           }
-           scoreFiles = helper
-           console.log(scoreFiles)
-       }
+        onDataChanged: {
+            var helper = "";
+            for (var i=0; i< count; i++) {
+                if (i>0) helper += ";"
+                helper += scoreFilesModel.get(i).url;
+            }
+            scoreFiles = helper
+        }
 
         Component.onCompleted: {
             if (scoreFiles) {
@@ -242,7 +239,6 @@ ApplicationWindow {
                 scoreFilesModel.clear()
                 var helperList = scoreFiles.split(";")
                 for (var i = 0; i < helperList.length; i++) {
-                    console.log("Parsed element: ", helperList[i])
                     scoreFilesModel.append({"url":helperList[i]})
                 }
             }
@@ -262,7 +258,7 @@ ApplicationWindow {
 
         ListView {
             id: scoreFilesList
-            property string lastFolder: shortcuts.home
+            property string lastFolder: ""
             function setIndex(index) {
 
                 if (index>=0 && index < scoreFilesModel.count) {
@@ -509,7 +505,12 @@ ApplicationWindow {
                     }
 
                     Button {
-                        text: "Reset"
+                        text: "Sound"
+                        onClicked: csoundOptions.text = "-odac -d"
+                    }
+
+                    Button {
+                        text: "No sound"
                         onClicked: csoundOptions.text = "-odac -+rtaudio=null -d"
                     }
 
@@ -591,77 +592,22 @@ ApplicationWindow {
                     }
                 }
 
-                Row {
-                    id: fileRow
-                    width: parent.width
-                    height: 30
-                    spacing: 5
+                // -----------------------------------------------------------------------
 
+                Item {width: 10; height: 15} // just some extra space
 
-                    Label {
-                        id: fileLabel
-                        text: qsTr("Score list: ")
+                // CONTROLS -  START /STOP, SCORE/TIME -----------------------------------
+
+                RowLayout {
+                    Label {text: qsTr("Use: ")}
+                    RadioButton {
+                        id: useScore
+                        text: qsTr("Score")
+                        checked: true
                     }
-
-
-
-                    TextField {
-                        id: scoField
-                        width: 200
-                        placeholderText: qsTr("score file")
-                        text: ":/csound/test.sco";
-
-                    }
-
-                    Button {
-                        text: qsTr("Select/Remove")
-                        onClicked: fileListRect.visible = true
-                    }
-
-                    Button {
-                        visible: false
-                        id: loadButton
-                        text: qsTr("Load")
-                        onClicked: {
-                            if (Qt.platform.os==="android" ) {
-                                filePicker.visible = true
-                            } else {
-                                fileDialog.visible=true
-                            }
-                        }
-                    }
-
-                    Button {
-                        visible: false
-                        id: testScoreButton
-                        text: qsTr("Test-score")
-                        onClicked: scoField.text=":/csound/test.sco"
-                    }
-
-                    RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
-                    RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
-                    RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
-                }
-
-                Row {
-                    id: startRow
-                    x: 0
-                    width: parent.width
-                    height: 42
-                    spacing: 5
-
-                    Label {
-                        id: label2
-                        text: qsTr("Start from:")
-                    }
-
-                    SpinBox {
-                        id: startBarSpinBox
-                        editable: true
-                        width: 150
-                        to: 1000000 // to enable very large complex bar numbers like 10101
-                        from: 1
-                        //                    onEditingFinished: cs.start(scoField.text, startBarSpinBox.value )
+                    RadioButton {
+                        id: useTime
+                        text: qsTr("Time")
                     }
 
                     Button {
@@ -676,11 +622,27 @@ ApplicationWindow {
                         }
 
                         onClicked: {
-                            cs.setOscAddresses(oscAddresses.text);
-                            cs.start(scoField.text, startBarSpinBox.value)
-                            messageArea.text = ""
+                            if (useScore.checked) {
+                                cs.setOscAddresses(oscAddresses.text);
+                                cs.start(scoField.text, startBarSpinBox.value)
+                                messageArea.text = ""
+                            }
+                            if (useTime.checked) {
+                                if (playSoundfile.checked && csoundOptions.text.indexOf("null")>=0) {
+                                    console.log("Seems that Csound is set to no audio output. Use -odac (or similar) as Csound option")
+                                    //TODO: Options
+                                }
+
+                                // TODO: check if rtaudio=null in settings, print warning!
+                                console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
+                                cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
+                            }
+
                             // set volume somewhat later when Csound will be loaded
-                            setVolumeTimer.start()
+                            if (volumeLabel.visible ) {
+                                setVolumeTimer.start()
+                            }
+
                             if (startCommand.length > 0) {
                                 console.log("executing command: ", startCommand)
                                 wsServer.runSystemCommand(startCommand)
@@ -717,9 +679,87 @@ ApplicationWindow {
                     }
                 }
 
+                Row {
+                    id: fileRow
+                    width: parent.width
+                    height: 30
+                    spacing: 5
+                    visible: scoreControls.visible
+
+
+                    Label {
+                        id: fileLabel
+                        text: qsTr("Score: ")
+                    }
+
+
+
+                    TextField {
+                        id: scoField
+                        width: 200
+                        placeholderText: qsTr("score file")
+                        text: ":/csound/test.sco";
+
+                    }
+
+                    Button {
+                        text: qsTr("List")
+                        onClicked: fileListRect.visible = true
+                    }
+
+                    Button {
+                        visible: false
+                        id: loadButton
+                        text: qsTr("Load")
+                        onClicked: {
+                            if (Qt.platform.os==="android" ) {
+                                filePicker.visible = true
+                            } else {
+                                fileDialog.visible=true
+                            }
+                        }
+                    }
+
+                    Button {
+                        visible: false
+                        id: testScoreButton
+                        text: qsTr("Test-score")
+                        onClicked: scoField.text=":/csound/test.sco"
+                    }
+
+                    RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
+                    RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
+                    RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
+                }
+
+
+                RowLayout {
+                    id: scoreControls
+                    visible: useScore.checked
+
+                    Label {
+                        id: label2
+                        text: qsTr("Start from bar:")
+                    }
+
+                    SpinBox {
+                        id: startBarSpinBox
+                        editable: true
+                        width: 150
+                        to: 1000000 // to enable very large complex bar numbers like 10101
+                        from: 1
+                    }
+
+                    Button {
+                        text: qsTr("Reset")
+                        onClicked: startBarSpinBox.value = 1
+                    }
+                }
+
                 RowLayout {
                     id: timeRow // if to just show time  like 0:0. 0:1 etc
                     spacing: 5
+                    visible: useTime.checked
 
 
                     Label { text: qsTr("Count time from:") }
@@ -730,13 +770,11 @@ ApplicationWindow {
                         RowLayout {
                             spacing: 2
 
-
                             Tumbler {
                                 id: minutesTumbler
                                 model: 60
                                 visibleItemCount: 3
                                 Layout.preferredHeight: 50
-
                             }
 
                             Label {text:":"}
@@ -757,17 +795,6 @@ ApplicationWindow {
                         text: qsTr("Countdown")
                     }
 
-                    Button {
-                        id: startTimeButton
-                        text: qsTr("Start")
-                        onClicked: {
-                            // TODO: check if rtaudio=null in settings, print warning!
-                            console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
-                            cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
-                            // TODO: set volume OR: use one Start button for score/time
-                        }
-
-                    }
 
                     Button {
                         id: resetTimeButton
@@ -780,9 +807,11 @@ ApplicationWindow {
 
                 }
 
+
                 RowLayout {
-                    id: soundFileRow
+                    id: soundFileRow // this belongs to showTime group actually, but easier to hold as sibling, then it is placed nicely to column
                     spacing: 5
+                    visible: timeRow.visible
 
                     CheckBox {id:playSoundfile; text:qsTr("Play soundfile")}
 
@@ -804,6 +833,12 @@ ApplicationWindow {
                     }
 
                 }
+
+                // -----------------------------------------------------------------------
+
+                Item {width: 10; height: 20} // just some extra space
+
+                // SHOW BEAT, BAR, TEMPO
 
                 Row {
                     id: beatRow
