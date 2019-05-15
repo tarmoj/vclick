@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.0.0-beta1" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.0.0-beta2" // NB! version 2 uses port 57878 for OSC communication
 
 
 

@@ -102,6 +102,7 @@ ApplicationWindow {
         property alias soundFile: soundFile.text
         property alias soundFileFolder: soundFileDialog.folder
         property alias countDownActive: countdown.checked
+        property alias scoreFiles: scoreFilesModel.scoreFiles
     }
 
     Component.onCompleted: {
@@ -216,14 +217,35 @@ ApplicationWindow {
 
     ListModel {
         id: scoreFilesModel
+        property string scoreFiles: ""
 
         ListElement {
             url: ":/csound/test.sco"
         }
 
-        Component.onCompleted:
-            scoreFilesModel.set(0, {"url": scoField.text})
+       onDataChanged: {
+           var helper = "";
+           for (var i=0; i< count; i++) {
+//               var element =  JSON.stringify(scoreFilesModel.get(i))
+//               console.log(element)
+               if (i>0) helper += ";"
+               helper += scoreFilesModel.get(i).url;
+           }
+           scoreFiles = helper
+           console.log(scoreFiles)
+       }
 
+        Component.onCompleted: {
+            if (scoreFiles) {
+                console.log(scoreFiles)
+                scoreFilesModel.clear()
+                var helperList = scoreFiles.split(";")
+                for (var i = 0; i < helperList.length; i++) {
+                    console.log("Parsed element: ", helperList[i])
+                    scoreFilesModel.append({"url":helperList[i]})
+                }
+            }
+        }
     }
 
     Rectangle {
@@ -247,10 +269,7 @@ ApplicationWindow {
                 } else {
                     console.log("Listmodel index out of range")
                 }
-
             }
-
-
 
             anchors.fill: parent
             anchors.margins: 10
@@ -830,7 +849,7 @@ ApplicationWindow {
                         readOnly: true
                         font.pointSize: 8
                         font.family: "Courier"
-                        //anchors.fill:  parent
+                        anchors.fill:  parent
                         //height: (mainColumn.y+mainColumn.height)-y
                         //width: parent.width
                         text:"Csound messages"
