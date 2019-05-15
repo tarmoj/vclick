@@ -12,14 +12,14 @@ ApplicationWindow {
     width: 740
     height: 820
     title: qsTr("vClick server")
-    property string version: "2.0.0-beta1"
+    property string version: "2.0.0-beta2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
-
+    property string lastFolder: ""
 
 
     header: Row {
-        Button {text:"Menu"; onClicked: mainMenu.open()}
+        Button {x: 5; text:"Menu"; onClicked: mainMenu.open()}
         Menu {
             //minimumWidth: 350
             width: 350
@@ -92,7 +92,7 @@ ApplicationWindow {
         property alias oscMenu: oscMenu.checked
         property alias readFromJack: jackCheckBox.checked
         property alias timeCodeHack: timeCodeCheckBox.checked
-        property alias lastScorePath: fileDialog.folder
+        property alias lastScorePath: scoreFilesList.lastFolder
         property alias csoundOptions: csoundOptions.text
         property alias sfdir: sfdirField.text
         property alias volume: volumeSlider.value
@@ -103,6 +103,7 @@ ApplicationWindow {
         property alias soundFileFolder: soundFileDialog.folder
         property alias countDownActive: countdown.checked
         property alias scoreFiles: scoreFilesModel.scoreFiles
+        property alias lastScoreIndex: scoreFilesList.currentIndex
     }
 
     Component.onCompleted: {
@@ -258,9 +259,10 @@ ApplicationWindow {
         radius: Math.min(10, height*0.1)
         z: 3
         visible: false
+
         ListView {
             id: scoreFilesList
-
+            property string lastFolder: shortcuts.home
             function setIndex(index) {
 
                 if (index>=0 && index < scoreFilesModel.count) {
@@ -276,11 +278,14 @@ ApplicationWindow {
             clip: true
             model: scoreFilesModel
 
-            header: Row {
-                //width: fileListRect.width
+            header: Item {
+                width: fileListRect.width -  2* anchors.margins
+                height: addButton.height * 1.1
                 anchors.margins: 10
 
                 RoundButton {
+                    id: addButton
+                    anchors.left: parent.left
                     text: "+"
                     onClicked: {
                         scoreFilesModel.append({"url":":/csound/test.sco"});
@@ -288,6 +293,7 @@ ApplicationWindow {
                 }
 
                 RoundButton {
+                    anchors.right: parent.right
                     text: "\u2a2f" // Unicode Character for cross
                     onClicked: fileListRect.visible = false
                 }
@@ -307,6 +313,11 @@ ApplicationWindow {
                         Layout.fillWidth: true
                         background: Rectangle { color: scoreFilesList.currentIndex == index ? "#F0A0A0A0" : "transparent" }
 
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: scoreFilesList.setIndex(index)
+                        }
+
                     }
                     RoundButton {
                         text: qsTr("\u2713") // select
@@ -321,36 +332,42 @@ ApplicationWindow {
                         onClicked: {
                             fileListDialog.open()
                         }
-                        FileDialog {
-                            id: fileListDialog
-                            title: qsTr("Please choose score for metronome")
-                            nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
-                            folder: "file://home/tarmo/tarmo/csound/metronome/scores"  // TODO: lastFolder
-                            onAccepted: {
-                                urlField.text = fileUrl
-                                folder = getBasename(fileUrl)
-                                // TODO: set also in fileModel
-                                url = fileUrl.toString()
-                                console.log("index: ", index, "url", url)
-                                // temporary:
-                                //fileDialog.folder = folder
-                            }
-                            onRejected: {
-                                visible = false;
-                            }
-                        }
+
                     }
 
                     RoundButton {
                         text: qsTr("\u2a2f") // remove
                         onClicked: scoreFilesModel.remove(index)
+
+
+                        FileDialog { // FileDialog here causes binding loop warning. Ingore it.
+                            id: fileListDialog
+                            title: qsTr("Please choose score for metronome")
+                            nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
+                            folder: scoreFilesList.lastFolder  //"file://home/tarmo/tarmo/csound/metronome/scores"  // TODO: lastFolder
+                            onAccepted: {
+                                urlField.text = fileUrl
+                                scoreFilesList.lastFolder = getBasename(fileUrl)
+                                url = fileUrl.toString()
+                                console.log("index: ", index, "url", url)
+                            }
+                            onRejected: {
+                                visible = false;
+                            }
+                        }
+
                     }
+
+
+
                 }
             }
 
-            onCurrentIndexChanged: console.log("List index: ", currentIndex)
+            //onCurrentIndexChanged: console.log("List index: ", currentIndex)
         }
     }
+
+
 
 
 
@@ -583,7 +600,7 @@ ApplicationWindow {
 
                     Label {
                         id: fileLabel
-                        text: qsTr("Score file: ")
+                        text: qsTr("Score list: ")
                     }
 
 
@@ -597,7 +614,7 @@ ApplicationWindow {
                     }
 
                     Button {
-                        text: qsTr("Select")
+                        text: qsTr("Select/Remove")
                         onClicked: fileListRect.visible = true
                     }
 
@@ -850,12 +867,9 @@ ApplicationWindow {
                         font.pointSize: 8
                         font.family: "Courier"
                         anchors.fill:  parent
-                        //height: (mainColumn.y+mainColumn.height)-y
-                        //width: parent.width
                         text:"Csound messages"
                     }
                 }
-
             }
         }
     }
