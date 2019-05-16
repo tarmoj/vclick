@@ -45,8 +45,9 @@ HEADERS += \
 
 linux:!android: HEADERS +=  jackreader.h
 
-win32: LIBS += -L "$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put linsndfile-1.dll and csound64.dll here
-linux:!android:|win32: LIBS += -lcsound64
+win32: LIBS += -L"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
+linux:!android: LIBS += -lcsound64
+win32-msvc: LIBS += csound64.lib
 linux:!android: LIBS += -ljack
 
 mac: {
@@ -84,7 +85,6 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat
 
-#win32: QMAKE_POST_LINK += copy "$$shell_path($$PWD/vclick-server.bat)" "$$shell_path($$OUT_PWD/$$DESTDIR/)" # a workaround script for win8 and possibly other versions
 
 macx {
     first.path = $$PWD
@@ -105,6 +105,16 @@ macx {
 
     INSTALLS += first third  final #final don't forget second!!!
 
+}
+
+win32 {
+    first.path = $$PWD
+    first.commands = $$[QT_INSTALL_PREFIX]/bin/windeployqt  -qmldir=$$PWD  $$OUT_PWD/$$DESTDIR/$${TARGET}.exe # first deployment
+    # second: copy dll-s from winlib and Csound bin
+    # make dir plugins64 in output bin directory and copy rtpa.dll and osc.dll there
+#missing libs after windeployqt: csound64.dll portaduio_x64.dll (to bin)
+    # enne installeri tegemist kopeeri klientist kõik deployga sinna saanud failid serveri bin-i
+    INSTALLS += first
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

@@ -480,7 +480,7 @@ ApplicationWindow {
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
-            visible: true//false
+            visible: false
             z:2
             Column {
                 anchors.fill: parent

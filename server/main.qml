@@ -99,6 +99,7 @@ ApplicationWindow {
         property alias stopCommand: window.stopCommand
         property alias oscPort: oscPortSpinbox.value // don't need save the setting in wsServer any more now
         property alias soundFile: soundFile.text
+        property alias playSoundFile: playSoundfile.checked
         property alias soundFileFolder: soundFileDialog.folder
         property alias countDownActive: countdown.checked
         property alias scoreFiles: scoreFilesModel.scoreFiles
@@ -206,7 +207,9 @@ ApplicationWindow {
         nameFilters: [ "Audio files (*.wav *.aif *.aiff *.mp3 *.ogg *.flac)", "All files (*)" ]
         folder: shortcuts.documents //"file://"
         onAccepted: {
-            soundFile.text = fileUrl.toString().replace("file://", "")
+            var urlString = fileUrl.toString()
+            urlString = Qt.platform.os === "windows" ? urlString.replace("file:///", "") : urlString.replace("file://", "")
+            soundFile.text =  urlString
             folder = getBasename(fileUrl)
         }
         onRejected: {
