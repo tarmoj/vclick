@@ -593,7 +593,7 @@ ApplicationWindow {
                 id: scoreOptions
                 anchors.fill: parent
                 anchors.margins:  5
-                visible: parent.isScore
+                visible: parent.isScore && !timeOptions.visible
 
                 Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
 
@@ -601,7 +601,6 @@ ApplicationWindow {
                     width: parent.width
                     spacing: 5
                     enabled: socket.status === WebSocket.Open
-                    visible: true
 
                     Label { text: qsTr("Starting bar: ") }
 
@@ -672,19 +671,80 @@ ApplicationWindow {
                 id: timeOptions
                 anchors.fill: parent
                 anchors.margins:  5
-                visible: ! parent.isScore
+                visible: !parent.isScore && !scoreOptions.visible
 
                 Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
 
                 RowLayout {
+                    id: timeRow // if to just show time  like 0:0. 0:1 etc
+                    spacing: 5
                     width: parent.width
 
-                    Label {text: qsTr("Start from:" ) }
+                    Label { text: qsTr("Count time from:") }
+
+                    Frame {
+
+                        RowLayout {
+                            spacing: 2
+
+                            Tumbler {
+                                id: minutesTumbler
+                                model: 60
+                                visibleItemCount: 3
+                                Layout.preferredHeight: 50
+                            }
+
+                            Label {text:":"}
+
+                            Tumbler {
+                                id: secondsTumbler
+                                model: 60
+                                visibleItemCount: 3
+                                Layout.preferredHeight: 50
+                            }
+                        }
+
+                    }
                 }
 
+                RowLayout {
 
+                    CheckBox {
+                        id: countdown
+                        checked: true
+                        text: qsTr("Countdown")
+                        onCheckedChanged: socket.sendTextMessage("countdown " + (checked) ? "1" : "0" )
+                    }
+
+                    Button  {
+                        text: qsTr("Set")
+                        onClicked:
+                            socket.sendTextMessage("setTime " + (minutesTumbler.currentIndex*60 + secondsTumbler.currentIndex).toString() )
+
+                    }
+
+
+                    Button {
+                        id: resetTimeButton
+                        text: qsTr("Reset")
+                        onClicked: {
+                            minutesTumbler.currentIndex = 0
+                            secondsTumbler.currentIndex = 0
+                            socket.sendTextMessage("setTime 0")
+                        }
+                    }
                 }
 
+                RowLayout {
+                    id: soundFileRow // this belongs to showTime group actually, but easier to hold as sibling, then it is placed nicely to column
+                    spacing: 5
+                    width: parent.width
+                    visible: timeRow.visible
+
+                    CheckBox {id:playSoundfile; text:qsTr("Play selected soundfile")}
+
+                }
+            }
         }
 
 
