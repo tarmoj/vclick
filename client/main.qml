@@ -320,7 +320,7 @@ ApplicationWindow {
             x:5
             source: "qrc:///menu.png"
             width: height
-            height: tempoLabel.height
+            height: Qt.platform.os === "ios" ?    connectButton.height : tempoLabel.height // maybe fices the size on iphone?
             MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
         }
 
@@ -480,7 +480,7 @@ ApplicationWindow {
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
-            visible: false
+            visible: true //false
             z:2
             Column {
                 anchors.fill: parent
@@ -491,7 +491,7 @@ ApplicationWindow {
 
                     width: parent.width
                     visible: true
-                    spacing: 5
+                    spacing: 8
 
                     Button {
                         id: controlConnectedButton
@@ -500,7 +500,7 @@ ApplicationWindow {
                         Layout.minimumWidth: 70
                         Layout.preferredWidth: implicitWidth
                         enabled: !socket.active
-                        text: socket.active ?  qsTr("Connected")  : qsTr("Connect");
+                        text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
                         onClicked: {
                             if (!socket.active) {
                                 if (serverAddress.text==socket.serverIP) {
@@ -520,7 +520,7 @@ ApplicationWindow {
                         Layout.minimumWidth: 50
                         Layout.preferredWidth: 60//implicitWidth
                         text: qsTr("Start");
-                        enabled: socket.active
+                        enabled: socket.status === WebSocket.Open
                         onClicked: socket.sendTextMessage("start");
                     }
 
@@ -530,25 +530,80 @@ ApplicationWindow {
                         Layout.minimumWidth: 50
                         Layout.preferredWidth: 60//implicitWidth
                         text: qsTr("Stop");
-                        enabled: socket.active
+                        enabled: socket.status === WebSocket.Open
                         onClicked: socket.sendTextMessage("stop");
                     }
+
+
 
                     Button {
                         Layout.fillWidth: true
                         Layout.maximumWidth: implicitWidth * 1.5
                         Layout.minimumWidth: 50
                         Layout.preferredWidth: 60//implicitWidth
+                        //Layout.alignment: Layout.Right
                         text: qsTr("Hide");
                         onClicked: controlRect.visible = false;
                     }
 
                     Item { Layout.fillWidth: true}
                 }
+
+                RowLayout {
+                    spacing: 8
+
+                    Label {text: qsTr("Options")}
+
+                    Button {
+                        text: qsTr("Score")
+                        onClicked: {
+                            remoteOptionsRect.isScore = true
+                            remoteOptionsRect.visible = true
+                        }
+
+                    }
+
+                    Button {
+                        text: qsTr("Time")
+                        onClicked: {
+                            remoteOptionsRect.isScore = false
+                            remoteOptionsRect.visible = true
+                        }
+                    }
+
+                }
+
+
+
+
+            }
+        }
+
+        Rectangle {
+            id: remoteOptionsRect
+            anchors.horizontalCenter:  parent.horizontalCenter
+            anchors.top: controlRect.bottom
+            anchors.topMargin: 20
+            width: parent.width * 0.8
+            height: 200
+            property bool isScore: true
+            visible: false
+
+            Column {
+                id: scoreOptions
+                anchors.fill: parent
+                anchors.margins:  5
+                visible: parent.isScore
+
+                Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
+
                 RowLayout {
                     width: parent.width
                     spacing: 5
-                    enabled: socket.active
+                    enabled: socket.status === WebSocket.Open
+                    visible: true
+
+                    Label { text: qsTr("Starting bar: ") }
 
                     SpinBox {
                         id: startBarSpinBox
@@ -559,23 +614,28 @@ ApplicationWindow {
                         to: 1000000 // to enable very large complex bar numbers like 10101
 
                     }
-                    RoundButton {
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                         Layout.preferredWidth: Layout.preferredHeight
-                        text: qsTr("S"); // set
+
+                    Button {
+                        text: qsTr("Set"); // set
                         onClicked: socket.sendTextMessage("startBar " + startBarSpinBox.value)
                     }
-                    RoundButton {
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                        Layout.preferredWidth: Layout.preferredHeight
-                        text: qsTr("R"); // reset
+                    Button {
+                        text: qsTr("Reset"); // reset
                         onClicked: {
                             startBarSpinBox.value = 1
                             socket.sendTextMessage("startBar " + startBarSpinBox.value)
                         }
                     }
 
-                    Label { text: qsTr("Score:")}
+
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 5
+                    enabled: socket.status === WebSocket.Open
+
+                    Label { text: qsTr("Active:")}
 
                     // for setting active index
                     RoundButton {
@@ -597,9 +657,34 @@ ApplicationWindow {
                         onClicked: socket.sendTextMessage("scoreIndex 2")
                     }
 
+                    RoundButton {
+                        Layout.preferredHeight: startBarSpinBox.height * 1.2
+                        Layout.preferredWidth: Layout.preferredHeight
+                        text: "4";
+                        onClicked: socket.sendTextMessage("scoreIndex 3")
+                    }
+
                     Item { Layout.fillWidth: true}
                 }
             }
+
+            Column {
+                id: timeOptions
+                anchors.fill: parent
+                anchors.margins:  5
+                visible: ! parent.isScore
+
+                Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
+
+                RowLayout {
+                    width: parent.width
+
+                    Label {text: qsTr("Start from:" ) }
+                }
+
+
+                }
+
         }
 
 
