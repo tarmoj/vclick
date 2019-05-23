@@ -175,6 +175,54 @@ void WsServer::processTextMessage(QString message)
 		sendOsc = oldSendOsc;
 	}
 
+    if (messageParts[0]=="useScore") {
+        qDebug()<<"Remote useScore";
+        emit newUseScore(true);
+        bool oldSendOsc = sendOsc;
+        sendOsc = true;
+        handleNotification("Use score", 2);
+        sendOsc = oldSendOsc;
+    }
+
+    if (messageParts[0]=="useTime") {
+        qDebug()<<"Remote useTime";
+        emit newUseScore(false);
+        bool oldSendOsc = sendOsc;
+        sendOsc = true;
+        handleNotification("Use time", 2);
+        sendOsc = oldSendOsc;
+    }
+
+    if (messageParts[0]=="startTime") {
+        int startSecond = messageParts[1].toInt();
+        qDebug()<<"Remote set startbar" << startSecond;
+        emit newStartTime(startSecond);
+        bool oldSendOsc = sendOsc;
+        sendOsc = true;
+        handleNotification(QString("Start %1").arg(startSecond), 2);
+        sendOsc = oldSendOsc;
+    }
+
+    if (messageParts[0]=="countdown") {
+        bool checked = static_cast<bool>( messageParts[1].toInt());
+        qDebug()<<"Remote set countdown" << checked;
+        emit newCountdown(checked);
+        bool oldSendOsc = sendOsc;
+        sendOsc = true;
+        handleNotification(QString("Countdown %1").arg(checked), 2);
+        sendOsc = oldSendOsc;
+    }
+
+    if (messageParts[0]=="useSoundFile") {
+        bool checked = static_cast<bool>( messageParts[1].toInt());
+        qDebug()<<"Remote set useSoundFile" << checked;
+        emit newUseSoundFile(checked);
+        bool oldSendOsc = sendOsc;
+        sendOsc = true;
+        handleNotification(QString("SoundFile %1").arg(checked), 2);
+        sendOsc = oldSendOsc;
+    }
+
 
 	int bar = -1, beat = -1, led = -1;
 	float duration = 0;

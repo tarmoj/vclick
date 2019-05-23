@@ -141,6 +141,19 @@ ApplicationWindow {
 
         onNewStartBar: startBarSpinBox.value = startBar
 
+        onNewUseScore:  if (score) useScore.checked = true; else useTime.checked = true;
+
+        onNewStartTime: {
+            var minute = Math.floor(startSecond/60)
+            var seconds = startSecond%60;
+            minutesTumbler.currentIndex = minute
+            secondsTumbler.currentIndex = seconds
+        }
+
+        onNewCountdown: countdown.checked = checked
+
+        onNewUseSoundFile: playSoundfile.checked = checked
+
     }
 
     function getBasename(url) {

@@ -71,6 +71,10 @@ Q_SIGNALS:
 	void stop();
 	void newScoreIndex(int index);
 	void newStartBar(int startBar);
+    void newUseScore(bool score);
+    void newStartTime(int startSecond);
+    void newCountdown(bool checked);
+    void newUseSoundFile(bool checked);
 
 private Q_SLOTS:
     void onNewConnection();

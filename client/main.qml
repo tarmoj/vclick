@@ -551,6 +551,7 @@ ApplicationWindow {
 
                 RowLayout {
                     spacing: 8
+                    enabled:  socket.status === WebSocket.Open
 
                     Label {text: qsTr("Options")}
 
@@ -559,8 +560,8 @@ ApplicationWindow {
                         onClicked: {
                             remoteOptionsRect.isScore = true
                             remoteOptionsRect.visible = true
+                            socket.sendTextMessage("useScore")
                         }
-
                     }
 
                     Button {
@@ -568,6 +569,9 @@ ApplicationWindow {
                         onClicked: {
                             remoteOptionsRect.isScore = false
                             remoteOptionsRect.visible = true
+                            if (socket.status === WebSocket.Open ) {
+                                socket.sendTextMessage("useTime")
+                            }
                         }
                     }
 
@@ -585,17 +589,27 @@ ApplicationWindow {
             anchors.top: controlRect.bottom
             anchors.topMargin: 20
             width: parent.width * 0.8
-            height: 200
+            height: 300 // bind to something, Math.min...
             property bool isScore: true
             visible: false
+            z: 5
 
-            Column {
+
+
+            ColumnLayout {
                 id: scoreOptions
                 anchors.fill: parent
                 anchors.margins:  5
                 visible: parent.isScore && !timeOptions.visible
 
-                Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
+                RoundButton {
+                    Layout.preferredHeight: startBarSpinBox.height * 0.8
+                    Layout.preferredWidth: Layout.preferredHeight
+                    Layout.alignment: Qt.AlignRight
+                    text: "\u2a2f" // Unicode Character for cross
+                    onClicked: remoteOptionsRect.visible = false
+                }
+
 
                 RowLayout {
                     width: parent.width
@@ -625,6 +639,8 @@ ApplicationWindow {
                             socket.sendTextMessage("startBar " + startBarSpinBox.value)
                         }
                     }
+
+                    Item {Layout.fillWidth: true}
 
 
                 }
@@ -665,20 +681,30 @@ ApplicationWindow {
 
                     Item { Layout.fillWidth: true}
                 }
+
+                Item {Layout.fillHeight:  true}
             }
 
-            Column {
+            ColumnLayout {
                 id: timeOptions
                 anchors.fill: parent
-                anchors.margins:  5
+                anchors.margins:  5               
                 visible: !parent.isScore && !scoreOptions.visible
 
-                Button { text: qsTr("Close"); onClicked: remoteOptionsRect.visible = false  }
+
+                RoundButton { // a bit stupid to copy the button, but ok, easier for layout
+                    Layout.preferredHeight: resetTimeButton.height * 0.8
+                    Layout.preferredWidth: Layout.preferredHeight
+                    Layout.alignment: Qt.AlignRight
+                    text: "\u2a2f" // Unicode Character for cross
+                    onClicked: remoteOptionsRect.visible = false
+                }
 
                 RowLayout {
                     id: timeRow // if to just show time  like 0:0. 0:1 etc
                     spacing: 5
                     width: parent.width
+                    enabled: socket.status === WebSocket.Open
 
                     Label { text: qsTr("Count time from:") }
 
@@ -704,22 +730,18 @@ ApplicationWindow {
                             }
                         }
 
+
+
                     }
                 }
-
                 RowLayout {
-
-                    CheckBox {
-                        id: countdown
-                        checked: true
-                        text: qsTr("Countdown")
-                        onCheckedChanged: socket.sendTextMessage("countdown " + (checked) ? "1" : "0" )
-                    }
+                    enabled: socket.status === WebSocket.Open
+                    spacing: 5
 
                     Button  {
                         text: qsTr("Set")
                         onClicked:
-                            socket.sendTextMessage("setTime " + (minutesTumbler.currentIndex*60 + secondsTumbler.currentIndex).toString() )
+                            socket.sendTextMessage("startTime " + (minutesTumbler.currentIndex*60 + secondsTumbler.currentIndex).toString() )
 
                     }
 
@@ -730,20 +752,41 @@ ApplicationWindow {
                         onClicked: {
                             minutesTumbler.currentIndex = 0
                             secondsTumbler.currentIndex = 0
-                            socket.sendTextMessage("setTime 0")
+                            socket.sendTextMessage("startTime 0")
                         }
                     }
+                }
+
+                RowLayout {
+                    enabled: socket.status === WebSocket.Open
+                    spacing: 5
+
+                    CheckBox {
+                        id: countdown
+                        checked: true
+                        text: qsTr("Countdown")
+                        onCheckedChanged: socket.sendTextMessage("countdown " + ((checked) ? "1" : "0") )
+                    }
+
                 }
 
                 RowLayout {
                     id: soundFileRow // this belongs to showTime group actually, but easier to hold as sibling, then it is placed nicely to column
                     spacing: 5
                     width: parent.width
-                    visible: timeRow.visible
+                    enabled: socket.status === WebSocket.Open
 
-                    CheckBox {id:playSoundfile; text:qsTr("Play selected soundfile")}
+                    CheckBox {
+                        id:playSoundfile;
+                        text:qsTr("Play selected soundfile")
+                        onCheckedChanged:
+                            socket.sendTextMessage("useSoundFile " + ((checked) ? "1" : "0") )
+
+                    }
 
                 }
+
+                Item {Layout.fillHeight:  true}
             }
         }
 
