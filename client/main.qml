@@ -503,12 +503,17 @@ ApplicationWindow {
                         text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
                         onClicked: {
                             if (!socket.active) {
+                                console.log(serverAddress.text, socket.serverIP)
                                 if (serverAddress.text==socket.serverIP) {
                                     socket.active = true
                                 } else {
                                     socket.serverIP = serverAddress.text
+                                    socket.active = true
                                 }
+                            } else {
+                                console.log("Socket already active?")
                             }
+
                         }
                     }
 
@@ -589,7 +594,7 @@ ApplicationWindow {
             anchors.top: controlRect.bottom
             anchors.topMargin: 20
             width: parent.width * 0.8
-            height: 300 // bind to something, Math.min...
+            height: startBarSpinBox.height * 6.5 // bind to something, Math.min...
             property bool isScore: true
             visible: false
             z: 5
@@ -606,7 +611,7 @@ ApplicationWindow {
                     Layout.preferredHeight: startBarSpinBox.height * 0.8
                     Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
-                    text: "\u2a2f" // Unicode Character for cross
+                    text: "x" //"\u2a2f" // Unicode Character for cross
                     onClicked: remoteOptionsRect.visible = false
                 }
 
@@ -696,7 +701,7 @@ ApplicationWindow {
                     Layout.preferredHeight: resetTimeButton.height * 0.8
                     Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
-                    text: "\u2a2f" // Unicode Character for cross
+                    text:  "x" // "\u2a2f" // Unicode Character for cross
                     onClicked: remoteOptionsRect.visible = false
                 }
 
@@ -830,6 +835,7 @@ ApplicationWindow {
                         }
                         //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     } else {
+                        console.log("Already active")
                         socket.sendTextMessage("hello "+instrument)
                     }
                 }
