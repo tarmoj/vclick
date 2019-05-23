@@ -258,6 +258,8 @@ ApplicationWindow {
                     scoreFilesModel.append({"url":helperList[i]})
                 }
             }
+
+            editOscButton.clicked() // this creates OSC clients in wsServer properly (quick fix, better look at the code in wsServer)
         }
     }
 

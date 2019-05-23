@@ -480,6 +480,7 @@ ApplicationWindow {
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
+
             visible: true //false
             z:2
             Column {
@@ -526,7 +527,10 @@ ApplicationWindow {
                         Layout.preferredWidth: 60//implicitWidth
                         text: qsTr("Start");
                         enabled: socket.status === WebSocket.Open
-                        onClicked: socket.sendTextMessage("start");
+                        onClicked: {
+                            socket.sendTextMessage("start");
+                            remoteOptionsRect.visible = false;
+                        }
                     }
 
                     Button {
@@ -548,7 +552,11 @@ ApplicationWindow {
                         Layout.preferredWidth: 60//implicitWidth
                         //Layout.alignment: Layout.Right
                         text: qsTr("Hide");
-                        onClicked: controlRect.visible = false;
+                        onClicked: {
+                            controlRect.visible = false;
+                            remoteOptionsRect.visible = false;
+                        }
+
                     }
 
                     Item { Layout.fillWidth: true}
@@ -594,7 +602,26 @@ ApplicationWindow {
             anchors.top: controlRect.bottom
             anchors.topMargin: 20
             width: parent.width * 0.8
-            height: startBarSpinBox.height * 6.5 // bind to something, Math.min...
+            height: startBarSpinBox.height * 7.5
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.00;
+                    color: "#cf424245";
+                }
+                GradientStop {
+                    position: 0.32;
+                    color: "#ffffff";
+                }
+                GradientStop {
+                    position: 0.64;
+                    color: "#ffffff";
+                }
+                GradientStop {
+                    position: 1.00;
+                    color: "#cf424245";
+                }
+            }
+            radius: 10
             property bool isScore: true
             visible: false
             z: 5
@@ -626,19 +653,17 @@ ApplicationWindow {
                     SpinBox {
                         id: startBarSpinBox
                         editable: true
-//                        Layout.maximumWidth: 150
-//                        Layout.fillWidth: true
                         from: 1
                         to: 1000000 // to enable very large complex bar numbers like 10101
 
                     }
 
                     Button {
-                        text: qsTr("Set"); // set
+                        text: qsTr("Set");
                         onClicked: socket.sendTextMessage("startBar " + startBarSpinBox.value)
                     }
                     Button {
-                        text: qsTr("Reset"); // reset
+                        text: qsTr("Reset");
                         onClicked: {
                             startBarSpinBox.value = 1
                             socket.sendTextMessage("startBar " + startBarSpinBox.value)
@@ -722,16 +747,18 @@ ApplicationWindow {
                                 id: minutesTumbler
                                 model: 60
                                 visibleItemCount: 3
-                                Layout.preferredHeight: 50
+                                Layout.preferredHeight: fontMetric.height *3
                             }
 
                             Label {text:":"}
+
+                            FontMetrics {id: fontMetric}
 
                             Tumbler {
                                 id: secondsTumbler
                                 model: 60
                                 visibleItemCount: 3
-                                Layout.preferredHeight: 50
+                                Layout.preferredHeight: fontMetric.height *3
                             }
                         }
 

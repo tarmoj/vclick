@@ -150,7 +150,11 @@ void WsServer::processTextMessage(QString message)
 
 	if (messageParts[0]=="stop") {
 		qDebug()<<"Remote call to stop vClick";
-		emit stop(); // message to QML to set the scorename and start Csound
+		emit stop();
+		bool oldSendOsc = sendOsc;
+		sendOsc = true;
+		handleNotification("Stop", 2);
+		sendOsc = oldSendOsc;
 
 	}
 
