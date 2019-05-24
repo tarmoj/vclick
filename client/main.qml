@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.0.0-beta2" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.0.0-rc1" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -106,7 +106,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016,2017<br><br>Built using Qt SDK"));
+                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2019<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("Exit")
@@ -320,7 +320,7 @@ ApplicationWindow {
             x:5
             source: "qrc:///menu.png"
             width: height
-            height: Qt.platform.os === "ios" ?    connectButton.height : tempoLabel.height // maybe fices the size on iphone?
+            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" ?    tempoLabel.height*1.5 : tempoLabel.height // maybe fices the size on iphone?
             MouseArea {width: parent.width*1.5; height: parent.height*2; onClicked: mainMenu.open() }
         }
 
@@ -345,7 +345,7 @@ ApplicationWindow {
             visible: (instrument>0)
             radius: 8
             width: height
-            height: tempoLabel.height
+            height: menuButton.height
             color: "transparent"
             anchors.top: mainRect.top
             anchors.topMargin: 5
@@ -673,6 +673,14 @@ ApplicationWindow {
 
                     }
 
+                    Item {Layout.fillWidth: true}
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 5
+                    enabled: socket.status === WebSocket.Open
+
                     Button {
                         text: qsTr("Set");
                         onClicked: socket.sendTextMessage("startBar " + startBarSpinBox.value)
@@ -926,6 +934,7 @@ ApplicationWindow {
                 height: parent.height
                 width: parent.width*0.46
                 anchors.left: parent.left
+                //Layout.alignment: Qt.AlignLeft
 
                 Label {
                     id: barLabel
@@ -946,7 +955,8 @@ ApplicationWindow {
                 //color: "pink"
                 height:parent.height
                 width: parent.width*0.46
-                anchors.right: parent.right
+                anchors.right: parent.right // NB! Fix this!!
+                //Layout.alignment: Qt.AlignRight
 
                 Label {
                     id: beatLabel
