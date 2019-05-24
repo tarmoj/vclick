@@ -102,7 +102,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("Toggle remote control")
-                onTriggered: controlRect.visible = !controlRect.visible
+                onTriggered: remoteControlRect.visible = !remoteControlRect.visible
             }
             MenuItem {
                 text: qsTr("About")
@@ -321,7 +321,22 @@ ApplicationWindow {
             source: "qrc:///menu.png"
             width: height
             height: Qt.platform.os === "ios" ?    connectButton.height : tempoLabel.height // maybe fices the size on iphone?
-            MouseArea {width: parent.width*2; height: parent.height*2; onClicked: mainMenu.open() }
+            MouseArea {width: parent.width*1.5; height: parent.height*2; onClicked: mainMenu.open() }
+        }
+
+        Image {
+            id: remoteButton
+            anchors.top: menuButton.top
+            anchors.left: menuButton.right
+            anchors.leftMargin: menuButton.width* 0.8
+            source: "qrc:///radio.png"
+            width: height
+            height: menuButton.height
+            MouseArea {
+                width:  parent.width * 1.8
+                height:  parent.height * 2
+                onClicked: remoteControlRect.visible = true;
+            }
         }
 
         Rectangle {
@@ -476,12 +491,12 @@ ApplicationWindow {
         }
 
         Rectangle { // this is same as delayrect - how to copy less code?
-            id: controlRect
+            id: remoteControlRect
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
             color: "lightgrey"
 
-            visible: true //false
+            visible: false
             z:2
             Column {
                 anchors.fill: parent
@@ -553,7 +568,7 @@ ApplicationWindow {
                         //Layout.alignment: Layout.Right
                         text: qsTr("Hide");
                         onClicked: {
-                            controlRect.visible = false;
+                            remoteControlRect.visible = false;
                             remoteOptionsRect.visible = false;
                         }
 
@@ -599,7 +614,7 @@ ApplicationWindow {
         Rectangle {
             id: remoteOptionsRect
             anchors.horizontalCenter:  parent.horizontalCenter
-            anchors.top: controlRect.bottom
+            anchors.top: remoteControlRect.bottom
             anchors.topMargin: 20
             width: parent.width * 0.8
             height: startBarSpinBox.height * 7.5
@@ -958,7 +973,11 @@ ApplicationWindow {
             id: ledRow
             width: parent.width *0.8
             height: Math.min(mainRect.width,mainRect.height) / 3 // one third of the smaller side, whether portrait or landscape
-             anchors.centerIn: parent
+            anchors.centerIn: parent
+
+
+
+            //anchors.verticalCenterOffset: 100 // somehow cannot use that - beatrow goes wrong...
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
             property real ledOffWidth: ledRow.ledOnWidth/4
             z:3 // to raise above notificationRect
