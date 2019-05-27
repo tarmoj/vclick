@@ -6,7 +6,9 @@
 &lt;p&gt;[vClick] (pages/about.html) is a free wireless visual click-track system for musicians.   &lt;/p&gt;
 &lt;p&gt;This version introduces new features, lots of improvements and numerous bug fixes. &lt;/p&gt;
 &lt;p&gt;The source and binaries can be downloaded from: &lt;a href="https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1"&gt;https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Client and server version 2" src="images/client-and-server-v2.png"&gt;&lt;/p&gt;
+&lt;p&gt;See demo:&lt;/p&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
 &lt;h3&gt;New in version 2.0.0:&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;

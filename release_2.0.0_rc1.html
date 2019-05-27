@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="https://tarmoj.github.io/vclick/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="https://tarmoj.github.io/vclick/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://tarmoj.github.io/vclick/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+
+
+<meta name="author" content="Tarmo Johannes" />
+<meta name="description" content="vClick v2 release candidate available for use! [vClick] (pages/about.html) is a free wireless visual click-track system for musicians. This version introduces new features, lots of improvements and numerous bug fixes. The source and binaries can be downloaded from: https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1 …" />
+<meta name="keywords" content="release">
+
+<meta property="og:site_name" content="vClick"/>
+<meta property="og:title" content="vClick 2.0.0 release candidate"/>
+<meta property="og:description" content="vClick v2 release candidate available for use! [vClick] (pages/about.html) is a free wireless visual click-track system for musicians. This version introduces new features, lots of improvements and numerous bug fixes. The source and binaries can be downloaded from: https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1 …"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="https://tarmoj.github.io/vclick/release_2.0.0_rc1.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-05-27 00:00:00+03:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://tarmoj.github.io/vclick/author/tarmo-johannes.html">
+<meta property="article:section" content="News"/>
+<meta property="article:tag" content="release"/>
+<meta property="og:image" content="">
+
+  <title>vClick &ndash; vClick 2.0.0 release candidate</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="https://tarmoj.github.io/vclick">
+        <img src="https://tarmoj.github.io/vclick/theme/img/profile.png" alt="" title="">
+      </a>
+      <h1><a href="https://tarmoj.github.io/vclick"></a></h1>
+
+
+      <nav>
+        <ul class="list">
+          <li><a href="https://tarmoj.github.io/vclick/pages/about.html#about">About</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/contact.html#contact">Contact</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/contribute.html#contribute">Contribute</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/download.html#download">Download</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/getting-started.html#getting-started">Getting started</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/how-it-works.html#how-it-works">How it works</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/score-files.html#score-files">Score files</a></li>
+          <li><a href="https://tarmoj.github.io/vclick/pages/score-library.html#score-library">Score Library</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="release_2.0.0_rc1">vClick 2.0.0 release candidate</h1>
+    <p>
+          Posted on Mon 27 May 2019 in <a href="https://tarmoj.github.io/vclick/category/news.html">News</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p><strong>vClick v2 release candidate available for use!</strong> </p>
+<p>[vClick] (pages/about.html) is a free wireless visual click-track system for musicians.   </p>
+<p>This version introduces new features, lots of improvements and numerous bug fixes. </p>
+<p>The source and binaries can be downloaded from: <a href="https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1">https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1</a>.</p>
+<p>See demo:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h3>New in version 2.0.0:</h3>
+<ul>
+<li>
+<p><strong>NB! The default OSC port has beeen changed!</strong>  In version 1 client was listening OSC messages on (and server sending to) fixed port 87878,  now <em>the port can be set in settings of both server and client</em>. <strong>The default port is now 57878</strong>. Bigger port numbers (above 65535) are not supported on MacOS any more. <strong>If you use v2 and v1 clients/servers together, make sure that the traffic happens on port 87878!</strong></p>
+</li>
+<li>
+<p><strong>Server's look and layout is changed</strong> (ported to QtQuick 2 using Material style).</p>
+</li>
+<li>
+<p>Ability to use <strong>several score files</strong> (ListView), easy switching between them.</p>
+</li>
+<li>
+<p>Feature to <strong>send time (like stopwatch) to clients</strong>, also with a playing soundfile (useful for example for for playing a fixed media piece).</p>
+</li>
+<li>
+<p><strong>Remote control from clients to server</strong> -  it is possible now to start/stop, set bars, start time etc from client.</p>
+</li>
+<li>
+<p>Easier way to set most basic Csound <strong>options (Sound/No sound)</strong>.</p>
+</li>
+<li>
+<p><strong>Experimental Android build of server</strong>.</p>
+</li>
+</ul>
+<p><br></p>
+<h3>Fixes</h3>
+<ul>
+<li>
+<p>Fixed crash if there is not enough fields in tempo line.</p>
+</li>
+<li>
+<p>Fixed one memory leak.</p>
+</li>
+<li>
+<p>Better websocket connection from clients to server.</p>
+</li>
+<li>
+<p>Better layout for delay and intrements row (client). More improvements on layout.</p>
+</li>
+<li>
+<p>Updated Windows version to build with MSVC 2017.</p>
+</li>
+<li>
+<p>iOS build complies with iOs 12.</p>
+</li>
+<li>
+<p>Csound v6.12 used as engine in Server</p>
+</li>
+</ul>
+<h3>Known issues</h3>
+<ul>
+<li>
+<p>mp3 playback does not work  on Windows and MacOS (server)</p>
+</li>
+<li>
+<p>Time Options layout (client) does not fit on smaller screens</p>
+</li>
+</ul>
+<h3>Report issues</h3>
+<p>via github: <a href="https://github.com/tarmoj/vclick/issues/new">https://github.com/tarmoj/vclick/issues/new</a></p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://tarmoj.github.io/vclick/tag/release.html">release</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " vClick ",
+  "url" : "https://tarmoj.github.io/vclick",
+  "image": "",
+  "description": ""
+}
+</script>
+
+</body>
+</html>
