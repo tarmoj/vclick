@@ -14,11 +14,14 @@ Category: News
 
 This version introduces new features, lots of improvements and numerous bug fixes. 
 
-The source and binaries can be downloaded from: <https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1>.
-
 See demo:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+The source and binaries can be downloaded from: <https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1>.
+
+
 
 ### New in version 2.0.0:
 
