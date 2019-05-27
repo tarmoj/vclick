@@ -1,42 +1,77 @@
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en">
 <head>
-    <title>How it works</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/vclick/theme/css/style.css' type="text/css" media="all" />
-    <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/vclick/theme/css/highlight.css' type="text/css" media="all" />
-    <link href="http://tarmoj.github.io/vclick/../feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="vClick Full Atom Feed" />
-    
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+
+
+    <meta name="author" content="Tarmo Johannes" />
+    <meta name="description" content="" />
+<meta property="og:site_name" content="vClick"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="vClick"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://tarmoj.github.io/vclick"/>
+
+  <title>vClick &ndash; How it works</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://tarmoj.github.io/vclick">
+        <img src="http://tarmoj.github.io/vclick/theme/img/profile.png" alt="" title="">
+      </a>
+      <h1><a href="http://tarmoj.github.io/vclick"></a></h1>
 
-<body id="index" class="blog">
-<div id="container" class="hfeed">
-    <header id="header" >
-        <div id="logo">
-                <h1><img src="http://tarmoj.github.io/vclick/theme/image/eclick-logo.png" width="300" height="100" alt="LOGO" />
-                vClick</h1>
-        </div> <!-- /#logo-->
-        <nav id="menu" class="main-nav"><ul class="menu">
-            <li ><a href="http://tarmoj.github.io/vclick/index.html">Home</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/about.html">About</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/download.html">Download</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/getting-started.html">Getting started</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/how-it-works.html">How it works</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/score-files.html">Score files</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/score-library.html">Library of scores</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/contribute.html">Contribute</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/contact.html">Contact</a></li>
 
-        </ul></nav><!-- /#menu -->
-    </header>
-    <section id="wrapper" class="clearfix">
-        <section id="content" class="grid col-620" >
-    <h1>How it works</h1>
+      <nav>
+        <ul class="list">
+          <li><a href="http://tarmoj.github.io/vclick/pages/about.html#about">About</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/contact.html#contact">Contact</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/contribute.html#contribute">Contribute</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/download.html#download">Download</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/getting-started.html#getting-started">Getting started</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/how-it-works.html#how-it-works">How it works</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/score-files.html#score-files">Score files</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/score-library.html#score-library">Score Library</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
     
-
-    <p>This is a bit more techical stuff but probably interesting to many people, who undertand the terms like OSC messages, websockets etc - it may help you to use the system in your own setup, write custom clients (like using Processing, Max MSP or any other OSC aware software). Feel free to be creative and use eClick as you need!</p>
+    <h1 id="how-it-works">How it works</h1>
+  </header>
+  <div>
+<p>This is a bit more techical stuff but probably interesting to many people, who undertand the terms like OSC messages, websockets etc - it may help you to use the system in your own setup, write custom clients (like using Processing, Max MSP or any other OSC aware software). Feel free to be creative and use eClick as you need!</p>
 <h3>The Client</h3>
 <p>The client is listening to <strong>incoming OSC messages on port 87878</strong>. (It was 8008 for version 0.1.* but must have been changed from version 0.2.0 on).</p>
 <p>The messages' format is:</p>
@@ -80,7 +115,7 @@
 <p>* Led numbers: 0 - red, 1 -  green, 2 - blue<br>
 ** If no duration given, 4 seconds is taken as default.</p>
 <p>For example (using oscsend on Linux), send following messages to client with IP address 192.168.1.151:</p>
-<div class="highlight"><pre>oscsend 192.168.1.151 87878 /metronome/led if 0 0.5
+<div class="highlight"><pre><span></span>oscsend 192.168.1.151 87878 /metronome/led if 0 0.5
 
     - blink red led for 0.5 seconds
 
@@ -99,7 +134,7 @@ oscsend 192.168.1.151 87878 /metronome/notification s &quot;Are you there?&quot;
 <p>It can send out websocket messages about beats, leds etc, when "Send ws" is ticked on the Server window. This way the client can be aslo be web based. In fact I developed the system at first this way - the users don't need a special app but just open one page in their browser. It works but is less stable. These files are not part of the git-project, if you are interested to have a look or try it out, please send me an e-mail.</p>
 <p>Also eClick server can be driven via websockest messages - you can start/stop the playback, send in messages about beats, led blinks, tempo changes etc and the server will send according OSC messages to all registered clients.  This way you can develop your own programs, scipts or web applications that can work together with eClick system according to your better needs.</p>
 <p>The messages expected are strings in following format:</p>
-<div class="highlight"><pre>&quot;start&quot; -  as if &quot;Start&quot; had been pressed on Server. Starting from given bar not implemented yet.
+<div class="highlight"><pre><span></span>&quot;start&quot; -  as if &quot;Start&quot; had been pressed on Server. Starting from given bar not implemented yet.
 &quot;stop&quot; -  as if &quot;Stop&quot; had been pressed on Server
 &quot;bar &lt; number&gt;&quot; - set bar number to &quot;number&quot;
 &quot;beat &lt; number&gt;&quot; - set beat number to &quot;number&quot;
@@ -110,83 +145,34 @@ oscsend 192.168.1.151 87878 /metronome/notification s &quot;Are you there?&quot;
 
 
 <p>The info can be combined also into one string:</p>
-<div class="highlight"><pre>&quot;bar 10 beat 4 led 1 druation 0.25&quot;
+<div class="highlight"><pre><span></span>&quot;bar 10 beat 4 led 1 druation 0.25&quot;
     -set bar to 10, beat 4, blink green led for 0.25 seconds
 </pre></div>
 
 
 <p><br></p>
-<p>The source code is available at <a href="https://github.com/tarmoj/vclick">https://github.com/tarmoj/vclick</a>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).</p>
+<p>The source code is available at <a href="https://github.com/tarmoj/vclick">https://github.com/tarmoj/vclick</a>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).</p>  </div>
+</article>
 
-        </section><!-- #content -->
-        <section id="widgets" class="grid col-300 fit" >
-            
-            <!--            <section id="widget-search" class="widget-wrapper widget_search">
-
-                <form id="searchform" action="http://www.google.com/search" method="get">
-                    <input id="q" class="field" type="text" placeholder="Search Blog" name="q" ></input>
-                    <input id="ie" name="ie" type="hidden" value="utf-8" ></input>
-                    <input id="oe" name="oe" type="hidden" value="utf-8" ></input>
-                    <input id="channel" name="channel" type="hidden" value="suggest" ></input>
-                    <input id="searchsubmit" class="submit" type="submit" value="">
-                </form>
-            </section>
--->
-           
-            <!--
-            <section id="widget-category" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Category
-                </div>
-                <ul>
-                        <li><a href="../category/news.html" >News </a></li>
-                </ul>
-            </section>
--->
-            <!--
-            <section id="widget-tagcloud" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Tagcloud
-                </div>
-                <div>
-                </div>
-            </section>
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
 
 
-            <section id="widget-links" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Links
-                </div>
-                <ul>
-                </ul>
-            </section>
--->
-            
-        </section><!-- widgets -->
-    </section><!-- /#wrapper -->
-    <footer id="footer" class="clearfix"><section class="footer-wrapper">
-        <div class="grid col-940" >
-            <div class="grid col-540"></div>
-            <div class="grid col-380 fit" >
-                <ul class="social-icons">
-                    <!-- TO BE CONTINUED -->
-                </ul>
-            </div>
-        </div>
 
-        <div class="grid col-300 copyright" >
-            <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" rel="license">
-                <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" style="border-width:0" alt="知识共享许可协议"></img>
-            </a>
-        </div>
-        <div class="grid col-300 ">
 
-        </div>
-        <div class="grid col-300 fit powered">
-            Powered by <a href="http://getpelican.com/">Pelican</a> <br />
-            which takes great advantage of <a href="http://python.org">Python</a>
-        </div>
-    </section></footer>
-</div>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " vClick ",
+  "url" : "http://tarmoj.github.io/vclick",
+  "image": "",
+  "description": ""
+}
+</script>
+
 </body>
 </html>

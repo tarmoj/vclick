@@ -1,42 +1,77 @@
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en">
 <head>
-    <title>Score files</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/vclick/theme/css/style.css' type="text/css" media="all" />
-    <link rel="stylesheet" id="responsive-style-css"  href='http://tarmoj.github.io/vclick/theme/css/highlight.css' type="text/css" media="all" />
-    <link href="http://tarmoj.github.io/vclick/../feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="vClick Full Atom Feed" />
-    
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://tarmoj.github.io/vclick/theme/font-awesome/css/font-awesome.min.css">
+
+
+
+
+
+
+
+    <meta name="author" content="Tarmo Johannes" />
+    <meta name="description" content="" />
+<meta property="og:site_name" content="vClick"/>
+<meta property="og:type" content="blog"/>
+<meta property="og:title" content="vClick"/>
+<meta property="og:description" content=""/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://tarmoj.github.io/vclick"/>
+
+  <title>vClick &ndash; Score files</title>
+
 </head>
+<body>
+  <aside>
+    <div>
+      <a href="http://tarmoj.github.io/vclick">
+        <img src="http://tarmoj.github.io/vclick/theme/img/profile.png" alt="" title="">
+      </a>
+      <h1><a href="http://tarmoj.github.io/vclick"></a></h1>
 
-<body id="index" class="blog">
-<div id="container" class="hfeed">
-    <header id="header" >
-        <div id="logo">
-                <h1><img src="http://tarmoj.github.io/vclick/theme/image/eclick-logo.png" width="300" height="100" alt="LOGO" />
-                vClick</h1>
-        </div> <!-- /#logo-->
-        <nav id="menu" class="main-nav"><ul class="menu">
-            <li ><a href="http://tarmoj.github.io/vclick/index.html">Home</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/about.html">About</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/download.html">Download</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/getting-started.html">Getting started</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/how-it-works.html">How it works</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/score-files.html">Score files</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/score-library.html">Library of scores</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/contribute.html">Contribute</a></li>
-            <li ><a href="http://tarmoj.github.io/vclick/pages/contact.html">Contact</a></li>
 
-        </ul></nav><!-- /#menu -->
-    </header>
-    <section id="wrapper" class="clearfix">
-        <section id="content" class="grid col-620" >
-    <h1>Score files</h1>
+      <nav>
+        <ul class="list">
+          <li><a href="http://tarmoj.github.io/vclick/pages/about.html#about">About</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/contact.html#contact">Contact</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/contribute.html#contribute">Contribute</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/download.html#download">Download</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/getting-started.html#getting-started">Getting started</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/how-it-works.html#how-it-works">How it works</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/score-files.html#score-files">Score files</a></li>
+          <li><a href="http://tarmoj.github.io/vclick/pages/score-library.html#score-library">Score Library</a></li>
+
+        </ul>
+      </nav>
+
+      <ul class="social">
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
     
-
-    <p><em>You ask:</em> How can I play a certain piece with vClick system? How does vClick know when to send the the beats? How is the "click-track" done?</p>
+    <h1 id="score-files">Score files</h1>
+  </header>
+  <div>
+<p><em>You ask:</em> How can I play a certain piece with vClick system? How does vClick know when to send the the beats? How is the "click-track" done?</p>
 <p>vClick needs a special score where everything is defined. It is a plain text file, written in standard Csound score syntax. The  file has usually .sco ending.</p>
 <p>You can study <a href="https://csound.github.io/docs/manual/ScoreTop.html">Csound score syntax</a> and the demo scores:</p>
 <p><a href="https://github.com/tarmoj/eclick/blob/master/server/simple-4-4.sco">https://github.com/tarmoj/eclick/blob/master/server/simple-4-4.sco</a> (simple 4/4 for 50 bars)</p>
@@ -61,82 +96,33 @@
 <p>Say the flutist want its bar subdivided 3+3+2 but clarinet 2+3+3 or you want players to help with different polyrhythms or send different notifications to different players. You can do it.</p>
 <p>To set to which player (which channel) the signal is sent, you must set the "channel" parameter in score lines. 0 means TUTTI - send to everybody, otherwise it should be bitwise sum of the voices you want to send the signal to: 1st voice - 1, 2nd voice - 2, 3rd voice - 4, 4st - 8 etc. Up to 32 different voices can be used.</p>
 <p>For example:</p>
-<div class="highlight"><pre>i   2   0   4   4   4   2   1   21 ; send 4/4 subidivided in 2, bar number 1 to voices 1, 3 and 5 (1+4+16) 
+<div class="highlight"><pre><span></span>i   2   0   4   4   4   2   1   21 ; send 4/4 subidivided in 2, bar number 1 to voices 1, 3 and 5 (1+4+16) 
 </pre></div>
 
 
-<div class="highlight"><pre>i   &quot;notification&quot;  0   2   &quot;You are 1!&quot;    1 ; send notification to voice 1
-</pre></div>
+<div class="highlight"><pre><span></span>i   &quot;notification&quot;  0   2   &quot;You are 1!&quot;    1 ; send notification to voice 1
+</pre></div>  </div>
+</article>
 
-        </section><!-- #content -->
-        <section id="widgets" class="grid col-300 fit" >
-            
-            <!--            <section id="widget-search" class="widget-wrapper widget_search">
-
-                <form id="searchform" action="http://www.google.com/search" method="get">
-                    <input id="q" class="field" type="text" placeholder="Search Blog" name="q" ></input>
-                    <input id="ie" name="ie" type="hidden" value="utf-8" ></input>
-                    <input id="oe" name="oe" type="hidden" value="utf-8" ></input>
-                    <input id="channel" name="channel" type="hidden" value="suggest" ></input>
-                    <input id="searchsubmit" class="submit" type="submit" value="">
-                </form>
-            </section>
--->
-           
-            <!--
-            <section id="widget-category" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Category
-                </div>
-                <ul>
-                        <li><a href="../category/news.html" >News </a></li>
-                </ul>
-            </section>
--->
-            <!--
-            <section id="widget-tagcloud" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Tagcloud
-                </div>
-                <div>
-                </div>
-            </section>
+    <footer>
+<p>&copy;  </p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
 
 
-            <section id="widget-links" class="widget-wrapper widget_archive">
-                <div class="widget-title">
-                    Links
-                </div>
-                <ul>
-                </ul>
-            </section>
--->
-            
-        </section><!-- widgets -->
-    </section><!-- /#wrapper -->
-    <footer id="footer" class="clearfix"><section class="footer-wrapper">
-        <div class="grid col-940" >
-            <div class="grid col-540"></div>
-            <div class="grid col-380 fit" >
-                <ul class="social-icons">
-                    <!-- TO BE CONTINUED -->
-                </ul>
-            </div>
-        </div>
 
-        <div class="grid col-300 copyright" >
-            <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" rel="license">
-                <img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" style="border-width:0" alt="知识共享许可协议"></img>
-            </a>
-        </div>
-        <div class="grid col-300 ">
 
-        </div>
-        <div class="grid col-300 fit powered">
-            Powered by <a href="http://getpelican.com/">Pelican</a> <br />
-            which takes great advantage of <a href="http://python.org">Python</a>
-        </div>
-    </section></footer>
-</div>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " vClick ",
+  "url" : "http://tarmoj.github.io/vclick",
+  "image": "",
+  "description": ""
+}
+</script>
+
 </body>
 </html>

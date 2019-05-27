@@ -14,6 +14,7 @@ SITEURL = 'http://tarmoj.github.io/vclick'
 SITE_URL = SITEURL
 RELATIVE_URLS = True
 
+# Tarmo commented these out:
 FEED_ALL_ATOM = '../feeds/all.atom.xml'
 CATEGORY_FEED_ATOM = '../feeds/%s.atom.xml'
 

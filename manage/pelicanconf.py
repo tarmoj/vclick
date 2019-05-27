@@ -25,7 +25,8 @@ TRANSLATION_FEED_ATOM = None
 
 DEFAULT_PAGINATION = False
 
-THEME = '../theme/Responsive-Pelican' #'../theme/gum'
+#THEME = '../theme/Responsive-Pelican' #'../theme/gum'
+THEME = "../theme/Flex"
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 PLUGIN_PATHS = [] # pelican_youtube shoud be installed systemwide with pip

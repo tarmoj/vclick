@@ -11,6 +11,15 @@ See more about score file syntax etc [here](score-files.html).
 
 **Morton Feldman**  ["For Frank O'Hara"](../scores/for-frank-o-hara.sco)
 
+**Tristan Murail**  ["Winter Fragments"](../scores/winter-fragments.sco)
+
+**Tristan Murail**  ["La Barque Mystique"](../scores/winter-fragments.sco)
+
+**Elliot Carter** ["Triple Duo"] (beginning) (../scores/triple_duo.sco)
+
+etc
+
+
 <br>
 ###Private scores
 
