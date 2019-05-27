@@ -9,7 +9,7 @@ Category: News
 **vClick v2 release candidate available for use!** 
 
     
-[vClick] (pages/about.html) is a free wireless visual click-track system for musicians.   
+[vClick](pages/about.html) is a free wireless visual click-track system for musicians.   
 
 
 This version introduces new features, lots of improvements and numerous bug fixes. 

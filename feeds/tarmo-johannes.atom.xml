@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>vClick - Tarmo Johannes</title><link href="https://tarmoj.github.io/vclick/" rel="alternate"></link><link href="https://tarmoj.github.io/vclick/feeds/tarmo-johannes.atom.xml" rel="self"></link><id>https://tarmoj.github.io/vclick/</id><updated>2019-05-27T00:00:00+03:00</updated><entry><title>vClick 2.0.0 release candidate</title><link href="https://tarmoj.github.io/vclick/release_2.0.0_rc1.html" rel="alternate"></link><published>2019-05-27T00:00:00+03:00</published><updated>2019-05-27T00:00:00+03:00</updated><author><name>Tarmo Johannes</name></author><id>tag:tarmoj.github.io,2019-05-27:/vclick/release_2.0.0_rc1.html</id><summary type="html">&lt;p&gt;&lt;strong&gt;vClick v2 release candidate available for use!&lt;/strong&gt; &lt;/p&gt;
-&lt;p&gt;[vClick] (pages/about.html) is a free wireless visual click-track system for musicians.   &lt;/p&gt;
+&lt;p&gt;&lt;a href="pages/about.html"&gt;vClick&lt;/a&gt; is a free wireless visual click-track system for musicians.   &lt;/p&gt;
 &lt;p&gt;This version introduces new features, lots of improvements and numerous bug fixes. &lt;/p&gt;
 &lt;p&gt;See demo:&lt;/p&gt;
 &lt;iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
 
-&lt;p&gt;The source and binaries can be downloaded from: &lt;a href="https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1"&gt;https://github.com/tarmoj/vclick/releases/tag/v2 …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;vClick v2 release candidate available for use!&lt;/strong&gt; &lt;/p&gt;
-&lt;p&gt;[vClick] (pages/about.html) is a free wireless visual click-track system for musicians.   &lt;/p&gt;
+&lt;p&gt;The source and binaries can be downloaded from: &lt;a href="https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1"&gt;https://github.com/tarmoj/vclick/releases/tag/v2.0.0-rc1&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;New …&lt;/h3&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;vClick v2 release candidate available for use!&lt;/strong&gt; &lt;/p&gt;
+&lt;p&gt;&lt;a href="pages/about.html"&gt;vClick&lt;/a&gt; is a free wireless visual click-track system for musicians.   &lt;/p&gt;
 &lt;p&gt;This version introduces new features, lots of improvements and numerous bug fixes. &lt;/p&gt;
 &lt;p&gt;See demo:&lt;/p&gt;
 &lt;iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
