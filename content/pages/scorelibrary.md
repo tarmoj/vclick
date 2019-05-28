@@ -15,7 +15,7 @@ See more about score file syntax etc [here](score-files.html).
 
 **Tristan Murail**  ["La Barque Mystique"](../scores/winter-fragments.sco)
 
-**Elliot Carter** ["Triple Duo"] (beginning) (../scores/triple_duo.sco)
+**Elliott Carter** ["Triple Duo (beginning)"](../scores/triple_duo.sco)
 
 etc
 
