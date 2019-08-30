@@ -17,12 +17,22 @@ See more about score file syntax etc [here](score-files.html).
 
 **Elliott Carter** ["Triple Duo (beginning)"](../scores/triple_duo.sco)
 
-etc
+**Karola Obermüller** ["Umdrehungen"](../scores/umdrehungen.sco)
+
+**Scott Miller** ["Accretion"](../scores/accretion.sco) *NB! Example of triggering audio samples (samples not included)*
+
+**Alican Çamcı** ["Böcekçe"](../scores/camci.sco) *NB! Example of different meters for different parts!*
+
+**Gordon Fitzell** ["Elea"](../scores/elea.sco)
+
+**Páll Ragnar Pállson** ["Lucidity"](../scores/lucidity.sco)
+
 
 
 <br>
-###Private scores
+### Private scores
 
 *NB! These are only excerpts, please contact me if you need the full score and I connect you with the commissioner.*
 
-Brian Ferneyhough
+**Brian Ferneyhough** ["In nomine a 12"](../scores/in-nomine-a-12.sco)
+
