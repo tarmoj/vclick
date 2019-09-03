@@ -242,8 +242,8 @@ void CsEngine::play(QString scoFile) {
 			beat = getChannel("beat");
 			bar = getChannel("bar");
 			if (beat!=oldBeat || bar!=oldBar) {
-                emit newBeatBar( int(bar), round(beat)); // round since sometimes given as 5.2999999
-				//qDebug()<<"BAR: "<<int(bar)<< "BEAT: "<<round(beat);
+				emit newBeatBar( int(bar), round(beat)); // round since sometimes given as 5.2999999
+				qDebug()<<"BAR: "<<int(bar)<< "BEAT: "<<round(beat);
 				oldBeat = beat; oldBar = bar;
 				// check for tempo changes:
 				tempo = getChannel("tempo");
@@ -264,12 +264,12 @@ void CsEngine::play(QString scoFile) {
 			*/
 			if (cs->GetMessageCnt()>0) {
                 message = QString(cs->GetFirstMessage());
-                //qDebug()<<"Csound MESSAGE: " << message;
-				emit csoundMessage(message.trimmed());
+				qDebug()<<"Csound MESSAGE: " << message;
+				//emit csoundMessage(message.trimmed()); // NB! This causes overload
 				cs->PopFirstMessage();
 			}
 
-			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be called
+			//QCoreApplication::processEvents(); // seems, no need for that...
 		}
 		qDebug()<<"Stopping csound";
 		cs->Stop();
