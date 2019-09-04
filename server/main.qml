@@ -129,7 +129,10 @@ ApplicationWindow {
             cs.setOscAddresses(oscAddresses.text);
         }
 
-        onCsoundMessage: messageArea.append(message)
+        onCsoundMessage: {
+            messageModel.append({"line":message})
+            messageView.positionViewAtEnd()
+        }
 
         onStart: {
             startButton.clicked()
@@ -643,7 +646,7 @@ ApplicationWindow {
                             if (useScore.checked) {
                                 cs.setOscAddresses(oscAddresses.text);
                                 cs.start(scoField.text, startBarSpinBox.value)
-                                messageArea.text = ""
+                                messageModel.clear()
                             }
                             if (useTime.checked) {
                                 if (playSoundfile.checked && csoundOptions.text.indexOf("null")>=0) {
@@ -903,25 +906,31 @@ ApplicationWindow {
                     visible: true
                 }
 
-                ScrollView {
-                    id: view
-                    //anchors.fill: parent
+
+                ListView {
+                    visible: true
+                    id: messageView
                     height: (mainColumn.y+mainColumn.height)-y
                     //anchors.bottom: parent.bottom
                     //anchors.bottomMargin: 6
                     width: parent.width
                     clip: true
 
+                    model: ListModel {
+                        id: messageModel
+                        ListElement { line: "Csound console" }
+                    }
 
-                    TextArea {
-                        id: messageArea
-                        visible: true
-                        readOnly: true
+                    delegate: Label {
                         font.pointSize: 8
                         font.family: "Courier"
-                        anchors.fill:  parent
-                        text:"Csound messages"
+                        text: line
                     }
+
+                    ScrollBar.vertical: ScrollBar {
+                        active: true
+                    }
+
                 }
             }
         }
