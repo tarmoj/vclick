@@ -320,7 +320,7 @@ ApplicationWindow {
             x:5
             source: "qrc:///menu.png"
             width: height
-            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" ?    tempoLabel.height*1.5 : tempoLabel.height // maybe fices the size on iphone?
+            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" || Qt.platform.os === "windows" ?    tempoLabel.height*1.5 : tempoLabel.height // maybe fices the size on iphone?
             MouseArea {width: parent.width*1.5; height: parent.height*2; onClicked: mainMenu.open() }
         }
 
