@@ -12,7 +12,7 @@ ApplicationWindow {
     width: 740
     height: 820
     title: qsTr("vClick server")
-    property string version: "2.0.0-rc1"
+    property string version: "2.0.0-rc2"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
