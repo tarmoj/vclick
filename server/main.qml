@@ -655,8 +655,8 @@ ApplicationWindow {
                                 }
 
                                 // TODO: check if rtaudio=null in settings, print warning!
-                                console.log(minutesTumbler.currentIndex, ":", secondsTumbler.currentIndex )
-                                cs.startTime(minutesTumbler.currentIndex*60+secondsTumbler.currentIndex, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
+                                startTimeField.convertToTime(); // text to minutes/seconds
+                                cs.startTime(startTimeField.minutes*60+startTimeField.seconds, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
                             }
 
                             // set volume somewhat later when Csound will be loaded
@@ -785,29 +785,25 @@ ApplicationWindow {
 
                     Label { text: qsTr("Count time from:") }
 
+                    TextField {
 
-                    Frame {
-
-                        RowLayout {
-                            spacing: 2
-
-                            Tumbler {
-                                id: minutesTumbler
-                                model: 60
-                                visibleItemCount: 3
-                                Layout.preferredHeight: 50
-                            }
-
-                            Label {text:":"}
-
-                            Tumbler {
-                                id: secondsTumbler
-                                model: 60
-                                visibleItemCount: 3
-                                Layout.preferredHeight: 50
-                            }
+                        function convertToTime() {
+                            var stringParts = text.split(":")
+                            minutes = stringParts[0]
+                            seconds = stringParts[1]
+                            console.log(minutes, seconds)
                         }
 
+                        id: startTimeField
+                        property int minutes: 0
+                        property int seconds: 0
+                        inputMask: "09:99"
+                        cursorVisible: true
+                        inputMethodHints: Qt.ImhTime
+                        font.pointSize: 20
+                        text: "00:00"
+                        //validator: RegExpValidator { regExp: /^([0-1\s]?[0-9\s]|2[0-3\s]):([0-5\s][0-9\s])$ / } // seems that it is not need if inputMask is there
+                        onAccepted: {convertToTime()  }
                     }
 
                     CheckBox {
@@ -821,8 +817,8 @@ ApplicationWindow {
                         id: resetTimeButton
                         text: qsTr("Reset")
                         onClicked: {
-                            minutesTumbler.currentIndex = 0
-                            secondsTumbler.currentIndex = 0
+                            startTimeField.text = "00:00"
+                            startTimeField.convertToTime(); // for any case, also done in startButton.onClicked()
                         }
                     }
 
