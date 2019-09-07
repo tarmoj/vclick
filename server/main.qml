@@ -149,8 +149,9 @@ ApplicationWindow {
         onNewStartTime: {
             var minute = Math.floor(startSecond/60)
             var seconds = startSecond%60;
-            minutesTumbler.currentIndex = minute
-            secondsTumbler.currentIndex = seconds
+            startTimeField.minutes = minute;
+            startTimeField.seconds = seconds;
+            startTimeField.text = minute + ":" + seconds;
         }
 
         onNewCountdown: countdown.checked = checked

@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.0.0-rc1" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.0.0-rc2" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -761,32 +761,25 @@ ApplicationWindow {
 
                     Label { text: qsTr("Count time from:") }
 
-                    Frame {
+                    TextField {
 
-                        RowLayout {
-                            spacing: 2
-
-                            Tumbler {
-                                id: minutesTumbler
-                                model: 60
-                                visibleItemCount: 3
-                                Layout.preferredHeight: fontMetric.height *3
-                            }
-
-                            Label {text:":"}
-
-                            FontMetrics {id: fontMetric}
-
-                            Tumbler {
-                                id: secondsTumbler
-                                model: 60
-                                visibleItemCount: 3
-                                Layout.preferredHeight: fontMetric.height *3
-                            }
+                        function convertToTime() {
+                            var stringParts = text.split(":")
+                            minutes = stringParts[0]
+                            seconds = stringParts[1]
+                            console.log(minutes, seconds)
                         }
 
-
-
+                        id: startTimeField
+                        property int minutes: 0
+                        property int seconds: 0
+                        inputMask: "09:99"
+                        cursorVisible: true
+                        inputMethodHints: Qt.ImhTime
+                        font.pointSize: 16
+                        text: "00:00"
+                        //validator: RegExpValidator { regExp: /^([0-1\s]?[0-9\s]|2[0-3\s]):([0-5\s][0-9\s])$ / } // seems that it is not need if inputMask is there
+                        onAccepted: {convertToTime()  }
                     }
                 }
                 RowLayout {
@@ -795,8 +788,10 @@ ApplicationWindow {
 
                     Button  {
                         text: qsTr("Set")
-                        onClicked:
-                            socket.sendTextMessage("startTime " + (minutesTumbler.currentIndex*60 + secondsTumbler.currentIndex).toString() )
+                        onClicked: {
+                            startTimeField.convertToTime()
+                            socket.sendTextMessage("startTime " + (startTimeField.minutes*60 + startTimeField.seconds).toString() )
+                        }
 
                     }
 
@@ -805,8 +800,9 @@ ApplicationWindow {
                         id: resetTimeButton
                         text: qsTr("Reset")
                         onClicked: {
-                            minutesTumbler.currentIndex = 0
-                            secondsTumbler.currentIndex = 0
+                            startTimeField.minutes = 0
+                            startTimeField.seconds = 0
+                            startTimeField.text = "00:00"
                             socket.sendTextMessage("startTime 0")
                         }
                     }
@@ -984,15 +980,14 @@ ApplicationWindow {
             width: parent.width *0.8
             height: Math.min(mainRect.width,mainRect.height) / 3 // one third of the smaller side, whether portrait or landscape
             anchors.centerIn: parent
-
-
-
             //anchors.verticalCenterOffset: 100 // somehow cannot use that - beatrow goes wrong...
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
             property real ledOffWidth: ledRow.ledOnWidth/4
             z:3 // to raise above notificationRect
-
+            // TODO: states, if vertical, nagu on - horizontal- anchor ledRow to bottom
             spacing: 10
+
+//            Rectangle {color:"green"; anchors.fill: parent}
 
             Item {
                 id: led1
