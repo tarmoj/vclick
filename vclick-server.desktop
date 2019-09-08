@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[en_US]=vClick Server
+Comment=
+Exec=/home/tarmo/src/vclick/server/bin/vclick-server
+GenericName[en_US]=vClick server
+GenericName=vClick server
+Icon=/home/tarmo/src/vclick/server/vclick-server.png
+MimeType=
+Name[en_US]=vClick Server
+Name=vClick Server
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

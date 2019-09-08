@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[en_US]=vClick Client
+Comment=
+Exec=/home/tarmo/src/vclick/client/bin/vclick-client
+GenericName[en_US]=vClick client
+GenericName=vClick client
+Icon=/home/tarmo/src/vclick/client/vclick-client.png
+MimeType=
+Name[en_US]=vClick client
+Name=vClick client
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
