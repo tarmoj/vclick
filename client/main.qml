@@ -787,7 +787,7 @@ ApplicationWindow {
                         font.pointSize: 16
                         text: "00:00"
                         //validator: RegExpValidator { regExp: /^([0-1\s]?[0-9\s]|2[0-3\s]):([0-5\s][0-9\s])$ / } // seems that it is not need if inputMask is there
-                        onAccepted: {convertToTime()  }
+                        onAccepted: { setTimeButton.clicked() }
                     }
                 }
                 RowLayout {
@@ -795,6 +795,7 @@ ApplicationWindow {
                     spacing: 5
 
                     Button  {
+                        id: setTimeButton
                         text: qsTr("Set")
                         onClicked: {
                             startTimeField.convertToTime()

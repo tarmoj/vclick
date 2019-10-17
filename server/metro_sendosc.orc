@@ -300,14 +300,14 @@ instr mySendOsc
 	if (strcmp(Stype,"sf")==0) then ; notification
 		Smessage strget p7
 		idur = p8
-				OSCsend_lo 1, Shost, giOscPort,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
+                                OSCsend 1, Shost, giOscPort,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
 	elseif (strcmp(Stype,"f")==0) then ; tempo
 		itempo = p7
-				OSCsend_lo 1, Shost, giOscPort,Sdestination, Stype, itempo
+                                OSCsend 1, Shost, giOscPort,Sdestination, Stype, itempo
         else ; beatbar and led send two bumbers
 		ip1 = p7
 		ip2 = p8
-				OSCsend_lo 1, Shost, giOscPort,Sdestination, Stype, ip1, ip2
+                                OSCsend 1, Shost, giOscPort,Sdestination, Stype, ip1, ip2
 	endif
 		
 endin
