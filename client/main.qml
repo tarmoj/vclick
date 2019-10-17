@@ -209,6 +209,14 @@ ApplicationWindow {
                         oscServer.restart() ;// to make sure it is running
                 }
             }
+
+            if ( (Qt.platform.os === "ios" || Qt.platform.os === "android") &&
+                    ( Qt.application.state === Qt.ApplicationSuspended  )  &&
+                    socket.status === WebSocket.Open )  {
+                console.log("Application suspended. Closing websocket.")
+                socket.active = false;
+            }
+
 //            if(Qt.application.state === Qt.ApplicationSuspended) {
 //                console.log("Suspended")
 //            }
@@ -518,7 +526,7 @@ ApplicationWindow {
                         enabled: !socket.active
                         text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
                         onClicked: {
-                            if (!socket.active) {
+                            if (!socket.active) { // <-- check thi
                                 console.log(serverAddress.text, socket.serverIP)
                                 if (serverAddress.text==socket.serverIP) {
                                     socket.active = true
@@ -872,12 +880,13 @@ ApplicationWindow {
                 id: connectButton
                 text: qsTr("Hello, Server")
                 onClicked: {
-                    //console.log("Socket state, errorString: ", socket.status, socket.errorString)
+                    //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
                         if (serverAddress.text==socket.serverIP) {
                             socket.active = true
                         } else {
                             socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+                            socket.active = true;
                         }
                         //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     } else {
