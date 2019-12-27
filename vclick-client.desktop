@@ -1,19 +1,22 @@
 [Desktop Entry]
-Comment[en_US]=vClick Client
-Comment=
-Exec=/home/tarmo/src/vclick/client/bin/vclick-client
-GenericName[en_US]=vClick client
-GenericName=vClick client
-Icon=/home/tarmo/src/vclick/client/vclick-client.png
+Comment[en_US]=Performer's app for vClick system
+Comment=Performer's app for vClick system
+Exec=vclick-client
+GenericName[en_US]=vClick Client
+GenericName=vClick Client
+Icon=vclick-client
 MimeType=
-Name[en_US]=vClick client
-Name=vClick client
-Path=
+Name[en_US]=vClick Client
+Name=vClick Client
 StartupNotify=true
 Terminal=false
-TerminalOptions=
 Type=Application
+Categories=AudioVideo;
 X-DBUS-ServiceName=
 X-DBUS-StartupType=
 X-KDE-SubstituteUID=false
 X-KDE-Username=
+X-AppImage-Name=vclick-client
+X-AppImage-Version=2.0.0-rc2
+X-AppImage-Arch=x86_64
+
