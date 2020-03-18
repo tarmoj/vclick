@@ -227,9 +227,10 @@ void CsEngine::play(QString scoFile) {
 		isRunning = true;
 		double bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
 		double oldTempo=0, oldBar=-1, oldBeat=-1;
-		//QStringList leds = QStringList() <<"red"<<"green"<<"blue";
+		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 		while (cs->PerformKsmps()==0 && !stopNow) {
-			/* don't care abou leds any more, csound send OSC messages
+			// TODO: move websocket sepecific stuff to separate block and handle it only if nexcessary (Send OSC/Send WS is selected)
+			// leds
 			for (int i=0;i<3;i++) {
 				double duration =  getChannel(leds[i]);
 				if (duration>0) {
@@ -238,7 +239,7 @@ void CsEngine::play(QString scoFile) {
 					setChannel(leds[i],0); // set to 0 in Csound
 				}
 			}
-			*/
+
 			beat = getChannel("beat");
 			bar = getChannel("bar");
 			if (beat!=oldBeat || bar!=oldBar) {
@@ -253,7 +254,7 @@ void CsEngine::play(QString scoFile) {
 					oldTempo = tempo;
 				}
 			}
-			/* don't care about notifications any more
+			// notifications
 			flagUp = getChannel("new_notification"); // duration > 0 if new message in the string channel
 			if (flagUp>0) {
 				QString notification = getStringChannel("notification");
@@ -261,7 +262,7 @@ void CsEngine::play(QString scoFile) {
 				emit newNotification(notification, flagUp);
 				setChannel("new_notification",0);
 			}
-			*/
+
 			if (cs->GetMessageCnt()>0) {
                 message = QString(cs->GetFirstMessage());
 				//qDebug()<<"Csound MESSAGE: " << message;
