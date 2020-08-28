@@ -18,14 +18,19 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 	02111-1307 USA
 */
+#ifdef CONSOLE_APP
+#include <QCoreApplication>
+#else
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include "wsserver.h"
-#include "csengine.h"
 #include <QQmlContext>
-#include <QThread>
 #include <QIcon>
 #include <QFont>
+#endif
+#include "wsserver.h"
+#include "csengine.h"
+#include <QThread>
+
 
 #ifdef Q_OS_ANDROID
 
@@ -50,19 +55,27 @@ bool checkPermission() { // requires >= Qt 5.10
 
 #define OSC_PORT 57878
 
-
+// see https://doc.qt.io/qt-5/qapplication.html#details for supporting both gui and console
+// for now just rewrite as console app
 
 int main(int argc, char *argv[])
 {
+
+#ifdef CONSOLE_APP
+	QCoreApplication app(argc, argv);
+#else
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // maybe bad for destop?
 	QApplication app(argc, argv);
 
-    //app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
+	//app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
+	app.setWindowIcon(QIcon(":/vclick-server.png"));
+#endif
+
 
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("server");
 
-	app.setWindowIcon(QIcon(":/vclick-server.png"));
+
 
 #ifdef Q_OS_OSX
     QString pluginsPath = QApplication::applicationDirPath() + "/../Frameworks/CsoundLib64.framework/Versions/6.0/Resources/Opcodes64";
@@ -83,16 +96,17 @@ int main(int argc, char *argv[])
 	setenv("OPCODE6DIR64", pluginsPath.toLocal8Bit() ,1);
 #endif
 
+
+	// create csound thread, must be before WsServer
+	QThread * csoundThread = new QThread();
+	CsEngine * csound = new CsEngine();
+	csound->moveToThread(csoundThread);
+
 	WsServer *wsServer;
 	wsServer = new WsServer(6006);  // hiljem muuda, nt 12021	
 #ifdef USE_JACK
 	JackReader *jackReader = new JackReader();  // started from qml
 #endif
-
-	// create csound thread
-	QThread * csoundThread = new QThread();
-	CsEngine * csound = new CsEngine();
-	csound->moveToThread(csoundThread);
 
 
 
@@ -109,26 +123,42 @@ int main(int argc, char *argv[])
 
 	QObject::connect(wsServer ,&WsServer::newOscPort, csound, &CsEngine::setOscPort );
 
+#ifdef CONSOLE_APP
+	QObject::connect(wsServer, &WsServer::stop, csound, &CsEngine::stop);
+	QObject::connect(wsServer, &WsServer::start, csound, &CsEngine::startScore);
+	QObject::connect(wsServer, &WsServer::newStartBar, csound, &CsEngine::setStartBar);
+	QObject::connect(wsServer, &WsServer::updateOscAddresses, csound, &CsEngine::setOscAddresses);
+#endif
+
 	//wsServer->setOscPort(87878);
 	csoundThread->start();
 
-	// QML engine and connections
 
-    QQmlApplicationEngine engine;
+#ifndef CONSOLE_APP
+	// QML engine and connections
+	QQmlApplicationEngine engine;
 	//QQuickStyle::setStyle("Material");
 	//bind object before load
 	engine.rootContext()->setContextProperty("wsServer", wsServer); // forward c++ object that can be reached form qml by object name "wsSerrver"
 	engine.rootContext()->setContextProperty("cs", csound);
 
+	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+#endif
+
+
+
 #ifdef USE_JACK
+#ifndef CONSOLE_APP
 	engine.rootContext()->setContextProperty("jackReader", jackReader);
+#endif
 	QObject::connect(jackReader, SIGNAL(newBeatBar(int,int)), wsServer, SLOT(handleBeatBar(int,int)) );
 	QObject::connect(jackReader, SIGNAL(newLed(int,float)), wsServer, SLOT(handleLed(int,float))) ;
 	QObject::connect(jackReader,  SIGNAL(newTempo(double)), wsServer, SLOT(handleTempo(double)));
 
 #endif
 
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
 
     return app.exec();
 }

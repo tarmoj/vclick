@@ -35,6 +35,7 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 	m_orc=":/csound/metro_simple.orc";
 	QObject::connect(this, SIGNAL(startPlaying(QString)), this, SLOT(play(QString)));
 	oscPort = 58787;
+	m_startBar = 1;
 }
 
 CsEngine::~CsEngine()
@@ -78,6 +79,12 @@ s
 
 	emit startPlaying(tempName); // TODO: name of temporary file!
 
+}
+
+
+void CsEngine::startScore(QString scoFile)
+{
+	start(QUrl(scoFile), m_startBar);
 }
 
 void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
@@ -270,7 +277,7 @@ void CsEngine::play(QString scoFile) {
 				cs->PopFirstMessage();
 			}
 
-			//QCoreApplication::processEvents(); // seems, no need for that...
+			QCoreApplication::processEvents(); // seems, no need for that...
 		}
 		qDebug()<<"Stopping csound";
 		cs->Stop();
@@ -356,7 +363,7 @@ void CsEngine::setOscAddresses(QString addresses)
 		address = address.simplified();
 		address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
 		if (!address.isEmpty()) { // for any case
-			// create string about addresses for Csound and compileit as orchestra
+			// create string about addresses for Csound and compile it as orchestra
 			oscLineToCompile += "\"" + address + "\",";
 			clientsCount++;
 

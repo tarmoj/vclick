@@ -1,8 +1,20 @@
 TEMPLATE = app
 #TARGET += "vClickServer"
 
-QT += qml quick widgets network websockets
-#QT += multimedia #for testing
+CONFIG += no-gui
+
+no-gui {
+    QT += core network websockets
+    CONFIG += c++11 console
+    CONFIG -= app_bundle
+    QT -= gui
+    DEFINES += CONSOLE_APP
+    TARGET=$$TARGET-nogui
+} else {
+    QT += qml quick widgets network websockets
+    #QT += multimedia #for testing
+}
+
 
 linux:!android:exists(/usr/lib64/libjack.so): DEFINES += USE_JACK
 
@@ -68,7 +80,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 	ANDROID_EXTRA_LIBS = /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
 }
 
-message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES)
+message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
     winicon.rc \

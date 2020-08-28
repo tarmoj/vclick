@@ -35,7 +35,7 @@ class CsEngine : public QObject
 {
 	Q_OBJECT
 public:
-	explicit CsEngine(QObject *parent = 0);
+	explicit CsEngine(QObject *parent = nullptr);
 	~CsEngine();
 
 	//Q_INVOKABLE void setOrcSco(QString orc, QString sco);
@@ -53,7 +53,9 @@ signals:
 public slots:
 	void setChannel(QString channel, double value);
 
-	void start(QUrl scoFile, int startBar);
+	void startScore(QString scoFile);
+	void start(QUrl scoFile, int startBar=1);
+	void setStartBar(int barNumber) { m_startBar = barNumber; }
 	void play(QString scoFile);
 	void stop();
     void pause();
@@ -74,6 +76,7 @@ private:
 	bool stopNow, isRunning;
 	QString SFDIR, oscLineToCompile;
 	int oscPort;
+	int m_startBar;
 };
 
 #endif // CSENGINE_H

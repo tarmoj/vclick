@@ -87,6 +87,7 @@ public Q_SLOTS:
 	void handleLed(int ledNumber, float duration); // to double everywhere?
 	void handleNotification(QString message, float duration=4);
 	void handleTempo(double tempo); // TODO: change to double/float
+	void setScoreIndex(int index);
 
 	void setOscPort(int port);
 
@@ -101,11 +102,12 @@ private:
 	QList <QOscClient *> m_oscClients;
 	void createOscClientsList(QString addresses);
     void createOscClientsList(); // takes data from m_clientsHash
-
+	QStringList scoreFiles;
 
 	QFile logFile;
 	QTime time;
 	int oscPort;
+	int scoreIndex;
 
 
 };

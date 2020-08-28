@@ -48,7 +48,8 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	createOscClientsList(getOscAddresses());
 	oscPort = settings->value("oscPort", 57878).toInt();
-
+	scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+	qDebug() << "Score files from settings: " << scoreFiles;
 }
 
 
@@ -143,8 +144,16 @@ void WsServer::processTextMessage(QString message)
 		QString scoreFile;
 		if (messageParts.length()>1) {
 			scoreFile = messageParts[1]; // for future
+		} else if ( scoreFiles.count()>=0 ) {
+			scoreFile = scoreFiles[scoreIndex];
 		}
-		emit start(scoreFile); // message to QML to set the scorename and start Csound
+		// ilmselt on ikka vaja, et siin oleks failide list olemas. Võibolla settingutest loetud? Kui scoFile pole antud, siis võtab scoreFiles[scoreIndex], muidu aga
+#ifdef CONSOLE_APP
+		emit newOscPort(oscPort);
+
+		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
+#endif
+		emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
 
 	}
 
@@ -162,6 +171,7 @@ void WsServer::processTextMessage(QString message)
 		int index = messageParts[1].toInt();
 		qDebug()<<"Remote set score index " << index;
 		emit newScoreIndex(index); // message to QML to set the active score if there are several
+		setScoreIndex(index);
 		bool oldSendOsc = sendOsc;
 		sendOsc = true;
 		handleNotification(QString("Score %1").arg(index + 1), 2);
@@ -366,13 +376,24 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 	}
 }
 
+void WsServer::setScoreIndex(int index)
+{
+	if (index>=0 && index<scoreFiles.count()) {
+		scoreIndex = index;
+	} else {
+		qDebug() << "Cannot set score index: " << index;
+	}
+}
+
 
 void WsServer::setOscPort(int port) {
 	oscPort = port;
 	qDebug() << Q_FUNC_INFO << port;
-/*	if (settings) { // not needed any more -  value stored in qml
+#ifdef CONSOLE_APP
+	if (settings) { // not needed any more -  value stored in qml
 		settings->setValue("oscPort", oscPort);
-	} */
+	}
+#endif
 	emit newOscPort(oscPort);
 }
 
@@ -481,16 +502,7 @@ void WsServer::setOscAddresses(QString addresses)
 	bool oldvalue = sendOsc;
 	sendOsc = false; // as kind of mutex not to send any osc messages during that time
 
-	// maybe not necessary later:
 	createOscClientsList(addresses);
-
-	/*
-	if (settings) { // store in settings
-		if (addresses=="none" ||  oscAddresses.isEmpty()  ) // allow also stroring empty addresses line, but avoid invalid value.
-			settings->setValue("oscaddresses", "");
-		else
-			settings->setValue("oscaddresses", oscAddresses);
-	} */
 	sendOsc = oldvalue;
 }
 
