@@ -1,7 +1,8 @@
 TEMPLATE = app
 #TARGET += "vClickServer"
 
-CONFIG += no-gui
+#uncomment or add to qmake parameters to build console version of the server
+#CONFIG += no-gui
 
 no-gui {
     QT += core network websockets
