@@ -17,7 +17,6 @@ no-gui {
 }
 
 
-linux:!android:exists(/usr/lib64/libjack.so): DEFINES += USE_JACK
 
 linux|android: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
@@ -37,8 +36,6 @@ SOURCES += main.cpp \
     qosc/qoscserver.cpp \
     qosc/qosctypes.cpp
 
-linux:!android: SOURCES += jackreader.cpp
-
 RESOURCES += qml.qrc \
     cs.qrc \
     vclick-server.qrc
@@ -56,12 +53,17 @@ HEADERS += \
     qosc/qoscserver.h \
     qosc/qosctypes.h
 
-linux:!android: HEADERS +=  jackreader.h
 
 win32: LIBS += -L"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
 linux:!android: LIBS += -lcsound64
 win32-msvc: LIBS += csound64.lib
-linux:!android: LIBS += -ljack
+
+linux:!android:exists(/usr/lib64/libjack.so) {
+    DEFINES += USE_JACK
+    SOURCES += jackreader.cpp
+    HEADERS += jackreader.h
+    LIBS += -ljack
+}
 
 mac: {
 LIBS += -F/Library/Frameworks/ -framework CsoundLib64
