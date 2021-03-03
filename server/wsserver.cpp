@@ -43,9 +43,14 @@ WsServer::WsServer(quint16 port, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
 	}
 
-	sendOsc = false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
-	sendWs = false;
 	settings = new QSettings("vclick","server"); // TODO platform independent
+	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
+	// if used as no-gui server application, always send ws out, too
+#ifdef CONSOLE_APP
+	sendWs = true;
+#else
+	sendWs = settings->value("sendWs", false).toBool();
+#endif
 	createOscClientsList(getOscAddresses());
 	oscPort = settings->value("oscPort", 57878).toInt();
 	scoreFiles = settings->value("scoreFiles", "").toString().split(";");
