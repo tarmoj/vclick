@@ -54,6 +54,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	createOscClientsList(getOscAddresses());
 	oscPort = settings->value("oscPort", 57878).toInt();
 	scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+    scoreIndex = 0; // or should it come from UI or settings?
 	qDebug() << "Score files from settings: " << scoreFiles;
 }
 
