@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		QAndroidJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
 	}
 #endif
-	OscHandler oscServer(static_cast<quint16>(OSCPORT));
+    OscHandler oscServer(static_cast<quint16>(OSCPORT)); // TODO: add condition
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");
 	app.setOrganizationName("vclick"); // for settings

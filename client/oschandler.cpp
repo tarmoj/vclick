@@ -61,6 +61,7 @@ void OscHandler::restart()
 	m_server = new QOscServer(m_port, nullptr);
     qDebug()<<"Created again";
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
+    m_server->
 
 }
 
@@ -75,6 +76,8 @@ void OscHandler::setPort(quint16 port)
 	m_port = port;
 	restart();
 }
+
+// TODO  methods start/stop listening-  perhaps disconnect/connect SIGNAL(dataIn() )
 
 void OscHandler::dataIn(QString path, QVariant data)
 {

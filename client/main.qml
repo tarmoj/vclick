@@ -28,14 +28,14 @@ import QtMultimedia 5.5
 import QtWebSockets 1.0
 
 ApplicationWindow {
-    title: qsTr("vClick client")
+    title: qsTr("vClick Client")
     id: app
     width: 480
     height: 640
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.0.0" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.1.0-beta" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -179,7 +179,28 @@ ApplicationWindow {
         url: "ws://"+serverIP+":6006/ws"//"ws://192.168.1.199:6006/ws"
 
         onTextMessageReceived: {
-            //console.log("Received message: ",message);
+            console.log("Received message: ",message);
+            // put back websocket control for communication over internet
+            var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
+            if (messageParts[0]==="b") {
+                barLabel.text = messageParts[1]
+                beatLabel.text = messageParts[2]
+            }
+            if (messageParts[0]==="l") {
+                var led = parseInt( messageParts[1] );
+                beatLength = parseFloat(messageParts[2]); // TODO - enable different durations for different beats
+                if (led===0) redAnimation.restart()
+                if (led===1) greenAnimation.restart()
+                if (led===2) blueAnimation.restart()
+            }
+            if (messageParts[0] === "n") {	// notification
+                messageParts.splice(0,1); // get rid of the "n" and join word intro string back again
+                var text = messageParts.join(" ");
+                notification(text);
+            }
+            if (messageParts[0] === "t") {	// tempo
+                tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
+            }
         }
         onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: " + socket.errorString)
