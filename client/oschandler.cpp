@@ -61,7 +61,6 @@ void OscHandler::restart()
 	m_server = new QOscServer(m_port, nullptr);
     qDebug()<<"Created again";
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
-    m_server->
 
 }
 
