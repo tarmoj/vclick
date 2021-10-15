@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
 	QObject::connect(wsServer, &WsServer::start, csound, &CsEngine::startScore);
 	QObject::connect(wsServer, &WsServer::newStartBar, csound, &CsEngine::setStartBar);
 	QObject::connect(wsServer, &WsServer::updateOscAddresses, csound, &CsEngine::setOscAddresses);
+    QObject::connect(wsServer, &WsServer::startTime, csound, &CsEngine::startTime);
 #endif
 
 	//wsServer->setOscPort(87878);

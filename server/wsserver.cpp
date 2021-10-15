@@ -55,6 +55,9 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 	oscPort = settings->value("oscPort", 57878).toInt();
 	scoreFiles = settings->value("scoreFiles", "").toString().split(";");
     scoreIndex = 0; // or should it come from UI or settings?
+    useTime = false;
+    startSecond = 0;
+    countDown = true; // in case of useTime
 	qDebug() << "Score files from settings: " << scoreFiles;
 }
 
@@ -159,8 +162,11 @@ void WsServer::processTextMessage(QString message)
 
 		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
 #endif
-		emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
-
+        if (!useTime) {
+            emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
+        } else {
+            emit startTime(startSecond, countDown, ""); // no soundfile support for now
+        }
 	}
 
 	if (messageParts[0]=="stop") {
@@ -197,6 +203,7 @@ void WsServer::processTextMessage(QString message)
 
     if (messageParts[0]=="useScore") {
         qDebug()<<"Remote useScore";
+        useTime = false;
         emit newUseScore(true);
         bool oldSendOsc = sendOsc;
         sendOsc = true;
@@ -206,6 +213,7 @@ void WsServer::processTextMessage(QString message)
 
     if (messageParts[0]=="useTime") {
         qDebug()<<"Remote useTime";
+        useTime = true;
         emit newUseScore(false);
         bool oldSendOsc = sendOsc;
         sendOsc = true;
@@ -216,6 +224,7 @@ void WsServer::processTextMessage(QString message)
     if (messageParts[0]=="startTime") {
         int startSecond = messageParts[1].toInt();
         qDebug()<<"Remote set startbar" << startSecond;
+        this->startSecond = startSecond;
         emit newStartTime(startSecond);
         bool oldSendOsc = sendOsc;
         sendOsc = true;
@@ -226,6 +235,7 @@ void WsServer::processTextMessage(QString message)
     if (messageParts[0]=="countdown") {
         bool checked = static_cast<bool>( messageParts[1].toInt());
         qDebug()<<"Remote set countdown" << checked;
+        countDown = checked;
         emit newCountdown(checked);
         bool oldSendOsc = sendOsc;
         sendOsc = true;
@@ -237,6 +247,7 @@ void WsServer::processTextMessage(QString message)
         bool checked = static_cast<bool>( messageParts[1].toInt());
         qDebug()<<"Remote set useSoundFile" << checked;
         emit newUseSoundFile(checked);
+        // no support for playing sound file in CONSOLE_APP mode yet...
         bool oldSendOsc = sendOsc;
         sendOsc = true;
         handleNotification(QString("SoundFile %1").arg(checked), 2);

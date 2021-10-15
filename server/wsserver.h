@@ -68,6 +68,7 @@ Q_SIGNALS:
 	void newOscPort(int port);
 
 	void start(QString scoreFile); // if started by remote
+    void startTime(int startSecond, bool countDown, QString soundFile=""); // if started by remote and useTime
 	void stop();
 	void newScoreIndex(int index);
 	void newStartBar(int startBar);
@@ -108,6 +109,9 @@ private:
 	QTime time;
 	int oscPort;
 	int scoreIndex;
+    bool useTime;
+    int startSecond;
+    bool countDown;
 
 
 };
