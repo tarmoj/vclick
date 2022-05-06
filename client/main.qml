@@ -196,7 +196,8 @@ ApplicationWindow {
             if (messageParts[0] === "n") {	// notification
                 messageParts.splice(0,1); // get rid of the "n" and join word intro string back again
                 var text = messageParts.join(" ");
-                notification(text);
+                notification(text, 2); // How to give the duration from message maybe like n2.3<space><message>
+                // duration hardcoded to 2 for now
             }
             if (messageParts[0] === "t") {	// tempo
                 tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
@@ -900,7 +901,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: qsTr("Hello, Server")
+                text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Hello, Server")
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {

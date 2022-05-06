@@ -90,10 +90,11 @@ void CsEngine::startScore(QString scoFile)
 void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
 	if (isRunning) {
-		stop(); // or is it possible to stop, wait while done and then continue?
-		qDebug()<<"vClick is running. Stopping now. Please press Start again!";
-        QThread::sleep(1);
-		//return;
+        stop();
+        qDebug()<<"vClick is running. Stopping now. Please press Start again!";
+        //QThread::sleep(1); // sleep and continue caused crash when start was pressed twice within one second.
+        emit newNotification("Stopped on double start", 1.0);
+        return;
 	}
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
