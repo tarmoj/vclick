@@ -9,6 +9,9 @@ SOURCES += main.cpp \
 	qosc/qoscserver.cpp \
 	qosc/qosctypes.cpp \
 
+# uncomment for build without OSC support (QML only)
+#DEFINES += USE_OSC
+
 RESOURCES += qml.qrc \
     vclick-client.qrc
 

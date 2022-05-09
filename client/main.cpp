@@ -20,8 +20,11 @@
 */
 #include <QApplication>
 #include <QQmlApplicationEngine>
+
+#ifdef USE_OSC
 #include "oschandler.h"
-//#include "settingshandler.h"
+#endif
+
 #include <QQmlContext>
 #include <QIcon>
 #include <QFont>
@@ -64,14 +67,22 @@ int main(int argc, char *argv[])
 		QAndroidJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
 	}
 #endif
-    OscHandler oscServer(static_cast<quint16>(OSCPORT)); // TODO: add condition
+
+
 	//SettingsHandler settings;
 	//settings.setSettingsValue("serverAddress","ws:test");
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("client");
 	app.setWindowIcon(QIcon(":/vclick-client.png"));
     QQmlApplicationEngine engine;
-	engine.rootContext()->setContextProperty("oscServer", &oscServer);
+
+#ifdef USE_OSC
+    OscHandler oscServer(static_cast<quint16>(OSCPORT)); // TODO: add condition
+    engine.rootContext()->setContextProperty("oscServer", &oscServer);
+# else
+    engine.rootContext()->setContextProperty("oscServer", nullptr);
+#endif
+
 	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();
