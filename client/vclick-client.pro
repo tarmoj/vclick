@@ -3,14 +3,25 @@ TEMPLATE = app
 QT += qml quick widgets websockets multimedia
 android: QT += androidextras
 
-SOURCES += main.cpp \
-    oschandler.cpp \
-	qosc/qoscclient.cpp \
-	qosc/qoscserver.cpp \
-	qosc/qosctypes.cpp \
-
 # uncomment for build without OSC support (QML only)
-#DEFINES += USE_OSC
+# for webassembly compile with command (in terminal):
+# /home/tarmo/src/Qt/5.15.2/wasm_32/bin/qmake && make -j8
+
+CONFIG += use_osc
+
+SOURCES += main.cpp
+
+use_osc: {
+
+SOURCES +=     oschandler.cpp \
+        qosc/qoscclient.cpp \
+        qosc/qoscserver.cpp \
+        qosc/qosctypes.cpp \
+
+DEFINES += USE_OSC
+
+}
+
 
 RESOURCES += qml.qrc \
     vclick-client.qrc
