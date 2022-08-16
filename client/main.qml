@@ -896,7 +896,7 @@ ApplicationWindow {
                 Layout.minimumWidth: 80
 
 
-                text: "192.168.1.199"
+                text: "live.uuu.ee"//"192.168.1.199"
             }
 
             Button {

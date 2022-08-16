@@ -53,7 +53,7 @@ WsServer::WsServer(quint16 port, QObject *parent) :
 #endif
 	createOscClientsList(getOscAddresses());
 	oscPort = settings->value("oscPort", 57878).toInt();
-	scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+    updateScoreFiles();
     scoreIndex = 0; // or should it come from UI or settings?
     useTime = false;
     startSecond = 0;
@@ -70,6 +70,10 @@ WsServer::~WsServer()
 	//logFile.close();
 }
 
+void WsServer::updateScoreFiles()
+{
+    scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+}
 
 void WsServer::onNewConnection()
 {
@@ -150,6 +154,7 @@ void WsServer::processTextMessage(QString message)
 
 	if (messageParts[0]=="start") {
 		qDebug()<<"Remote call to start vClick";
+        updateScoreFiles();
 		QString scoreFile;
 		if (messageParts.length()>1) {
 			scoreFile = messageParts[1]; // for future

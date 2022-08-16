@@ -56,6 +56,7 @@ public:
 	Q_INVOKABLE QString getLocalAddress();
 	Q_INVOKABLE void runSystemCommand(QString command);
 
+    void updateScoreFiles();
 Q_SIGNALS:
     void closed();
     void newConnection(int connectionsCount);

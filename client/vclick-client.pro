@@ -3,11 +3,11 @@ TEMPLATE = app
 QT += qml quick widgets websockets multimedia
 android: QT += androidextras
 
-# uncomment for build without OSC support (QML only)
+# comment out for build without OSC support (QML only)
 # for webassembly compile with command (in terminal):
 # /home/tarmo/src/Qt/5.15.2/wasm_32/bin/qmake && make -j8
 
-CONFIG += use_osc
+#CONFIG += use_osc
 
 SOURCES += main.cpp
 
@@ -28,7 +28,7 @@ RESOURCES += qml.qrc \
 
 macx: ICON = vclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
-
+un
 ios {
 CONFIG -= bitcode
 HEADERS += ios-screen.h
