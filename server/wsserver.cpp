@@ -161,13 +161,16 @@ void WsServer::processTextMessage(QString message)
 		} else if ( scoreFiles.count()>=0 ) {
 			scoreFile = scoreFiles[scoreIndex];
 		}
+        qDebug() << "scoreFile: " << scoreFile << scoreIndex;
 		// ilmselt on ikka vaja, et siin oleks failide list olemas. Võibolla settingutest loetud? Kui scoFile pole antud, siis võtab scoreFiles[scoreIndex], muidu aga
 #ifdef CONSOLE_APP
 		emit newOscPort(oscPort);
 
 		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
 #endif
+        // TODO: the start problem is here: sometimes there is no scoreFile
         if (!useTime) {
+            // Something wrong here: ....
             emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
         } else {
             emit startTime(startSecond, countDown, ""); // no soundfile support for now
