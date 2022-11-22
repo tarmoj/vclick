@@ -178,6 +178,7 @@ ApplicationWindow {
         property string serverIP: "192.168.1.199"
         url: "ws://"+serverIP+":6006/ws"//"ws://192.168.1.199:6006/ws"
 
+
         onTextMessageReceived: {
             console.log("Received message: ",message);
             // put back websocket control for communication over internet
@@ -186,12 +187,30 @@ ApplicationWindow {
                 barLabel.text = messageParts[1]
                 beatLabel.text = messageParts[2]
             }
+            // this doubles in great part code in oscServer connections. Would make sense to rewrite new functions that are called from both
             if (messageParts[0]==="l") {
                 var led = parseInt( messageParts[1] );
                 beatLength = parseFloat(messageParts[2]); // TODO - enable different durations for different beats
-                if (led===0) redAnimation.restart()
-                if (led===1) greenAnimation.restart()
-                if (led===2) blueAnimation.restart()
+                if (led===0)  {
+                    redAnimation.restart();
+                    if (soundCheckBox.checked) {
+                        sound1.play();
+                    }
+                }
+                if (led===1)  {
+                        greenAnimation.restart();
+                        if (soundCheckBox.checked) {
+                            sound2.play();
+                        }
+                    }
+
+                if (led===2) {
+
+                    blueAnimation.restart()
+                    if (soundCheckBox.checked) {
+                        sound2.play();
+                    }
+                }
             }
             if (messageParts[0] === "n") {	// notification
                 messageParts.splice(0,1); // get rid of the "n" and join word intro string back again
