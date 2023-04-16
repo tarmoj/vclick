@@ -1,0 +1,21 @@
+[Desktop Entry]
+Comment[en_US]=vClick server
+Comment=
+Exec=/home/tarmo/tarmo/programm/qt-projects/vClick/build-vclick-server-Qt5_desktop-Debug/bin/vclick-server
+GenericName[en_US]=vClick server
+GenericName=vClick server
+Icon=/home/tarmo/tarmo/programm/qt-projects/vClick/server/vclick-server.png
+MimeType=
+Name[en_US]=vClick server
+Name=vClick server
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+Categories=Utility
+
