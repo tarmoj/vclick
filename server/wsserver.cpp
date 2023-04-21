@@ -173,7 +173,11 @@ void WsServer::processTextMessage(QString message)
             // Something wrong here: ....
             emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
         } else {
-            emit startTime(startSecond, countDown, ""); // no soundfile support for now
+#ifdef CONSOLE_APP
+            emit startTime(startSecond, countDown, ""); // no soundfile support for now -  forwarded to CsEnginge
+#else
+            emit start(""); // forwarded to QML
+#endif
         }
 	}
 
