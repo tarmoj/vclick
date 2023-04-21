@@ -49,8 +49,8 @@ $LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE  --icon-file=vclick-serv
 
 
 # copy Csound binary, plugins and and Csound Manual - probably copied by default
-#mkdir -p  $APP_DIR/usr/lib/csound
-#cp -r $CSOUND_PLUGINS_DIR $APP_DIR/usr/lib/csound
+mkdir -p  $APP_DIR/usr/lib/csound
+cp -r $CSOUND_PLUGINS_DIR $APP_DIR/usr/lib/csound
 
 #create hook to set Csound Plugins Dir environment
 
