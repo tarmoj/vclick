@@ -89,11 +89,12 @@ void CsEngine::startScore(QString scoFile)
 
 void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML signal play külge.
 {
-	if (isRunning) {
-        stop();
+
+    if (isRunning) {
+        //stop();
         qDebug()<<"vClick is running. Stopping now. Please press Start again!";
         //QThread::sleep(1); // sleep and continue caused crash when start was pressed twice within one second.
-        emit newNotification("Stopped on double start", 1.0);
+        emit newNotification("Already running.", 1.0);
         return;
 	}
 	// check for starting bar number and construct a temporary score with necessary changes:
@@ -171,11 +172,19 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 }
 
 void CsEngine::play(QString scoFile) {
+    qDebug()<<__FUNCTION__<< isRunning;
+    if (isRunning) {
+        qDebug() << Q_FUNC_INFO << "Already running ";
+        return;
+    }
+
 #ifdef Q_OS_ANDROID
 	cs = new AndroidCsound();
 #else
 	cs = new Csound();
 #endif
+    Q_ASSERT(cs);
+
 	// must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
     cs->CreateMessageBuffer(0); // also to stdout for debugging

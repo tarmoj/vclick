@@ -12,7 +12,7 @@ ApplicationWindow {
     width: 740
     height: 820
     title: qsTr("vClick Server")
-    property string version: "2.1.2"
+    property string version: "2.1.3"
     property string startCommand: "" // system command run on start for example send OSC message to Reaper
     property string stopCommand: "" // set in config file, so far no dialog for that...
 
@@ -59,7 +59,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2019<br><br>Built using Qt SDK and Csound audio engine."));
+                onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK and Csound audio engine."));
             }
 
             MenuItem {
@@ -321,7 +321,7 @@ ApplicationWindow {
             delegate: Component {
                 RowLayout {
                     spacing: 10
-                    width: parent.width
+                    //width: parent.width
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
 
@@ -329,7 +329,7 @@ ApplicationWindow {
                         id: urlField
                         text: url
                         Layout.fillWidth: true
-                        background: Rectangle { color: scoreFilesList.currentIndex == index ? "#F0A0A0A0" : "transparent" }
+                        background: Rectangle { color: scoreFilesList.currentIndex === index ? "#F0A0A0A0" : "transparent" }
 
                         MouseArea {
                             anchors.fill: parent
