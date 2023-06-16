@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2016-2019 Tarmo Johannes
+    Copyright (C) 2016-2023 Tarmo Johannes
     trmjhnns@gmail.com
 
     This file is part of vClick.
@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: "2.1.0-beta2" // NB! version 2 uses port 57878 for OSC communication
+    property string version: "2.1.1" // NB! version 2 uses port 57878 for OSC communication
 
 
 
@@ -62,6 +62,31 @@ ApplicationWindow {
                 }
                 Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
                 Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
+            }
+
+            Label { text: qsTr("Server port:") }
+            Row { // Not shown with Qt.labs.platform...
+                spacing: 4
+                SpinBox {
+                    id: serverPortSpinbox;
+                    editable: true
+                    to: 100000 // to enable very large complex bar numbers like 10101
+                    from: 1025
+                    value: 6006
+                }
+                Button { text: qsTr("Set");
+                    onClicked: {
+                        if (serverPortSpinbox.value==socket.serverPort) {
+                            socket.active = true
+                        } else {
+                            socket.active = false; // do we need to wait here?
+                            socket.serverPort = serverPortSpinbox.value // this should activate the socket as well, since server.url is bound to serverIP
+                            socket.active = true;
+                        }
+                    }
+
+                }
+                Button { text: qsTr("Reset"); onClicked: serverPortSpinbox.value = 6006 }
             }
 
             CheckBox {
@@ -106,7 +131,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2019<br><br>Built using Qt SDK"));
+                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK"));
             }
             MenuItem {
                 text: qsTr("Exit")
@@ -172,15 +197,30 @@ ApplicationWindow {
         clearNotification.start();
     }
 
+    function connectSocket() {
+        if (!socket.active) {
+            if (serverAddress.text===socket.serverIP && serverPortSpinbox.value===socket.serverPort ) {
+                socket.active = true
+            } else {
+                socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+                socket.serverPort = serverPortSpinbox.value;
+                socket.active = true; // do we need this?
+            }
+        } else {
+            console.log("Socket already active?")
+        }
+    }
+
 
     WebSocket {
         id: socket
         property string serverIP: "192.168.1.199"
-        url: "ws://"+serverIP+":6006/ws"//"ws://192.168.1.199:6006/ws"
+        property int serverPort: 6006
+        url: "ws://"+serverIP+":" + serverPort +  "/ws"  //"ws://192.168.1.199:6006/ws"
 
 
         onTextMessageReceived: {
-            console.log("Received message: ",message);
+            // console.log("Received message: ",message);
             // put back websocket control for communication over internet
             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
             if (messageParts[0]==="b") {
@@ -223,12 +263,13 @@ ApplicationWindow {
             }
         }
         onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
-                             console.log("Error: " + socket.errorString)
+                             console.log("Error: ", socket.errorString, url )
                              socket.active = false;
                              notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
-                             console.log("Socket open")
+                             console.log("Socket open", url)
                              settings.serverIP= socket.serverIP //serverAddress.text//socket.url
+                             settings.serverPort=socket.serverPort
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
                              // socket.active = false; // do not for remote control  // and close socket
                          } else if (socket.status == WebSocket.Closed) {
@@ -236,7 +277,7 @@ ApplicationWindow {
                              socket.active = false;                             
                          }
                          else if (socket.status == WebSocket.Connecting) {
-                             console.log("Socket connecting")
+                             console.log("Socket connecting", url)
                          }
         active: false
     }
@@ -331,6 +372,7 @@ ApplicationWindow {
     Settings {
         id: settings
         property alias serverIP:  serverAddress.text
+        property alias serverPort: serverPortSpinbox.value
         property alias sound: soundCheckBox.checked
         property alias animation: animationCheckBox.checked
         property alias serverRowVisible: serverRow.visible
@@ -516,13 +558,14 @@ ApplicationWindow {
 
                     text: qsTr("Update");
                     onClicked: { console.log("should send Hello instrument nr here");
-                        if (!socket.active) {
-                            if (serverAddress.text==socket.serverIP) {
-                                socket.active = true
-                            } else {
-                                socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
-                            }
-                        }
+                        connectSocket();
+//                        if (!socket.active) {
+//                            if (serverAddress.text==socket.serverIP) {
+//                                socket.active = true
+//                            } else {
+//                                socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+//                            }
+//                        }
                     }
                 }
                 Button {
@@ -567,17 +610,18 @@ ApplicationWindow {
                         enabled: !socket.active
                         text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
                         onClicked: {
-                            if (!socket.active) { // <-- check thi
-                                console.log(serverAddress.text, socket.serverIP)
-                                if (serverAddress.text==socket.serverIP) {
-                                    socket.active = true
-                                } else {
-                                    socket.serverIP = serverAddress.text
-                                    socket.active = true
-                                }
-                            } else {
-                                console.log("Socket already active?")
-                            }
+                            connectSocket()
+//                            if (!socket.active) { // <-- check thi
+//                                console.log(serverAddress.text, socket.serverIP)
+//                                if (serverAddress.text==socket.serverIP) {
+//                                    socket.active = true
+//                                } else {
+//                                    socket.serverIP = serverAddress.text
+//                                    socket.active = true
+//                                }
+//                            } else {
+//                                console.log("Socket already active?")
+//                            }
 
                         }
                     }
@@ -913,9 +957,11 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 250
                 Layout.minimumWidth: 80
-
-
                 text: "live.uuu.ee"//"192.168.1.199"
+
+                onTextChanged: text = text.trim() // exclude erratic whitespaces
+
+
             }
 
             Button {
@@ -924,12 +970,13 @@ ApplicationWindow {
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
-                        if (serverAddress.text==socket.serverIP) {
-                            socket.active = true
-                        } else {
-                            socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
-                            socket.active = true;
-                        }
+                         connectSocket();
+//                        if (serverAddress.text==socket.serverIP) {
+//                            socket.active = true
+//                        } else {
+//                            socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
+//                            socket.active = true;
+//                        }
                         //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     } else {
                         console.log("Already active")
@@ -947,7 +994,7 @@ ApplicationWindow {
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
             color: "darkblue"
-            text: qsTr("My IP: ")+ oscServer.getLocalAddress();
+            text: qsTr("My IP: ")+  oscServer ? oscServer.getLocalAddress() : ""; // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
 
         }
 
