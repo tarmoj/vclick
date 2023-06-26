@@ -74,10 +74,11 @@ int main(int argc, char *argv[])
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("client");
 	app.setWindowIcon(QIcon(":/vclick-client.png"));
+    app.setApplicationVersion(APP_VERSION);
     QQmlApplicationEngine engine;
 
 #ifdef USE_OSC
-    OscHandler oscServer(static_cast<quint16>(OSCPORT)); // TODO: add condition
+    OscHandler oscServer(static_cast<quint16>(OSCPORT));
     engine.rootContext()->setContextProperty("oscServer", &oscServer);
 # else
     engine.rootContext()->setContextProperty("oscServer", nullptr);

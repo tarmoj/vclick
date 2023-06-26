@@ -1,5 +1,13 @@
 TEMPLATE = app
 
+
+VERSION = 2.1.1
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+ANDROID_VERSION_NAME = $$VERSION
+ANDROID_VERSION_CODE = 16 # basically build number
+
+
 QT += qml quick widgets websockets multimedia
 android: QT += androidextras
 
@@ -45,6 +53,7 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 DISTFILES += \
+    android/gradle.properties \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/AndroidManifest.xml \
     android/res/values/libs.xml \
