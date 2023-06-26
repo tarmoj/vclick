@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
     02111-1307 USA
 */
+
 import QtQuick 2.4
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.2
@@ -148,7 +149,10 @@ ApplicationWindow {
                 messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
             }
         }
-        oscServer.setPort(oscPortSpinbox.value)
+        if (oscServer) {
+            oscServer.setPort(oscPortSpinbox.value)
+        }
+
     }
 
 
@@ -284,7 +288,8 @@ ApplicationWindow {
 
     Connections { // To see, if OSC server can be restarted on reopen
         target: Qt.application
-        onStateChanged: {
+        function onStateChanged(state) {
+            console.log("State: ", state);
             if(Qt.application.state === Qt.ApplicationActive) {
                 //console.log("Active")
                 if (Qt.platform.os === "ios") {
@@ -298,30 +303,20 @@ ApplicationWindow {
                 console.log("Application suspended. Closing websocket.")
                 socket.active = false;
             }
-
-//            if(Qt.application.state === Qt.ApplicationSuspended) {
-//                console.log("Suspended")
-//            }
-//            if(Qt.application.state === Qt.ApplicationHidden) {
-//                console.log("Hidden")
-//            }
-//            if(Qt.application.state === Qt.ApplicationInactive) {
-//                console.log("Inactive")
-//            }
         }
     }
 
     Connections {
         target: oscServer
 
-        onNewBeatBar: {
+        function onNewBeatBar(bar, beat) {
             barLabel.text = bar;
             beatLabel.text = beat;
         }
 
-        onNewTempo: tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2);
+        function onNewTempo(tempo) { tempoLabel.text = qsTr("Tempo: ")+tempo.toFixed(2); }
 
-        onNewLed: {
+        function onNewLed(led, duration) {
             beatLength = duration;
             if (led===0) {
                 if (soundCheckBox.checked) {
@@ -365,7 +360,7 @@ ApplicationWindow {
             }
             }
 
-            onNewMessage: {notification(message, duration);}
+            function onNewMessage(message, duration) {notification(message, duration);}
 
         }
 
@@ -994,7 +989,7 @@ ApplicationWindow {
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
             color: "darkblue"
-            text: qsTr("My IP: ")+  oscServer ? oscServer.getLocalAddress() : ""; // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
+            text: qsTr("My IP: ") + (oscServer===null) ?  "" : oscServer.getLocalAddress(); // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
 
         }
 
@@ -1015,20 +1010,19 @@ ApplicationWindow {
         RowLayout {
             id: beatRow
             z:3
+            spacing: 20
             anchors.top: tempoLabel.bottom
             anchors.topMargin: tempoLabel.height
             anchors.bottom: ledRow.top
-            //anchors.bottomMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width*0.98
 
-            Item {
+            Item  {
                 id:leftRectangle
                 //color: "lightpink"
-                height: parent.height
-                width: parent.width*0.46
-                anchors.left: parent.left
-                //Layout.alignment: Qt.AlignLeft
+                width: mainRect.width*0.4
+                Layout.fillHeight: true
+                Layout.fillWidth: true
 
                 Label {
                     id: barLabel
@@ -1046,11 +1040,10 @@ ApplicationWindow {
 
             Item {
                 id:rightRectangle
-                //color: "pink"
-                height:parent.height
-                width: parent.width*0.46
-                anchors.right: parent.right // NB! Fix this!!
-                //Layout.alignment: Qt.AlignRight
+                // color: "pink"
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
 
                 Label {
                     id: beatLabel
@@ -1061,10 +1054,9 @@ ApplicationWindow {
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    //font.pixelSize: barLabel.paintedHeight * 0.75 // quite good approximization TEST on mobile devices! -  THIS IS NOT ADEQUATE, can give different results...
                     minimumPointSize: 10
                     font.pointSize: 200
-                    fontSizeMode: Text.Fit // on some screens this makes beatnumber bigger, since bar may have easily 3 digits, but that is OK
+                    fontSizeMode: Text.Fit
                 }
             }
 
@@ -1078,14 +1070,11 @@ ApplicationWindow {
             width: parent.width *0.8
             height: Math.min(mainRect.width,mainRect.height) / 3 // one third of the smaller side, whether portrait or landscape
             anchors.centerIn: parent
-            //anchors.verticalCenterOffset: 100 // somehow cannot use that - beatrow goes wrong...
             property real ledOnWidth: Math.min(mainRect.width,mainRect.height) * 0.4
             property real ledOffWidth: ledRow.ledOnWidth/4
             z:3 // to raise above notificationRect
-            // TODO: states, if vertical, nagu on - horizontal- anchor ledRow to bottom
             spacing: 10
 
-//            Rectangle {color:"green"; anchors.fill: parent}
 
             Item {
                 id: led1
