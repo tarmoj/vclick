@@ -18,14 +18,14 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
     02111-1307 USA
 */
-import QtQuick 2.4
-import QtQuick.Controls 2.2
-import QtQuick.Window 2.2
-import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.0
-import Qt.labs.settings 1.0
-import QtMultimedia 5.5
-import QtWebSockets 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import QtQuick.Dialogs
+import QtQuick.Layouts
+import Qt.labs.settings
+import QtMultimedia
+import QtWebSockets
 
 ApplicationWindow {
     title: qsTr("vClick Client")
@@ -35,7 +35,7 @@ ApplicationWindow {
     visible: true
     property real beatLength: 1
     property int instrument: 0 // TODO: set from menu for different channels
-    property string version: Qt.application.version  //"2.1.1" // NB! version 2 uses port 57878 for OSC communication
+    property string version: Qt.application.version  // NB! version 2 uses port 57878 for OSC communication
 
 
 

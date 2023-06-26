@@ -15,7 +15,7 @@ android: QT += androidextras
 # for webassembly compile with command (in terminal):
 # /home/tarmo/src/Qt/5.15.2/wasm_32/bin/qmake && make -j8
 
-CONFIG += use_osc
+#CONFIG += use_osc
 
 SOURCES += main.cpp
 
@@ -25,6 +25,12 @@ SOURCES +=     oschandler.cpp \
         qosc/qoscclient.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
+
+HEADERS += \
+          oschandler.h \
+        qosc/qoscclient.h \
+        qosc/qoscserver.h \
+        qosc/qosctypes.h \
 
 DEFINES += USE_OSC
 
@@ -69,11 +75,7 @@ DESTDIR=bin #Target file directory
 OBJECTS_DIR=generated_files #Intermediate object files directory
 MOC_DIR=generated_files #Intermediate moc files directory
 
-HEADERS += \
-	  oschandler.h \
-	qosc/qoscclient.h \
-	qosc/qoscserver.h \
-	qosc/qosctypes.h \
+
 
 
 ios {
