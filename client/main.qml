@@ -989,7 +989,7 @@ ApplicationWindow {
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
             color: "darkblue"
-            text: qsTr("My IP: ") + (oscServer===null) ?  "" : oscServer.getLocalAddress(); // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
+            text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress(); // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
 
         }
 
