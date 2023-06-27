@@ -288,7 +288,7 @@ ApplicationWindow {
     Connections { // To see, if OSC server can be restarted on reopen
         target: Qt.application
         function onStateChanged(state) {
-            console.log("State: ", state);
+            //console.log("State: ", state);
             if(Qt.application.state === Qt.ApplicationActive) {
                 //console.log("Active")
                 if (Qt.platform.os === "ios") {
