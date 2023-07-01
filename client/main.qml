@@ -961,7 +961,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Hello, Server")
+                text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Hello, Server") )
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
