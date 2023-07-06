@@ -26,6 +26,12 @@ SOURCES +=     oschandler.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
 
+HEADERS += \
+          oschandler.h \
+        qosc/qoscclient.h \
+        qosc/qoscserver.h \
+        qosc/qosctypes.h \
+
 DEFINES += USE_OSC
 
 }
@@ -68,12 +74,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 DESTDIR=bin #Target file directory
 OBJECTS_DIR=generated_files #Intermediate object files directory
 MOC_DIR=generated_files #Intermediate moc files directory
-
-HEADERS += \
-	  oschandler.h \
-	qosc/qoscclient.h \
-	qosc/qoscserver.h \
-	qosc/qosctypes.h \
 
 
 ios {

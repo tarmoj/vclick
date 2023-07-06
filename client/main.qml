@@ -952,7 +952,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 250
                 Layout.minimumWidth: 80
-                text: "live.uuu.ee"//"192.168.1.199"
+                text: "192.168.1.199"
 
                 onTextChanged: text = text.trim() // exclude erratic whitespaces
 
@@ -961,7 +961,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Hello, Server")
+                text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Hello, Server") )
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
@@ -989,7 +989,7 @@ ApplicationWindow {
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
             color: "darkblue"
-            text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress(); // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
+            text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress();
 
         }
 
