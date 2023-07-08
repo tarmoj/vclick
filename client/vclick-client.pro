@@ -56,24 +56,24 @@ LIBS += -framework UIKit # maybe not necessary, maybe done automatically by Qt..
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
-include(deployment.pri)
+#include(deployment.pri)
 
 DISTFILES += \
-    android/gradle.properties \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/AndroidManifest.xml \
-    android/res/values/libs.xml \
-    android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew \
-    android/gradlew.bat \
+#    android/gradle.properties \
+#    android/gradle/wrapper/gradle-wrapper.jar \
+#    android/AndroidManifest.xml \
+#    android/res/values/libs.xml \
+#    android/build.gradle \
+#    android/gradle/wrapper/gradle-wrapper.properties \
+#    android/gradlew \
+#    android/gradlew.bat \
     winicon.rc
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 DESTDIR=bin #Target file directory
-OBJECTS_DIR=generated_files #Intermediate object files directory
-MOC_DIR=generated_files #Intermediate moc files directory
+#OBJECTS_DIR=generated_files #Intermediate object files directory
+#MOC_DIR=generated_files #Intermediate moc files directory # needed to comment it out for android multi-abi build
 
 
 ios {
