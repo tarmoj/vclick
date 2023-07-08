@@ -5,7 +5,7 @@ VERSION = 2.1.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 ANDROID_VERSION_NAME = $$VERSION
-ANDROID_VERSION_CODE = 16 # basically build number
+ANDROID_VERSION_CODE = 18 # build number
 
 
 QT += qml quick widgets websockets multimedia
