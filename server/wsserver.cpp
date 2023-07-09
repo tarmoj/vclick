@@ -30,11 +30,12 @@ QT_USE_NAMESPACE
 
 
 
-WsServer::WsServer(quint16 port, QObject *parent) :
+WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
     QObject(parent),
-	m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
+    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
                                             QWebSocketServer::NonSecureMode, this)),
-	m_clients(), m_oscClients()
+    m_clients(),
+    m_oscClients(), userScoreFiles(userScoreFiles)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
@@ -72,7 +73,13 @@ WsServer::~WsServer()
 
 void WsServer::updateScoreFiles()
 {
-    scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+    if (userScoreFiles.isEmpty()) {
+        scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+    } else {
+        scoreFiles = userScoreFiles.split(";");
+    }
+    qDebug() << Q_FUNC_INFO << scoreFiles;
+
 }
 
 void WsServer::onNewConnection()
@@ -157,9 +164,9 @@ void WsServer::processTextMessage(QString message)
         updateScoreFiles();
 		QString scoreFile;
 		if (messageParts.length()>1) {
-			scoreFile = messageParts[1]; // for future
+            scoreFile = messageParts[1].trimmed(); // for future
 		} else if ( scoreFiles.count()>=0 ) {
-			scoreFile = scoreFiles[scoreIndex];
+            scoreFile = scoreFiles[scoreIndex].trimmed();
 		}
         qDebug() << "scoreFile: " << scoreFile << scoreIndex;
 		// ilmselt on ikka vaja, et siin oleks failide list olemas. Võibolla settingutest loetud? Kui scoFile pole antud, siis võtab scoreFiles[scoreIndex], muidu aga
