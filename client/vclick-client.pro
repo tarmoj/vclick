@@ -6,6 +6,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 ANDROID_VERSION_NAME = $$VERSION
 ANDROID_VERSION_CODE = 18 # build number
+#ANDROID_APP_NAME = "vClick Client"
 
 
 QT += qml quick widgets websockets multimedia
