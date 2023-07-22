@@ -27,6 +27,7 @@ import QtQuick.Layouts 1.15
 import Qt.labs.settings 1.1
 import QtMultimedia 5.15
 import QtWebSockets 1.15
+import QtQuick.Controls.Material 2.15
 
 ApplicationWindow {
     title: qsTr("vClick Client")
@@ -543,7 +544,7 @@ ApplicationWindow {
             id: instrumentRect
             width: parent.width
             height: instrumentSpinBox.height * 1.5
-            color: "lightgrey"
+            color:  "#F0F5F5F5"//"lightgrey"
             visible: false
             z:2
             RowLayout {
@@ -614,7 +615,7 @@ ApplicationWindow {
             id: remoteControlRect
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
-            color: "lightgrey"
+            color:  "#0FF5F5F5"//"lightgrey"
 
             visible: false
             z:2
@@ -1009,7 +1010,7 @@ ApplicationWindow {
             anchors.bottom: serverRow.top
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
-            color: "darkblue"
+            color:  "#BDBDBD"//"lightgrey"
             text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress();
 
         }

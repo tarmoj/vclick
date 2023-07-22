@@ -10,7 +10,7 @@ ANDROID_VERSION_CODE = 19 # build number
 
 
 QT += qml quick widgets websockets multimedia
-android: QT += androidextras
+android: QT += androidextras quickcontrols2
 
 # comment out for build without OSC support (QML only)
 # for webassembly compile with command (in terminal):
@@ -60,14 +60,6 @@ QML_IMPORT_PATH =
 #include(deployment.pri)
 
 DISTFILES += \
-#    android/gradle.properties \
-#    android/gradle/wrapper/gradle-wrapper.jar \
-#    android/AndroidManifest.xml \
-#    android/res/values/libs.xml \
-#    android/build.gradle \
-#    android/gradle/wrapper/gradle-wrapper.properties \
-#    android/gradlew \
-#    android/gradlew.bat \
     android/AndroidManifest.xml \
     android/build.gradle \
     android/gradle.properties \
