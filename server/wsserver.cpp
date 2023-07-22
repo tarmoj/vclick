@@ -59,7 +59,6 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
     useTime = false;
     startSecond = 0;
     countDown = true; // in case of useTime
-	qDebug() << "Score files from settings: " << scoreFiles;
 }
 
 
@@ -68,7 +67,6 @@ WsServer::~WsServer()
 {
     m_pWebSocketServer->close();
     qDeleteAll(m_clients.begin(), m_clients.end());
-	//logFile.close();
 }
 
 void WsServer::updateScoreFiles()
@@ -169,7 +167,7 @@ void WsServer::processTextMessage(QString message)
             scoreFile = scoreFiles[scoreIndex].trimmed();
 		}
         qDebug() << "scoreFile: " << scoreFile << scoreIndex;
-		// ilmselt on ikka vaja, et siin oleks failide list olemas. Võibolla settingutest loetud? Kui scoFile pole antud, siis võtab scoreFiles[scoreIndex], muidu aga
+
 #ifdef CONSOLE_APP
 		emit newOscPort(oscPort);
 
@@ -380,11 +378,7 @@ void WsServer::handleNotification(QString message, float duration)
 			target->sendData("/metronome/notification", data);
 		}
 	}
-	//joke for ending
-//	QStringList endmessages = QStringList()<<"Uhhh..."<<"Hästi tehtud!"<< "Läbi sai" << "OK!" << "Nu-nuu..." << "Tsss!" << "Löpp" << "Pole hullu!";
-//	if (message=="end") {
-//		message = endmessages[qrand()%(endmessages.length()-1)];
-//	}
+
 	if (sendWs) {
 		message = "n "+message;
 		send2all(message);
@@ -553,6 +547,7 @@ QString WsServer::getOscAddresses()
 		else
 			return QString();
 	}
+    return QString();
 }
 
 QString WsServer::getLocalAddress()
