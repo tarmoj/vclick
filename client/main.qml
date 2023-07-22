@@ -28,7 +28,7 @@ import Qt.labs.settings 1.0
 import QtMultimedia
 import QtWebSockets
 
-import QtQuick.Controls.Material
+//import QtQuick.Controls.Material 2.12
 
 
 ApplicationWindow {
@@ -42,17 +42,22 @@ ApplicationWindow {
     property string version: Qt.application.version  // NB! version 2 uses port 57878 for OSC communication
 
 
+//    Material.theme: Material.Light
+//    Material.accent: Material.BlueGrey
+//    Material.primary: "#90A4AE"
 
         Menu {
             id: mainMenu
             title: qsTr("Menu")
+            width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
 
-            background: Rectangle {
-                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :400
-                    implicitHeight: 200
-                    color: "#f0ffffff"
-                    border.color: "#353637"
-                }
+
+//            background: Rectangle {
+//                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
+//                    implicitHeight: 200
+//                    color: "#f0ffffff"
+//                    border.color: "#353637"
+//                }
 
 
 

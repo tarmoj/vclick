@@ -10,7 +10,7 @@ ANDROID_VERSION_CODE = 19 # build number
 
 
 QT += qml quick widgets websockets multimedia
-android: QT += androidextras quickcontrols2
+android: QT += core-private quickcontrols2
 
 # comment out for build without OSC support (QML only)
 # for webassembly compile with command (in terminal):
