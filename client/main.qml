@@ -18,6 +18,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
     02111-1307 USA
 */
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
@@ -26,6 +27,9 @@ import QtQuick.Layouts
 import Qt.labs.settings 1.0
 import QtMultimedia
 import QtWebSockets
+
+import QtQuick.Controls.Material
+
 
 ApplicationWindow {
     title: qsTr("vClick Client")
@@ -44,100 +48,111 @@ ApplicationWindow {
             title: qsTr("Menu")
 
             background: Rectangle {
-                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :350
+                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :400
                     implicitHeight: 200
-                    color: "#ffffff"
+                    color: "#f0ffffff"
                     border.color: "#353637"
                 }
 
-            Label { text: qsTr("OSC port:") }
-            Row { // Not shown with Qt.labs.platform...
-                spacing: 4
-                SpinBox {
-                    id: oscPortSpinbox;
-                    editable: true
-                    to: 100000 // to enable very large complex bar numbers like 10101
-                    from: 1025
-                    value: 57878
-                }
-                Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
-                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
-            }
 
-            Label { text: qsTr("Server port:") }
-            Row { // Not shown with Qt.labs.platform...
-                spacing: 4
-                SpinBox {
-                    id: serverPortSpinbox;
-                    editable: true
-                    to: 100000 // to enable very large complex bar numbers like 10101
-                    from: 1025
-                    value: 6006
-                }
-                Button { text: qsTr("Set");
-                    onClicked: {
-                        if (serverPortSpinbox.value==socket.serverPort) {
-                            socket.active = true
-                        } else {
-                            socket.active = false; // do we need to wait here?
-                            socket.serverPort = serverPortSpinbox.value // this should activate the socket as well, since server.url is bound to serverIP
-                            socket.active = true;
-                        }
+
+            Column {
+                x: 5
+                width: parent.width-10
+
+                Label { text: qsTr("OSC port:"); }
+                Row { // Not shown with Qt.labs.platform...
+                    spacing: 4
+                    SpinBox {
+                        id: oscPortSpinbox;
+                        editable: true
+                        to: 100000 // to enable very large complex bar numbers like 10101
+                        from: 1025
+                        value: 57878
                     }
-
+                    Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
+                    Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
                 }
-                Button { text: qsTr("Reset"); onClicked: serverPortSpinbox.value = 6006 }
+
+                Label { text: qsTr("Server port:") }
+                Row { // Not shown with Qt.labs.platform...
+                    spacing: 4
+                    SpinBox {
+                        id: serverPortSpinbox;
+                        editable: true
+                        to: 100000 // to enable very large complex bar numbers like 10101
+                        from: 1025
+                        value: 6006
+                    }
+                    Button { text: qsTr("Set");
+                        onClicked: {
+                            if (serverPortSpinbox.value==socket.serverPort) {
+                                socket.active = true
+                            } else {
+                                socket.active = false; // do we need to wait here?
+                                socket.serverPort = serverPortSpinbox.value // this should activate the socket as well, since server.url is bound to serverIP
+                                socket.active = true;
+                            }
+                        }
+
+                    }
+                    Button { text: qsTr("Reset"); onClicked: serverPortSpinbox.value = 6006 }
+                }
+
+                CheckBox {
+                    id: animationCheckBox
+                    checked: true
+                    text: qsTr("Animation")
+                }
+
+                CheckBox {
+                    id: soundCheckBox
+                    checked: false
+                    text: qsTr("Sound")
+                }
+    //            MenuItem {
+    //                text: qsTr("Show/Hide &server address")
+    //                onTriggered: serverRow.visible = !serverRow.visible
+    //            }
+    //            MenuItem {
+    //                text: qsTr("Restart OSC listener")
+    //                onTriggered: oscServer.restart()
+    //            }
+                MenuItem {
+                    text: qsTr("Set instrument number")
+                    onTriggered: instrumentRect.visible = !instrumentRect.visible
+                }
+
+                MenuItem {
+                    text: qsTr("Update IP address")
+                    onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
+                }
+                MenuItem {
+                    text: qsTr("Toggle test leds")
+                    onTriggered: testRow.visible = !testRow.visible
+                }
+                MenuItem {
+                    text: qsTr("Toggle delay row")
+                    onTriggered: delayRect.visible = !delayRect.visible
+                }
+                MenuItem {
+                    text: qsTr("Toggle remote control")
+                    onTriggered: remoteControlRect.visible = !remoteControlRect.visible
+                }
+                MenuItem {
+                    text: qsTr("About")
+                    onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK"));
+                }
+                MenuItem {
+                    text: qsTr("Exit")
+                    onTriggered: Qt.quit();
+                }
             }
 
-            CheckBox {
-                id: animationCheckBox
-                checked: true
-                text: qsTr("Animation")
-            }
 
-            CheckBox {
-                id: soundCheckBox
-                checked: false
-                text: qsTr("Sound")
-            }
-//            MenuItem {
-//                text: qsTr("Show/Hide &server address")
-//                onTriggered: serverRow.visible = !serverRow.visible
-//            }
-//            MenuItem {
-//                text: qsTr("Restart OSC listener")
-//                onTriggered: oscServer.restart()
-//            }
-            MenuItem {
-                text: qsTr("Set instrument number")
-                onTriggered: instrumentRect.visible = !instrumentRect.visible
-            }
 
-            MenuItem {
-                text: qsTr("Update IP address")
-                onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
-            }
-            MenuItem {
-                text: qsTr("Toggle test leds")
-                onTriggered: testRow.visible = !testRow.visible
-            }
-            MenuItem {
-                text: qsTr("Toggle delay row")
-                onTriggered: delayRect.visible = !delayRect.visible
-            }
-            MenuItem {
-                text: qsTr("Toggle remote control")
-                onTriggered: remoteControlRect.visible = !remoteControlRect.visible
-            }
-            MenuItem {
-                text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK"));
-            }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Qt.quit();
-            }
         }
+
 
 
     Component.onCompleted: {
@@ -288,7 +303,9 @@ ApplicationWindow {
     Connections { // To see, if OSC server can be restarted on reopen
         target: Qt.application
         function onStateChanged(state) {
-            //console.log("State: ", state);
+
+            console.log("State: ", state);
+
             if(Qt.application.state === Qt.ApplicationActive) {
                 //console.log("Active")
                 if (Qt.platform.os === "ios") {
@@ -398,6 +415,7 @@ ApplicationWindow {
         }
         anchors.fill: parent
 
+
         Image {
 
             id: menuButton
@@ -405,7 +423,7 @@ ApplicationWindow {
             x:5
             source: "qrc:///menu.png"
             width: height
-            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" || Qt.platform.os === "windows" ?    tempoLabel.height*1.5 : tempoLabel.height // maybe fices the size on iphone?
+            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" || Qt.platform.os === "windows" ?    tempoLabel.height*1.5 : tempoLabel.height*1.1 // maybe fixes the size on iphone?
             MouseArea {width: parent.width*1.5; height: parent.height*2; onClicked: mainMenu.open() }
         }
 
@@ -413,7 +431,7 @@ ApplicationWindow {
             id: remoteButton
             anchors.top: menuButton.top
             anchors.left: menuButton.right
-            anchors.leftMargin: menuButton.width* 0.8
+            anchors.leftMargin: 20
             source: "qrc:///radio.png"
             width: height
             height: menuButton.height
@@ -449,6 +467,27 @@ ApplicationWindow {
             }
 
         }
+
+        // TEST
+//        RoundButton {
+//            x: 20; y:20
+//            icon.source: "qrc:///xmark-solid.png"
+//        }
+
+//        Button {
+//            x: 60; y:20
+//            icon.source: "qrc:///radio.png"
+//        }
+
+//        ToolButton {
+//            x: 120; y:20
+//            icon.source: "qrc:///radio.png"
+//        }
+
+//        Button {
+//            x: 180; y:20
+//            icon.name: "window-close"
+//        }
 
 
         // TODO: one rect, different Rowlayouts rect.visible = comp1.visble || comp2.visible || comp3.visible
@@ -509,7 +548,7 @@ ApplicationWindow {
             id: instrumentRect
             width: parent.width
             height: instrumentSpinBox.height * 1.5
-            color: "lightgrey"
+            color:  "#F0F5F5F5"//"lightgrey"
             visible: false
             z:2
             RowLayout {
@@ -580,7 +619,7 @@ ApplicationWindow {
             id: remoteControlRect
             width: parent.width
             height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
-            color: "lightgrey"
+            color:  "#0FF5F5F5"//"lightgrey"
 
             visible: false
             z:2
@@ -605,18 +644,6 @@ ApplicationWindow {
                         text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
                         onClicked: {
                             connectSocket()
-//                            if (!socket.active) { // <-- check thi
-//                                console.log(serverAddress.text, socket.serverIP)
-//                                if (serverAddress.text==socket.serverIP) {
-//                                    socket.active = true
-//                                } else {
-//                                    socket.serverIP = serverAddress.text
-//                                    socket.active = true
-//                                }
-//                            } else {
-//                                console.log("Socket already active?")
-//                            }
-
                         }
                     }
 
@@ -736,11 +763,11 @@ ApplicationWindow {
                 anchors.margins:  5
                 visible: parent.isScore && !timeOptions.visible
 
-                RoundButton {
+                ToolButton {
                     Layout.preferredHeight: startBarSpinBox.height * 0.8
                     Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
-                    text: "x" //"\u2a2f" // Unicode Character for cross
+                    icon.source: "qrc:///xmark-solid.png"
                     onClicked: remoteOptionsRect.visible = false
                 }
 
@@ -832,16 +859,16 @@ ApplicationWindow {
                 visible: !parent.isScore && !scoreOptions.visible
 
 
-                RoundButton { // a bit stupid to copy the button, but ok, easier for layout
+                ToolButton { // a bit stupid to copy the button, but ok, easier for layout
                     Layout.preferredHeight: resetTimeButton.height * 0.8
                     Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
-                    text:  "x" // "\u2a2f" // Unicode Character for cross
+                    icon.source: "qrc:///xmark-solid.png"
                     onClicked: remoteOptionsRect.visible = false
                 }
 
                 RowLayout {
-                    id: timeRow // if to just show time  like 0:0. 0:1 etc
+                    id: timeRow
                     spacing: 5
                     width: parent.width
                     enabled: socket.status === WebSocket.Open
@@ -951,7 +978,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredWidth: 250
                 Layout.minimumWidth: 80
-                text: "live.uuu.ee"//"192.168.1.199"
+                text: "192.168.1.199"
 
                 onTextChanged: text = text.trim() // exclude erratic whitespaces
 
@@ -960,7 +987,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Hello, Server")
+                text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Hello, Server") )
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
@@ -987,8 +1014,9 @@ ApplicationWindow {
             anchors.bottom: serverRow.top
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
-            color: "darkblue"
-            text: qsTr("My IP: ") +  oscServer ;//(oscServer===null) ? oscServer.getLocalAddress() : ""; // does not solve the 'Cannot call method 'getLocalAddress' of null' on exit. no problem though.
+            color:  "#BDBDBD"//"lightgrey"
+            text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress();
+
 
         }
 
@@ -1000,7 +1028,7 @@ ApplicationWindow {
             anchors.topMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             color: "darkblue"
-            //font.pointSize: 20
+            //font.pointSize: 10
             text: qsTr("Tempo: 0")
 
         }

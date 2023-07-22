@@ -30,6 +30,7 @@
 #include "wsserver.h"
 #include "csengine.h"
 #include <QThread>
+#include <QCommandLineParser>
 
 
 #ifdef Q_OS_ANDROID
@@ -74,6 +75,34 @@ int main(int argc, char *argv[])
 
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("server");
+    app.setApplicationVersion(APP_VERSION);
+
+    qDebug() << "vClick Server, version " << APP_VERSION;
+
+    // parse command line
+    QCommandLineParser parser;
+    parser.setApplicationDescription("vCLick Server command line options");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption port(QStringList() << "p" << "port",
+                            QCoreApplication::translate("main", "Websocket port that the server will be listening to"),
+                            QCoreApplication::translate("main", "port"));
+    parser.addOption(port);
+
+    QCommandLineOption scoreFiles(QStringList() << "s" << "score-files",
+                                  QCoreApplication::translate("main", "Scorefiles (if not read from settings) , separated by semicolon"),
+                                  QCoreApplication::translate("main", "scoreFiles"));
+    parser.addOption(scoreFiles);
+
+    QCommandLineOption noOscOption (QStringList() << "no-osc" << "n",
+                                    QCoreApplication::translate("main", "Do not send OSC messages, do not register oscClients"));
+    parser.addOption(noOscOption);
+
+    // Process the actual command line arguments given by the user
+    parser.process(app);
+
+    qDebug() << "Options: " << parser.isSet(noOscOption) << parser.value(port) << parser.value(scoreFiles) ;
 
 
 
@@ -103,24 +132,11 @@ int main(int argc, char *argv[])
 	csound->moveToThread(csoundThread);
 
 	WsServer *wsServer;
-    // the port can ge given also from command line with option --port=6007
-    quint16 wsPort = 6006;
-    if (argc>1) {
-        QString argument1 = QCoreApplication::arguments().at(1);
-        if (argument1.startsWith("--port=")) {
-            quint16 portNumber = argument1.split("=")[1].simplified().toUInt();
-            qDebug() << "Got port number from command line: " << portNumber;
-            if (portNumber > 1024) {
-                wsPort = portNumber;
-            } else {
-                qDebug() << "Invalid port number: " << portNumber;
-            }
-        } else {
-            qDebug() << "Only option supported now should be fro setting the WS port (like): --port=6006";
-        }
 
-    }
-    wsServer = new WsServer(wsPort);  // hiljem muuda, nt 12021
+    quint16 wsPort = parser.isSet(port) ?  parser.value(port).toUInt() :  6006;
+    QString userScoreFiles = parser.isSet(scoreFiles) ? parser.value(scoreFiles) : "";
+    wsServer = new WsServer(wsPort, userScoreFiles);
+
 #ifdef USE_JACK
 	JackReader *jackReader = new JackReader();  // started from qml
 #endif
