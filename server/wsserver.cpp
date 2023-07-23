@@ -23,7 +23,8 @@
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
 #include <QDir>
-#include <QNetworkInterface>
+#include <QNetworkInterface>b
+#include <QRegularExpression>
 
 
 QT_USE_NAMESPACE
@@ -340,8 +341,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 		}
 	}
 	if (sendWs) {
-		QString message;
-		message.sprintf("b %d %d", bar, beat); // short form to send out for javascript and app
+        QString message = QString("b %1 %2 ").arg(bar).arg(beat);
 		send2all(message);
 	}
 
@@ -360,9 +360,9 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	}
 
 	if (sendWs) {
-		QString message;
-		message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
-		send2all(message);
+        QString message = QString("l %1 %2").arg(ledNumber).arg(duration);
+        //message.asprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
+        send2all(message);
 	}
 
 
@@ -433,9 +433,7 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
     int instrument = 0;
     foreach (QString address, addresses.split(",")) {
         address = address.simplified();
-        int index = -1;
-        index = QRegExp("(^[0-9]{1,2}):").indexIn(address); // should I check for port at all?
-        if (index>=0) {
+        if (QRegularExpression("(^[0-9]{1,2}):").match(address).hasMatch()) {
 
             instrument = address.split(":")[0].toInt();
             address = address.split(":")[1];
@@ -511,7 +509,7 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-	foreach (QWebSocket *socket, m_clients) {
+    foreach (QWebSocket *socket, m_clients) {
 		socket->sendTextMessage(message);
 	}
 }
