@@ -571,21 +571,20 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: instrumentRect
             width: parent.width
-            height: instrumentSpinBox.height * 1.5
+            height: instrumentRow.height*1.5 //instrumentSpinBox.height * 1.5
             color:   mainRect.semitransparent//"#a5c9db"//"lightgrey"
             visible: false
             z:2
-            RowLayout {
-                x:5
+            Flow {
                 id: instrumentRow
-                y:5                
+                x:5; y:5
                 width: parent.width //(mainRect.width>mainRect.height) ? parent.width*0.75 : parent.width-5
-                visible: true
                 spacing: 3
+
                 Label {
                     text: qsTr("Instrument no: ");
-                    Layout.fillWidth: true;
-                    Layout.maximumWidth: implicitWidth
+                    height: instrumentSpinBox.height
+                    verticalAlignment: Text.AlignVCenter
                 }
                 SpinBox {
                     id: instrumentSpinBox
@@ -618,18 +617,19 @@ ApplicationWindow {
                         connectSocket();
                     }
                 }
-                RoundButton {
-//                    Layout.fillWidth: true
-//                    Layout.maximumWidth: implicitWidth * 1.5
-//                    Layout.minimumWidth: 50
-//                    Layout.preferredWidth: 60//implicitWidth
-                    icon.source: "qrc:///xmark-solid.png"
-                    //text: qsTr("Hide");
+                Button {
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: implicitWidth * 1.5
+                    Layout.minimumWidth: 50
+                    Layout.preferredWidth: 60//implicitWidth
+                    //icon.source: "qrc:///xmark-solid.png"
+                    text: qsTr("Hide");
                     onClicked: instrumentRect.visible = false;
                 }
 
                 Item { Layout.fillWidth: true}
             }
+
 
         }
 
