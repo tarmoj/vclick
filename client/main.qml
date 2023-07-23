@@ -500,7 +500,7 @@ ApplicationWindow {
             id: delayRect
             width: parent.width
             height: delaySpinBox.height * 1.5
-            color: "#F0d4e1e3"
+            color: "#0FF5F5F5" //"#F0d4e1e3"
             visible: false
             z:2
             RowLayout {
@@ -553,7 +553,7 @@ ApplicationWindow {
             id: instrumentRect
             width: parent.width
             height: instrumentSpinBox.height * 1.5
-            color:  "#F0F5F5F5"//"lightgrey"
+            color:   "transparent" //"#a5c9db"//"lightgrey"
             visible: false
             z:2
             RowLayout {
@@ -737,22 +737,23 @@ ApplicationWindow {
             anchors.topMargin: 20
             width: parent.width * 0.8
             height: startBarSpinBox.height * 7.5
+            color: Material.background
             gradient: Gradient {
                 GradientStop {
                     position: 0.00;
-                    color: "#cf424245";
+                    color: "#cfffffff";
                 }
                 GradientStop {
                     position: 0.32;
-                    color: "#ffffff";
+                    color: Material.background
                 }
                 GradientStop {
                     position: 0.64;
-                    color: "#ffffff";
+                    color: Material.background
                 }
                 GradientStop {
                     position: 1.00;
-                    color: "#cf424245";
+                    color: "#cfffffff";
                 }
             }
             radius: 10
