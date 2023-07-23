@@ -1,8 +1,12 @@
 TEMPLATE = app
 #TARGET += "vClickServer"
 
+
+VERSION = 2.2.0-beta
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
 #uncomment or add to qmake parameters to build console version of the server
-#CONFIG += no-gui
+CONFIG += no-gui
 
 no-gui {
     QT += core network websockets
@@ -44,7 +48,7 @@ RESOURCES += qml.qrc \
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
-include(deployment.pri)
+#include(deployment.pri)
 
 HEADERS += \
     wsserver.h \

@@ -44,7 +44,7 @@ class WsServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit WsServer(quint16 port, QObject *parent = NULL);
+    explicit WsServer(quint16 port, QString userScoreFiles=QString(), QObject *parent = NULL);
     ~WsServer();
 
 	void sendMessage(QWebSocket *socket, QString message);
@@ -105,6 +105,7 @@ private:
 	void createOscClientsList(QString addresses);
     void createOscClientsList(); // takes data from m_clientsHash
 	QStringList scoreFiles;
+    QString userScoreFiles; // set by command line option
 
 	QFile logFile;
 	QTime time;

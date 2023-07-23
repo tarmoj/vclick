@@ -1,15 +1,16 @@
 TEMPLATE = app
 
 
-VERSION = 2.1.1
+VERSION = 2.1.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 ANDROID_VERSION_NAME = $$VERSION
-ANDROID_VERSION_CODE = 16 # basically build number
+ANDROID_VERSION_CODE = 19 # build number
+#ANDROID_APP_NAME = "vClick Client"
 
 
 QT += qml quick widgets websockets multimedia
-android: QT += androidextras
+android: QT += androidextras quickcontrols2
 
 # comment out for build without OSC support (QML only)
 # for webassembly compile with command (in terminal):
@@ -56,24 +57,53 @@ LIBS += -framework UIKit # maybe not necessary, maybe done automatically by Qt..
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
-include(deployment.pri)
+#include(deployment.pri)
 
 DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
     android/gradle.properties \
     android/gradle/wrapper/gradle-wrapper.jar \
-    android/AndroidManifest.xml \
-    android/res/values/libs.xml \
-    android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
     android/gradlew.bat \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-hdpi/logo.png \
+    android/res/drawable-hdpi/logo_land.png \
+    android/res/drawable-hdpi/logo_port.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-ldpi/logo.png \
+    android/res/drawable-ldpi/logo_port.png \
+    android/res/drawable-mdpi/icon.png \
+    android/res/drawable-mdpi/logo.png \
+    android/res/drawable-mdpi/logo_land.png \
+    android/res/drawable-mdpi/logo_port.png \
+    android/res/drawable-xhdpi/icon.png \
+    android/res/drawable-xhdpi/logo.png \
+    android/res/drawable-xhdpi/logo_land.png \
+    android/res/drawable-xhdpi/logo_port.png \
+    android/res/drawable-xxhdpi/icon.png \
+    android/res/drawable-xxhdpi/logo.png \
+    android/res/drawable-xxhdpi/logo_land.png \
+    android/res/drawable-xxhdpi/logo_port.png \
+    android/res/drawable-xxxhdpi/icon.png \
+    android/res/drawable-xxxhdpi/logo.png \
+    android/res/drawable-xxxhdpi/logo_land.png \
+    android/res/drawable-xxxhdpi/logo_port.png \
+    android/res/drawable/splashscreen.xml \
+    android/res/drawable/splashscreen_land.xml \
+    android/res/drawable/splashscreen_port.xml \
+    android/res/values-land/splashscreentheme.xml \
+    android/res/values-port/splashscreentheme.xml \
+    android/res/values/libs.xml \
+    android/res/values/splashscreentheme.xml \
     winicon.rc
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 DESTDIR=bin #Target file directory
-OBJECTS_DIR=generated_files #Intermediate object files directory
-MOC_DIR=generated_files #Intermediate moc files directory
+#OBJECTS_DIR=generated_files #Intermediate object files directory
+#MOC_DIR=generated_files #Intermediate moc files directory # needed to comment it out for android multi-abi build
 
 
 ios {
