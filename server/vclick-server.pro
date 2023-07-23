@@ -2,7 +2,7 @@ TEMPLATE = app
 #TARGET += "vClickServer"
 
 
-VERSION = 2.2.0-beta
+VERSION = 2.2.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
