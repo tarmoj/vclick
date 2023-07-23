@@ -61,11 +61,18 @@ QML_IMPORT_PATH =
 
 DISTFILES += \
     android/AndroidManifest.xml \
+    android/AndroidManifest.xml \
+    android/build.gradle \
     android/build.gradle \
     android/gradle.properties \
+    android/gradle.properties \
+    android/gradle/wrapper/gradle-wrapper.jar \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
+    android/gradlew \
+    android/gradlew.bat \
     android/gradlew.bat \
     android/res/drawable-hdpi/icon.png \
     android/res/drawable-hdpi/logo.png \
@@ -95,6 +102,7 @@ DISTFILES += \
     android/res/drawable/splashscreen_port.xml \
     android/res/values-land/splashscreentheme.xml \
     android/res/values-port/splashscreentheme.xml \
+    android/res/values/libs.xml \
     android/res/values/libs.xml \
     android/res/values/splashscreentheme.xml \
     winicon.rc
