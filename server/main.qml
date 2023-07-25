@@ -3,7 +3,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
-import Qt.labs.settings 1.1
+import QtCore
 import Qt.labs.platform 1.1 as Platform
 
 ApplicationWindow {
@@ -177,8 +177,8 @@ ApplicationWindow {
         z: 10
 
         onFileSelected: {
-            scoField.text = fileURL
-            fileDialog.folder = getBasename(fileURL)
+            scoField.text = file
+            fileDialog.folder = getBasename(file)
             visible = false
         }
         onHidePressed: visible = false
@@ -191,8 +191,8 @@ ApplicationWindow {
         nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
         folder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
         onAccepted: {
-            scoField.text = fileUrl
-            folder = getBasename(fileUrl)
+            scoField.text = file
+            folder = getBasename(file)
         }
         onRejected: {
             visible = false;
@@ -224,10 +224,10 @@ ApplicationWindow {
         nameFilters: [ "Audio files (*.wav *.aif *.aiff *.mp3 *.ogg *.flac)", "All files (*)" ]
         folder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
         onAccepted: {
-            var urlString = fileUrl.toString()
+            var urlString = file.toString()
             urlString = Qt.platform.os === "windows" ? urlString.replace("file:///", "") : urlString.replace("file://", "")
             soundFile.text =  urlString
-            folder = getBasename(fileUrl)
+            folder = getBasename(file)
         }
         onRejected: {
             visible = false;
@@ -321,7 +321,6 @@ ApplicationWindow {
             delegate: Component {
                 RowLayout {
                     spacing: 10
-                    //width: parent.width
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
 
@@ -329,6 +328,7 @@ ApplicationWindow {
                         id: urlField
                         text: url
                         Layout.fillWidth: true
+                        Layout.preferredWidth: scoreFilesList.width * 0.6
                         background: Rectangle { color: scoreFilesList.currentIndex === index ? "#F0A0A0A0" : "transparent" }
 
                         MouseArea {
@@ -364,9 +364,9 @@ ApplicationWindow {
                             nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
                             folder: scoreFilesList.lastFolder  //"file://home/tarmo/tarmo/csound/metronome/scores"  // TODO: lastFolder
                             onAccepted: {
-                                urlField.text = fileUrl
-                                scoreFilesList.lastFolder = getBasename(fileUrl)
-                                url = fileUrl.toString()
+                                urlField.text = file
+                                scoreFilesList.lastFolder = getBasename(file)
+                                url = file.toString()
                                 console.log("index: ", index, "url", url)
                             }
                             onRejected: {
@@ -375,6 +375,8 @@ ApplicationWindow {
                         }
 
                     }
+
+                    Item {Layout.fillWidth: true} // does not seem to do the job...
 
 
 
