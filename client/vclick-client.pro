@@ -1,3 +1,5 @@
+# convert to cmake with: qmake2cmake vclick-client.pro --min-qt-version 6.3
+
 TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
