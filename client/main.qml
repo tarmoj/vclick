@@ -118,7 +118,7 @@ ApplicationWindow {
                     onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
                 }
                 MenuItem {
-                    text: qsTr("Show test leds")
+                    text: qsTr("Show/Hide test leds")
                     onTriggered:  {
                         testRow.visible = !testRow.visible;
                         mainMenu.close()

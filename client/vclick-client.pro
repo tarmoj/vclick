@@ -2,7 +2,7 @@ TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 3.0.0-beta
+VERSION = 3.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 ANDROID_VERSION_NAME = $$VERSION
