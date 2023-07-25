@@ -18,7 +18,10 @@ ApplicationWindow {
 
 
     header: Row {
-        Button {x: 5; text:"Menu"; onClicked: mainMenu.open()}
+        x: 5
+
+        Button { text: qsTr("Menu"); onClicked: mainMenu.open()}
+
         Menu {
             //minimumWidth: 350
             width: 350

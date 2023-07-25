@@ -76,6 +76,7 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 
+# android build not fixed to Qt6 yet. Plan to Drop it.
 android {
   QT += androidextras
   INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library

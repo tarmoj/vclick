@@ -23,7 +23,7 @@
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
 #include <QDir>
-#include <QNetworkInterface>b
+#include <QNetworkInterface>
 #include <QRegularExpression>
 
 
@@ -77,7 +77,7 @@ void WsServer::updateScoreFiles()
     } else {
         scoreFiles = userScoreFiles.split(";");
     }
-    qDebug() << Q_FUNC_INFO << scoreFiles;
+    //qDebug() << Q_FUNC_INFO << scoreFiles;
 
 }
 
@@ -86,7 +86,6 @@ void WsServer::onNewConnection()
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 
     connect(pSocket, &QWebSocket::textMessageReceived, this, &WsServer::processTextMessage);
-    //connect(pSocket, &QWebSocket::binaryMessageReceived, this, &WsServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &WsServer::socketDisconnected);
 
     m_clients << pSocket;
@@ -174,9 +173,8 @@ void WsServer::processTextMessage(QString message)
 
 		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
 #endif
-        // TODO: the start problem is here: sometimes there is no scoreFile
+
         if (!useTime) {
-            // Something wrong here: ....
             emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
         } else {
 #ifdef CONSOLE_APP
@@ -309,13 +307,6 @@ void WsServer::processTextMessage(QString message)
 
 }
 
-//void WsServer::processBinaryMessage(QByteArray message)
-//{
-//    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-//    if (pClient) {
-//        pClient->sendBinaryMessage(message);
-//    }
-//}
 
 void WsServer::socketDisconnected()
 {
@@ -361,7 +352,6 @@ void WsServer::handleLed(int ledNumber, float duration) {
 
 	if (sendWs) {
         QString message = QString("l %1 %2").arg(ledNumber).arg(duration);
-        //message.asprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
         send2all(message);
 	}
 
@@ -388,12 +378,9 @@ void WsServer::handleNotification(QString message, float duration)
 
 void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
-	//tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
 	//qDebug()<<"Tempo: "<<tempo;
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
-			//QList<QVariant> data;
-			//data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/tempo", tempo);
 		}
 
@@ -538,9 +525,9 @@ QString WsServer::getOscAddresses()
 {
 	if (settings) {
 		QVariant value = settings->value("oscaddresses");
-		if (value.type()==QMetaType::QString)
+        if (value.typeId()==QMetaType::QString)
 			return value.toString();
-		else if (value.type()==QMetaType::QStringList)
+        else if (value.typeId()==QMetaType::QStringList)
 			return value.toStringList().join(",");
 		else
 			return QString();
