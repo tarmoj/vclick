@@ -9,7 +9,7 @@ import Qt.labs.platform 1.1 as Platform
 ApplicationWindow {
     id: window
     visible: true
-    width: 740
+    width: 760
     height: 820
     title: qsTr("vClick Server")
     property string version:  Qt.application.version
