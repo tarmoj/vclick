@@ -91,6 +91,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
+    folder.png \
     winicon.rc \
     android/AndroidManifest.xml \
     android/gradle/wrapper/gradle-wrapper.jar \

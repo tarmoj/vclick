@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>vclick-server.png</file>
+        <file>folder.png</file>
     </qresource>
 </RCC>

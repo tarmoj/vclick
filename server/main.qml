@@ -349,7 +349,8 @@ ApplicationWindow {
 
                     }
                     RoundButton {
-                        text: qsTr("\u21ba") // load
+                        //text: qsTr("\u21ba") // load
+                        icon.source: "qrc:///folder.png"
                         onClicked: {
                             fileListDialog.open()
                         }

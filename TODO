@@ -12,6 +12,7 @@
 - Windows Client menuButton suurus mitte *1.5
 - webassembly -  disable sound
 - Mac//iOS - test MyIP (maybe show all that are found)
+-Client click Volume too high?
 
 In future: qosc requires more rewrite (get rid of warnings), for Qt6, move to separate repo
 
