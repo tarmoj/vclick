@@ -1,5 +1,6 @@
 TEMPLATE = app
 
+lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
 VERSION = 3.0.0-beta
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -43,7 +44,7 @@ RESOURCES += qml.qrc \
 
 macx: ICON = vclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
-un
+
 ios {
 CONFIG -= bitcode
 HEADERS += ios-screen.h

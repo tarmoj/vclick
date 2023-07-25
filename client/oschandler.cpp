@@ -25,7 +25,7 @@
 OscHandler::OscHandler(quint16 port, QObject *parent) : QObject(parent)
 {
 	m_port = port;
-	m_server = new QOscServer(m_port, parent); //TODO: osc port now hardcoded, put into config
+    m_server = new QOscServer(m_port, parent);
     m_delay = 0;
 	connect(m_server, SIGNAL(dataIn(QString,QVariant)),this, SLOT(dataIn(QString,QVariant)));
 }
@@ -46,7 +46,6 @@ QString OscHandler::getLocalAddress()
 				address = localAddresses[i].toString();
 				qDebug() << "YOUR IP: " << address;
 				break; // get the first address (avoid bridges etc)
-
 		}
 
 	}
@@ -101,7 +100,7 @@ void OscHandler::dataIn(QString path, QVariant data)
 	}
 
 	if (path.startsWith("/metronome/tempo")) {
-		if (data.type()==QMetaType::Float){
+        if (data.typeId()==QMetaType::Float){
 			m_tempo = data.toFloat();
 			//qDebug()<<"TEMPO"<<tempo;
 			QTimer::singleShot(m_delay, this, SLOT(sendTempo()));
@@ -113,7 +112,7 @@ void OscHandler::dataIn(QString path, QVariant data)
 			m_message = args[0].toString();
 			m_messageDuration = args[1].toFloat();
 			QTimer::singleShot(m_delay, this, SLOT(sendNotification()));
-		} else if (data.type()==QMetaType::QString){
+        } else if (data.typeId()==QMetaType::QString){
 			m_message = data.toString();
 			m_messageDuration = 4.0;
 			QTimer::singleShot(m_delay, this, SLOT(sendNotification()));

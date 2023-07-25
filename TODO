@@ -10,6 +10,7 @@
 - teade veebi; veebi haldamine...
 - Android Build eri arhitektuuridega.
 - Windows Client menuButton suurus mitte *1.5
+- webassembly -  disable sound
 
 
 metronoomi ikoon:

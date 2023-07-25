@@ -38,7 +38,7 @@
 
 // for changes in Qt6, see: https://www.qt.io/blog/qt-extras-modules-in-qt-6
 #ifdef Q_OS_ANDROID
-    #include <QtCore/private/qandroidextras_p.h> // <QtAndroid>
+    #include <QtCore/private/qandroidextras_p.h>
     #include <QJniEnvironment>
 #endif
 
@@ -71,8 +71,6 @@ int main(int argc, char *argv[])
 #endif
 
 
-	//SettingsHandler settings;
-	//settings.setSettingsValue("serverAddress","ws:test");
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("client");
 	app.setWindowIcon(QIcon(":/vclick-client.png"));

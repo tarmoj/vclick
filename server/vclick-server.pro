@@ -1,6 +1,6 @@
-TEMPLATE = app
-#TARGET += "vClickServer"
+lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
+TEMPLATE = app
 
 VERSION = 3.0.0-beta
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
