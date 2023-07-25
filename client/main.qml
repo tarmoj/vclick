@@ -27,7 +27,7 @@ import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Dialogs
 import QtQuick.Layouts
-import Qt.labs.settings 1.0
+import QtCore
 import QtMultimedia
 import QtWebSockets
 
@@ -162,7 +162,8 @@ ApplicationWindow {
                 MenuItem {
                     text: qsTr("About")
                     onTriggered: {
-                        messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK"));
+                        messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK" );
+                        messageDialog.open()
                         mainMenu.close()
                     }
                 }
@@ -183,7 +184,8 @@ ApplicationWindow {
             if (Qt.platform.os === "ios") {
                 notification(qsTr("Delay is not 0!"),5)
             } else {
-                messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
+                messageDialog.text = qsTr("Delay is greater than 0! Check delay row from menu!")
+                messageDialog.open();
             }
         }
         if (oscServer) {
@@ -260,7 +262,7 @@ ApplicationWindow {
         url: "ws://"+serverIP+":" + serverPort +  "/ws"  //"ws://192.168.1.199:6006/ws"
 
 
-        onTextMessageReceived:  {
+        onTextMessageReceived: function (message) {
             // console.log("Received message: ",message);
             // put back websocket control for communication over internet
             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
@@ -1308,14 +1310,15 @@ ApplicationWindow {
     }
 
 
-
     MessageDialog {
         id: messageDialog
-        //TODO: on iOs "OK" is not shown and dialog cannot be closed. Perhaps fixed in Qt 5.8
-
-        function show(caption) {
-            messageDialog.text = caption;
-            messageDialog.open();
-        }
+        buttons: MessageDialog.Ok
+        text: "Message"
+        onButtonClicked: function (button, role) { // does not close on Android otherwise
+            switch (button) {
+                case MessageDialog.Ok:
+                    messageDialog.close()
+                }
+            }
     }
 }
