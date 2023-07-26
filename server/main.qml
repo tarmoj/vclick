@@ -1,15 +1,15 @@
-import QtQuick 2.9
-import QtQuick.Window 2.2
-import QtQuick.Controls 2.2 //1.2
-import QtQuick.Layouts 1.2
-import QtQuick.Dialogs 1.2
-import Qt.labs.settings 1.0
-//import Qt.labs.platform 1.0
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Dialogs
+import QtCore
+import Qt.labs.platform 1.1 as Platform
 
 ApplicationWindow {
     id: window
     visible: true
-    width: 740
+    width: 760
     height: 820
     title: qsTr("vClick Server")
     property string version:  Qt.application.version
@@ -18,7 +18,10 @@ ApplicationWindow {
 
 
     header: Row {
-        Button {x: 5; text:"Menu"; onClicked: mainMenu.open()}
+        x: 5
+
+        Button { text: qsTr("Menu"); onClicked: mainMenu.open()}
+
         Menu {
             //minimumWidth: 350
             width: 350
@@ -113,40 +116,40 @@ ApplicationWindow {
 
     Connections {
         target: wsServer
-        onNewConnection: {
+        function onNewConnection() {
             //console.log(connectionsCount)
             clientsLabel.text = qsTr("Clients: ") + connectionsCount;
         }
-        onNewBeatBar: {
+        function onNewBeatBar(bar, beat) {
             barLabel.text = bar;
             beatLabel.text = beat;
         }
 
-        onNewTempo: tempoLabel.text = tempo;
+        function onNewTempo(tempo) {tempoLabel.text = tempo; }
 
-        onUpdateOscAddresses: {
+        function onUpdateOscAddresses(adresses) {
             oscAddresses.text = adresses;
             cs.setOscAddresses(oscAddresses.text);
         }
 
-        onCsoundMessage: {
+        function onCsoundMessage(message) {
             messageModel.append({"line":message})
             messageView.positionViewAtEnd()
         }
 
-        onStart: {
+        function onStart() {
             startButton.clicked()
         }
 
-        onStop: cs.stop()
+        function onStop() { cs.stop() }
 
-        onNewScoreIndex: scoreFilesList.setIndex(index)
+        function onNewScoreIndex(index)  { scoreFilesList.setIndex(index) }
 
-        onNewStartBar: startBarSpinBox.value = startBar
+        function onNewStartBar(startBar) { startBarSpinBox.value = startBar }
 
-        onNewUseScore:  if (score) useScore.checked = true; else useTime.checked = true;
+        function onNewUseScore(score) { if (score) useScore.checked = true; else useTime.checked = true; }
 
-        onNewStartTime: {
+        function onNewStartTime(startSecond)  {
             var minute = Math.floor(startSecond/60)
             var seconds = startSecond%60;
             startTimeField.minutes = minute;
@@ -154,9 +157,9 @@ ApplicationWindow {
             startTimeField.text = minute + ":" + seconds;
         }
 
-        onNewCountdown: countdown.checked = checked
+        function onNewCountdown(checke) { countdown.checked = checked }
 
-        onNewUseSoundFile: playSoundfile.checked = checked
+        function onNewUseSoundFile(checked) { playSoundfile.checked = checked }
 
     }
 
@@ -177,22 +180,22 @@ ApplicationWindow {
         z: 10
 
         onFileSelected: {
-            scoField.text = fileURL
-            fileDialog.folder = getBasename(fileURL)
+            scoField.text = file
+            fileDialog.folder = getBasename(file)
             visible = false
         }
         onHidePressed: visible = false
     }
 
 
-    FileDialog {
+    Platform.FileDialog {
         id: fileDialog
         title: qsTr("Please choose score for metronome")
         nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
-        folder: shortcuts.documents //"file://"
+        folder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
         onAccepted: {
-            scoField.text = fileUrl
-            folder = getBasename(fileUrl)
+            scoField.text = file
+            folder = getBasename(file)
         }
         onRejected: {
             visible = false;
@@ -201,12 +204,12 @@ ApplicationWindow {
 
     // TODO: FilePicker for next ones.. Rewrite with condition.. to OS
 
-    FileDialog {
+    Platform.FolderDialog {
         id: sfdirDialog
         title: qsTr("Please choose folder of playbacks soundfiles")
 
-        folder: shortcuts.documents //sfdirField.text
-        selectFolder: true
+        folder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
+        //selectFolder: true
 
         onAccepted: {
             console.log("You chose: " + folder)
@@ -218,16 +221,16 @@ ApplicationWindow {
         }
     }
 
-    FileDialog {
+    Platform.FileDialog {
         id: soundFileDialog
         title: qsTr("Please choose sound file")
         nameFilters: [ "Audio files (*.wav *.aif *.aiff *.mp3 *.ogg *.flac)", "All files (*)" ]
-        folder: shortcuts.documents //"file://"
+        folder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
         onAccepted: {
-            var urlString = fileUrl.toString()
+            var urlString = file.toString()
             urlString = Qt.platform.os === "windows" ? urlString.replace("file:///", "") : urlString.replace("file://", "")
             soundFile.text =  urlString
-            folder = getBasename(fileUrl)
+            folder = getBasename(file)
         }
         onRejected: {
             visible = false;
@@ -321,7 +324,6 @@ ApplicationWindow {
             delegate: Component {
                 RowLayout {
                     spacing: 10
-                    //width: parent.width
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
 
@@ -329,6 +331,7 @@ ApplicationWindow {
                         id: urlField
                         text: url
                         Layout.fillWidth: true
+                        Layout.preferredWidth: scoreFilesList.width * 0.6
                         background: Rectangle { color: scoreFilesList.currentIndex === index ? "#F0A0A0A0" : "transparent" }
 
                         MouseArea {
@@ -346,7 +349,8 @@ ApplicationWindow {
 
                     }
                     RoundButton {
-                        text: qsTr("\u21ba") // load
+                        //text: qsTr("\u21ba") // load
+                        icon.source: "qrc:///folder.png"
                         onClicked: {
                             fileListDialog.open()
                         }
@@ -358,15 +362,15 @@ ApplicationWindow {
                         onClicked: scoreFilesModel.remove(index)
 
 
-                        FileDialog { // FileDialog here causes binding loop warning. Ingore it.
+                        Platform.FileDialog { // FileDialog here causes binding loop warning. Ingore it.
                             id: fileListDialog
                             title: qsTr("Please choose score for metronome")
                             nameFilters: [ "Csound score files (*.sco)", "All files (*)" ]
                             folder: scoreFilesList.lastFolder  //"file://home/tarmo/tarmo/csound/metronome/scores"  // TODO: lastFolder
                             onAccepted: {
-                                urlField.text = fileUrl
-                                scoreFilesList.lastFolder = getBasename(fileUrl)
-                                url = fileUrl.toString()
+                                urlField.text = file
+                                scoreFilesList.lastFolder = getBasename(file)
+                                url = file.toString()
                                 console.log("index: ", index, "url", url)
                             }
                             onRejected: {
@@ -375,6 +379,8 @@ ApplicationWindow {
                         }
 
                     }
+
+                    Item {Layout.fillWidth: true} // does not seem to do the job...
 
 
 
@@ -704,8 +710,8 @@ ApplicationWindow {
                 Row {
                     id: fileRow
                     width: parent.width
-                    height: 30
-                    spacing: 5
+                    //height: 30
+                    spacing: 3
                     visible: scoreControls.visible
 
 
@@ -719,7 +725,7 @@ ApplicationWindow {
                     TextField {
                         id: scoField
                         width: 200
-                        placeholderText: qsTr("score file")
+                        placeholderText: qsTr("Score file")
                         text: ":/csound/test.sco";
 
                     }
@@ -752,6 +758,8 @@ ApplicationWindow {
                     RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
                     RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
                     RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
+                    RoundButton { text: "4"; onClicked: scoreFilesList.setIndex(3) }
+
                 }
 
 

@@ -19,15 +19,20 @@
     02111-1307 USA
 */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.15
-import QtQuick.Dialogs 1.3
-import QtQuick.Layouts 1.15
-import Qt.labs.settings 1.1
-import QtMultimedia 5.15
-import QtWebSockets 1.15
-import QtQuick.Controls.Material 2.15
+
+// Qt6 required
+
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import QtQuick.Dialogs
+import QtQuick.Layouts
+import QtCore
+import QtMultimedia
+import QtWebSockets
+
+//import QtQuick.Controls.Material 2.12
+
 
 ApplicationWindow {
     title: qsTr("vClick Client")
@@ -36,22 +41,13 @@ ApplicationWindow {
     height: 640
     visible: true
     property real beatLength: 1
-    property int instrument: 0 // TODO: set from menu for different channels
-    property string version: Qt.application.version  //"2.1.1" // NB! version 2 uses port 57878 for OSC communication
-
-
+    property int instrument: 0
+    property string version: Qt.application.version
 
         Menu {
             id: mainMenu
             title: qsTr("Menu")
-
-            background: Rectangle {
-                    implicitWidth: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.75 :400
-                    implicitHeight: 200
-                    color: "#f0ffffff"
-                    border.color: "#353637"
-                }
-
+            width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
 
 
             Column {
@@ -84,11 +80,11 @@ ApplicationWindow {
                     }
                     Button { text: qsTr("Set");
                         onClicked: {
-                            if (serverPortSpinbox.value==socket.serverPort) {
+                            if (serverPortSpinbox.value===socket.serverPort) {
                                 socket.active = true
                             } else {
-                                socket.active = false; // do we need to wait here?
-                                socket.serverPort = serverPortSpinbox.value // this should activate the socket as well, since server.url is bound to serverIP
+                                socket.active = false;
+                                socket.serverPort = serverPortSpinbox.value // this activates the socket as well, since server.url is bound to serverIP
                                 socket.active = true;
                             }
                         }
@@ -108,17 +104,13 @@ ApplicationWindow {
                     checked: false
                     text: qsTr("Sound")
                 }
-    //            MenuItem {
-    //                text: qsTr("Show/Hide &server address")
-    //                onTriggered: serverRow.visible = !serverRow.visible
-    //            }
-    //            MenuItem {
-    //                text: qsTr("Restart OSC listener")
-    //                onTriggered: oscServer.restart()
-    //            }
+
                 MenuItem {
                     text: qsTr("Set instrument number")
-                    onTriggered: instrumentRect.visible = !instrumentRect.visible
+                    onTriggered: {
+                        instrumentRect.visible = !instrumentRect.visible;
+                        mainMenu.close()
+                    }
                 }
 
                 MenuItem {
@@ -126,20 +118,33 @@ ApplicationWindow {
                     onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
                 }
                 MenuItem {
-                    text: qsTr("Toggle test leds")
-                    onTriggered: testRow.visible = !testRow.visible
+                    text: qsTr("Show/Hide test leds")
+                    onTriggered:  {
+                        testRow.visible = !testRow.visible;
+                        mainMenu.close()
+                    }
                 }
                 MenuItem {
-                    text: qsTr("Toggle delay row")
-                    onTriggered: delayRect.visible = !delayRect.visible
+                    text: qsTr("Show delay row")
+                    onTriggered: {
+                        delayRect.visible = !delayRect.visible;
+                        mainMenu.close()
+                    }
                 }
                 MenuItem {
-                    text: qsTr("Toggle remote control")
-                    onTriggered: remoteControlRect.visible = !remoteControlRect.visible
+                    text: qsTr("Show remote control")
+                    onTriggered:  {
+                        remoteControlRect.visible = !remoteControlRect.visible
+                        mainMenu.close()
+                    }
                 }
                 MenuItem {
                     text: qsTr("About")
-                    onTriggered: messageDialog.show(qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK"));
+                    onTriggered: {
+                        messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK" );
+                        messageDialog.open()
+                        mainMenu.close()
+                    }
                 }
                 MenuItem {
                     text: qsTr("Exit")
@@ -156,9 +161,10 @@ ApplicationWindow {
     Component.onCompleted: {
         if (delaySpinBox.value>0) {
             if (Qt.platform.os === "ios") {
-                notification(qsTr("Delay is not 0!"),5)
+                notification(qsTr("Delay is not 0!"),3)
             } else {
-                messageDialog.show(qsTr("Delay is greater than 0! Check delay row from menu!"))
+                messageDialog.text = qsTr("Delay is greater than 0! Check delay row from menu!")
+                messageDialog.open();
             }
         }
         if (oscServer) {
@@ -175,11 +181,11 @@ ApplicationWindow {
 
     SoundEffect {
         id: sound2
-        source: "qrc:///sounds/sound2.wav"//installPath + "sound2.wav"
+        source: "qrc:///sounds/sound2.wav"
     }
     SoundEffect {
         id: sound3
-        source: "qrc:///sounds/sound3.wav" //installPath + "sound3.wav"
+        source: "qrc:///sounds/sound3.wav"
     }
 
     Timer {
@@ -235,9 +241,8 @@ ApplicationWindow {
         url: "ws://"+serverIP+":" + serverPort +  "/ws"  //"ws://192.168.1.199:6006/ws"
 
 
-        onTextMessageReceived: {
+        onTextMessageReceived: function (message) {
             // console.log("Received message: ",message);
-            // put back websocket control for communication over internet
             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
             if (messageParts[0]==="b") {
                 barLabel.text = messageParts[1]
@@ -284,10 +289,10 @@ ApplicationWindow {
                              notification("Failed!", 1.0);
                          } else if (socket.status == WebSocket.Open) {
                              console.log("Socket open", url)
-                             settings.serverIP= socket.serverIP //serverAddress.text//socket.url
+                             settings.serverIP= socket.serverIP
                              settings.serverPort=socket.serverPort
                              socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
-                             // socket.active = false; // do not for remote control  // and close socket
+                             // socket.active = false; // do not for remote control
                          } else if (socket.status == WebSocket.Closed) {
                              console.log("Socket closed")
                              socket.active = false;                             
@@ -301,7 +306,9 @@ ApplicationWindow {
     Connections { // To see, if OSC server can be restarted on reopen
         target: Qt.application
         function onStateChanged(state) {
-            console.log("State: ", state);
+
+            //console.log("State: ", state);
+
             if(Qt.application.state === Qt.ApplicationActive) {
                 //console.log("Active")
                 if (Qt.platform.os === "ios") {
@@ -367,7 +374,7 @@ ApplicationWindow {
                     blueLed.color = blueLed.bright
                     blueLed.width = ledRow.ledOnWidth;
                     ledOffTimer.object = blueLed
-                    ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                    ledOffTimer.start()
                 }
             }
             }
@@ -410,6 +417,7 @@ ApplicationWindow {
             }
         }
         anchors.fill: parent
+        property string semitransparent: "#0FF5F5F5"
 
 
         Image {
@@ -419,7 +427,7 @@ ApplicationWindow {
             x:5
             source: "qrc:///menu.png"
             width: height
-            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" || Qt.platform.os === "windows" ?    tempoLabel.height*1.5 : tempoLabel.height*1.1 // maybe fixes the size on iphone?
+            height: Qt.platform.os === "ios"  || Qt.platform.os === "osx" ?    tempoLabel.height*1.5 : tempoLabel.height*1.1 // maybe fixes the size on iphone?
             MouseArea {width: parent.width*1.5; height: parent.height*2; onClicked: mainMenu.open() }
         }
 
@@ -464,34 +472,13 @@ ApplicationWindow {
 
         }
 
-        // TEST
-//        RoundButton {
-//            x: 20; y:20
-//            icon.source: "qrc:///xmark-solid.png"
-//        }
-
-//        Button {
-//            x: 60; y:20
-//            icon.source: "qrc:///radio.png"
-//        }
-
-//        ToolButton {
-//            x: 120; y:20
-//            icon.source: "qrc:///radio.png"
-//        }
-
-//        Button {
-//            x: 180; y:20
-//            icon.name: "window-close"
-//        }
-
 
         // TODO: one rect, different Rowlayouts rect.visible = comp1.visble || comp2.visible || comp3.visible
         Rectangle {
             id: delayRect
             width: parent.width
             height: delaySpinBox.height * 1.5
-            color: "#F0d4e1e3"
+            color: mainRect.semitransparent // "#0FF5F5F5" //"#F0d4e1e3"
             visible: false
             z:2
             RowLayout {
@@ -505,8 +492,6 @@ ApplicationWindow {
                 SpinBox {
                     id: delaySpinBox
                     editable: true
-                    //up.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : up.indicator.implicitWidth
-                    //down.indicator.width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ? delaySpinBox.width/5 : down.indicator.implicitWidth
                     value: 0
                     from: 0
                     to: 1001
@@ -516,7 +501,6 @@ ApplicationWindow {
                     Layout.minimumWidth: 60
                     stepSize: 1
                     onValueChanged: oscServer.setDelay(value)
-                    //onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
                 Button {
                     Layout.fillWidth: true
@@ -543,42 +527,38 @@ ApplicationWindow {
         Rectangle { // this is same as delayrect - how to copy less code?
             id: instrumentRect
             width: parent.width
-            height: instrumentSpinBox.height * 1.5
-            color:  "#F0F5F5F5"//"lightgrey"
+            height: instrumentRow.height*1.5 //instrumentSpinBox.height * 1.5
+            color:   mainRect.semitransparent
             visible: false
             z:2
-            RowLayout {
-                x:5
+            Flow {
                 id: instrumentRow
-                y:5                
-                width: parent.width //(mainRect.width>mainRect.height) ? parent.width*0.75 : parent.width-5
-                visible: true
+                x:5; y:5
+                width: parent.width
                 spacing: 3
+
                 Label {
                     text: qsTr("Instrument no: ");
-                    Layout.fillWidth: true;
-                    Layout.maximumWidth: implicitWidth
+                    height: instrumentSpinBox.height
+                    verticalAlignment: Text.AlignVCenter
                 }
                 SpinBox {
                     id: instrumentSpinBox
                     editable: true
-                    //up.indicator.width:    delaySpinBox.up.indicator.width
-                    //down.indicator.width: delaySpinBox.down.indicator.width
                     value: instrument
                     from: 0
                     to: 32
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth*1.5
                     Layout.preferredWidth: implicitWidth
-                    Layout.minimumWidth: 50
+                    Layout.minimumWidth: 120
                     stepSize: 1
                     onValueChanged:  {
                         console.log("New instrument value: ", value)
                         instrument = value
                     }
-
-                    //onWidthChanged: console.log("SpinboxWidth:",this.width)
                 }
+
                 Button {
                     Layout.fillWidth: true
                     Layout.maximumWidth: implicitWidth*1.5
@@ -588,13 +568,6 @@ ApplicationWindow {
                     text: qsTr("Update");
                     onClicked: { console.log("should send Hello instrument nr here");
                         connectSocket();
-//                        if (!socket.active) {
-//                            if (serverAddress.text==socket.serverIP) {
-//                                socket.active = true
-//                            } else {
-//                                socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
-//                            }
-//                        }
                     }
                 }
                 Button {
@@ -602,6 +575,7 @@ ApplicationWindow {
                     Layout.maximumWidth: implicitWidth * 1.5
                     Layout.minimumWidth: 50
                     Layout.preferredWidth: 60//implicitWidth
+                    //icon.source: "qrc:///xmark-solid.png"
                     text: qsTr("Hide");
                     onClicked: instrumentRect.visible = false;
                 }
@@ -609,14 +583,14 @@ ApplicationWindow {
                 Item { Layout.fillWidth: true}
             }
 
+
         }
 
         Rectangle { // this is same as delayrect - how to copy less code?
             id: remoteControlRect
             width: parent.width
-            height: controlConnectedButton.height*2.5 //soundCheckBox.y+soundCheckBox.height
-            color:  "#0FF5F5F5"//"lightgrey"
-
+            height: controlConnectedButton.height*2.5
+            color:  mainRect.semitransparent
             visible: false
             z:2
             Column {
@@ -632,12 +606,13 @@ ApplicationWindow {
 
                     Button {
                         id: controlConnectedButton
+                        visible: !(socket.status === WebSocket.Open)
                         Layout.fillWidth: true
                         Layout.maximumWidth: implicitWidth*1.5
                         Layout.minimumWidth: 70
                         Layout.preferredWidth: implicitWidth
                         enabled: !socket.active
-                        text: socket.status === WebSocket.Open ?  qsTr("Connected")  : qsTr("Connect");
+                        text:  qsTr("Connect");
                         onClicked: {
                             connectSocket()
                         }
@@ -714,10 +689,6 @@ ApplicationWindow {
                     }
 
                 }
-
-
-
-
             }
         }
 
@@ -727,23 +698,24 @@ ApplicationWindow {
             anchors.top: remoteControlRect.bottom
             anchors.topMargin: 20
             width: parent.width * 0.8
-            height: startBarSpinBox.height * 7.5
+            height: startBarSpinBox.height * 5
+            color: Material.background
             gradient: Gradient {
                 GradientStop {
                     position: 0.00;
-                    color: "#cf424245";
+                    color: "#cfffffff";
                 }
                 GradientStop {
                     position: 0.32;
-                    color: "#ffffff";
+                    color: Material.background
                 }
                 GradientStop {
                     position: 0.64;
-                    color: "#ffffff";
+                    color: Material.background
                 }
                 GradientStop {
                     position: 1.00;
-                    color: "#cf424245";
+                    color: "#cfffffff";
                 }
             }
             radius: 10
@@ -760,8 +732,6 @@ ApplicationWindow {
                 visible: parent.isScore && !timeOptions.visible
 
                 ToolButton {
-                    Layout.preferredHeight: startBarSpinBox.height * 0.8
-                    Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
                     icon.source: "qrc:///xmark-solid.png"
                     onClicked: remoteOptionsRect.visible = false
@@ -818,26 +788,18 @@ ApplicationWindow {
                     // for setting active index
                     RoundButton {
                         text: "1";
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                        Layout.preferredWidth: Layout.preferredHeight
                         onClicked: socket.sendTextMessage("scoreIndex 0")
                     }
                     RoundButton {
                         text: "2";
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                        Layout.preferredWidth: Layout.preferredHeight
                         onClicked: socket.sendTextMessage("scoreIndex 1")
                     }
                     RoundButton {
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                        Layout.preferredWidth: Layout.preferredHeight
                         text: "3";
                         onClicked: socket.sendTextMessage("scoreIndex 2")
                     }
 
                     RoundButton {
-                        Layout.preferredHeight: startBarSpinBox.height * 1.2
-                        Layout.preferredWidth: Layout.preferredHeight
                         text: "4";
                         onClicked: socket.sendTextMessage("scoreIndex 3")
                     }
@@ -855,7 +817,7 @@ ApplicationWindow {
                 visible: !parent.isScore && !scoreOptions.visible
 
 
-                ToolButton { // a bit stupid to copy the button, but ok, easier for layout
+                ToolButton {
                     Layout.preferredHeight: resetTimeButton.height * 0.8
                     Layout.preferredWidth: Layout.preferredHeight
                     Layout.alignment: Qt.AlignRight
@@ -988,13 +950,6 @@ ApplicationWindow {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
                          connectSocket();
-//                        if (serverAddress.text==socket.serverIP) {
-//                            socket.active = true
-//                        } else {
-//                            socket.serverIP = serverAddress.text // this should activate the socket as well, since server.url is bound to serverIP
-//                            socket.active = true;
-//                        }
-                        //console.log("Connecting to ",serverAddress.text, "Socket status: ", socket.status)
                     } else {
                         console.log("Already active")
                         socket.sendTextMessage("hello "+instrument)
@@ -1010,8 +965,9 @@ ApplicationWindow {
             anchors.bottom: serverRow.top
             anchors.bottomMargin: 2
             anchors.left: serverRow.left
-            color:  "#BDBDBD"//"lightgrey"
+            color:  "#BDBDBD"
             text: (oscServer===null) ? "" :  qsTr("My IP: ") +  oscServer.getLocalAddress();
+
 
         }
 
@@ -1023,7 +979,6 @@ ApplicationWindow {
             anchors.topMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             color: "darkblue"
-            //font.pointSize: 10
             text: qsTr("Tempo: 0")
 
         }
@@ -1048,7 +1003,7 @@ ApplicationWindow {
 
                 Label {
                     id: barLabel
-                    color: "ghostwhite" //"#d6d6d6"
+                    color: "ghostwhite"
                     text: "0"
                     font.bold: true
                     anchors.fill: parent
@@ -1085,8 +1040,6 @@ ApplicationWindow {
         }
 
 
-
-
         Row{
             id: ledRow
             width: parent.width *0.8
@@ -1097,16 +1050,16 @@ ApplicationWindow {
             z:3 // to raise above notificationRect
             spacing: 10
 
-
+            // in future, when breaking into separate components, have a Led component
             Item {
                 id: led1
-                width: parent.width/3//mainRect.width *0.28
-                height: parent.height//width
+                width: parent.width/3
+                height: parent.height
 
                 Rectangle {
                     id: redLed
                     anchors.centerIn: parent
-                    width: ledRow.ledOnWidth/4 // parent.width/4 //mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4
                     height: width
                     color: "#5c0303"
                     radius: width/2
@@ -1120,20 +1073,17 @@ ApplicationWindow {
                         ColorAnimation {target: redLed; properties: "color";  from: target.bright ;to: target.dark; duration:  beatLength *1000}
                         NumberAnimation {target: redLed;  properties: "width";from: ledRow.ledOnWidth; to: ledRow.ledOffWidth; duration:beatLength *1000}
                     }
-
                 }
-
-
             }
 
             Item {
                 id: led2
-                width: parent.width/3//mainRect.width *0.28
-                height: parent.height//width
+                width: parent.width/3
+                height: parent.height
 
                 Rectangle {
                     id: greenLed
-                    width: ledRow.ledOnWidth/4 //mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4
                     anchors.centerIn: parent
                     height: width
                     radius: width/2
@@ -1152,13 +1102,13 @@ ApplicationWindow {
 
             Item {
                 id: led3
-                width: parent.width/3//mainRect.width *0.28
-                height: parent.height//width
+                width: parent.width/3
+                height: parent.height
 
                 Rectangle {
                     id: blueLed
                     anchors.centerIn: parent
-                    width: ledRow.ledOnWidth/4 //mainRect.width *0.1
+                    width: ledRow.ledOnWidth/4
                     height: width
                     radius: width/2
                     border.color: "#ffea44"
@@ -1178,7 +1128,7 @@ ApplicationWindow {
 
         Rectangle {
             id: notificationRect
-            color: "transparent"//"#3c3c62"
+            color: "transparent"
             gradient: Gradient {
                 GradientStop {
                     position: 0.00;
@@ -1196,7 +1146,7 @@ ApplicationWindow {
                     position: 1.00;
                     color: "black";
                 }
-            } //"transparent"
+            }
             anchors.top: ledRow.bottom
             anchors.bottom: mainRect.bottom
             anchors.bottomMargin: 5
@@ -1233,11 +1183,11 @@ ApplicationWindow {
                         redLed.color = redLed.bright
                         redLed.width = ledRow.ledOnWidth;
                         ledOffTimer.object = redLed
-                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
-                    }
+                        ledOffTimer.start()
 
-                    if (soundCheckBox.checked) {
-                        sound1.play();
+                        if (soundCheckBox.checked) {
+                            sound1.play();
+                        }
                     }
                 }
             }
@@ -1253,7 +1203,7 @@ ApplicationWindow {
                         greenLed.color = greenLed.bright
                         greenLed.width = ledRow.ledOnWidth;
                         ledOffTimer.object = greenLed
-                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                        ledOffTimer.start()
                     }
                     if (soundCheckBox.checked) {
                         sound2.play();
@@ -1275,7 +1225,7 @@ ApplicationWindow {
                         blueLed.color = blueLed.bright
                         blueLed.width = ledRow.ledOnWidth;
                         ledOffTimer.object = blueLed
-                        ledOffTimer.start() // mis juhtub, kui kaks korraga vaja maha võtta? Kummalgi vist oma taimerit vaja...
+                        ledOffTimer.start()
                     }
                 }
             }
@@ -1283,14 +1233,16 @@ ApplicationWindow {
     }
 
 
-
     MessageDialog {
         id: messageDialog
-        //TODO: on iOs "OK" is not shown and dialog cannot be closed. Perhaps fixed in Qt 5.8
-
-        function show(caption) {
-            messageDialog.text = caption;
-            messageDialog.open();
-        }
+        buttons: MessageDialog.Ok
+        text: "Message"
+        onButtonClicked: function (button, role) { // does not close on Android otherwise
+            switch (button) {
+                case MessageDialog.Ok:
+                    messageDialog.close()
+                }
+            }
     }
 }
+

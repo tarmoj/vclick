@@ -1,7 +1,8 @@
 TEMPLATE = app
 
+lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 2.1.2
+VERSION = 3.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 ANDROID_VERSION_NAME = $$VERSION
@@ -10,7 +11,7 @@ ANDROID_VERSION_CODE = 19 # build number
 
 
 QT += qml quick widgets websockets multimedia
-android: QT += androidextras quickcontrols2
+android: QT += core-private quickcontrols2
 
 # comment out for build without OSC support (QML only)
 # for webassembly compile with command (in terminal):
@@ -43,7 +44,7 @@ RESOURCES += qml.qrc \
 
 macx: ICON = vclick-client.icns
 win32: RC_FILE =  winicon.rc # for windows icon
-un
+
 ios {
 CONFIG -= bitcode
 HEADERS += ios-screen.h
@@ -61,11 +62,18 @@ QML_IMPORT_PATH =
 
 DISTFILES += \
     android/AndroidManifest.xml \
+    android/AndroidManifest.xml \
+    android/build.gradle \
     android/build.gradle \
     android/gradle.properties \
+    android/gradle.properties \
+    android/gradle/wrapper/gradle-wrapper.jar \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
+    android/gradlew \
+    android/gradlew.bat \
     android/gradlew.bat \
     android/res/drawable-hdpi/icon.png \
     android/res/drawable-hdpi/logo.png \
@@ -95,6 +103,7 @@ DISTFILES += \
     android/res/drawable/splashscreen_port.xml \
     android/res/values-land/splashscreentheme.xml \
     android/res/values-port/splashscreentheme.xml \
+    android/res/values/libs.xml \
     android/res/values/libs.xml \
     android/res/values/splashscreentheme.xml \
     winicon.rc

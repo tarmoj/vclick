@@ -1,12 +1,12 @@
+lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
+
 TEMPLATE = app
-#TARGET += "vClickServer"
 
-
-VERSION = 2.2.0-beta
+VERSION = 3.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
-CONFIG += no-gui
+#CONFIG += no-gui
 
 no-gui {
     QT += core network websockets
@@ -76,6 +76,7 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 
+# android build not fixed to Qt6 yet. Plan to Drop it.
 android {
   QT += androidextras
   INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library
@@ -90,6 +91,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
+    folder.png \
     winicon.rc \
     android/AndroidManifest.xml \
     android/gradle/wrapper/gradle-wrapper.jar \
