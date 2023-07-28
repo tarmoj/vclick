@@ -72,19 +72,18 @@ if(ANDROID)
     )
 
 # TRY something like:
-set(ANDROID_BUILD_ALL_ABIS false)
+set(QT_ANDROID_BUILD_ALL_ABIS true) # does not seem to affect
 
 # these did not affect. Set the version number and code in manifest for now.
-set(ANDROID_VERSION_NAME ${APP_VERSION})
-set(ANDROID_VERSION_CODE 20)
+set(QT_ANDROID_VERSION_NAME ${APP_VERSION})
+set(QT_ANDROID_VERSION_CODE 20)
 
 
 endif()
 
 
-message("TEST MESSAGE message ${use_osc} ${QT_ANDROID_VERSION_CODE}")
+#message("TEST MESSAGE message ${use_osc} ${QT_ANDROID_VERSION_CODE}")
 
-set (use_osc true)
 if(use_osc)
     target_sources(vclick-client PUBLIC
         oschandler.cpp oschandler.h
