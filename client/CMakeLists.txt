@@ -71,12 +71,11 @@ if(ANDROID)
         QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
     )
 
-# TRY something like:
-set(QT_ANDROID_BUILD_ALL_ABIS true) # does not seem to affect
+# TRY something like  - does not seem to work
+set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_BUILD_ALL_ABIS true) # does not seem to affect
+set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_NAME ${APP_VERSION})
+set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
 
-# these did not affect. Set the version number and code in manifest for now.
-set(QT_ANDROID_VERSION_NAME ${APP_VERSION})
-set(QT_ANDROID_VERSION_CODE 20)
 
 
 endif()
