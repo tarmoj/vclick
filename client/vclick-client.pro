@@ -44,7 +44,11 @@ DEFINES += USE_OSC
 RESOURCES += qml.qrc \
     vclick-client.qrc
 
-macx: ICON = vclick-client.icns
+# for mac universal build & Cmake see https://doc.qt.io/qt-6/macos.html#architectures
+macx {
+    ICON = vclick-client.icns
+	QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+}
 win32: RC_FILE =  winicon.rc # for windows icon
 
 ios {
