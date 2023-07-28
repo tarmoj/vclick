@@ -9,9 +9,14 @@ find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS QuickControls2)
 
 qt_standard_project_setup()
 
+
+SET(use_osc TRUE)
+
+
 qt_add_executable(vclick-client WIN32 MACOSX_BUNDLE
     main.cpp
 )
+
 qt_add_qml_module(vclick-client
     URI vclick_client
     VERSION ${PROJECT_VERSION}
@@ -61,9 +66,25 @@ if(ANDROID)
         Qt::CorePrivate
         Qt::QuickControls2
     )
-    set(QT_ANDROID_BUILD_ALL_ABIS true)
+
+    set_property(TARGET vclick-client APPEND PROPERTY
+        QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
+    )
+
+# TRY something like:
+set(ANDROID_BUILD_ALL_ABIS false)
+
+# these did not affect. Set the version number and code in manifest for now.
+set(ANDROID_VERSION_NAME ${APP_VERSION})
+set(ANDROID_VERSION_CODE 20)
+
+
 endif()
 
+
+message("TEST MESSAGE message ${use_osc} ${QT_ANDROID_VERSION_CODE}")
+
+set (use_osc true)
 if(use_osc)
     target_sources(vclick-client PUBLIC
         oschandler.cpp oschandler.h
@@ -87,20 +108,10 @@ if(IOS)
     )
 endif()
 
-#----
-
-#target_link_libraries(appdeleteme-cmake
-#    PRIVATE Qt6::Quick)
-
-#install(TARGETS appdeleteme-cmake
-#    BUNDLE DESTINATION .
-#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-# ----
 
 install(TARGETS vclick-client
     BUNDLE DESTINATION .
-    #RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 
 )
@@ -113,3 +124,4 @@ qt_generate_deploy_qml_app_script(
     MACOS_BUNDLE_POST_BUILD
 )
 install(SCRIPT ${deploy_script})
+
