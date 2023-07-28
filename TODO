@@ -8,7 +8,7 @@
 - release notes
 - video
 - teade veebi; veebi haldamine...
-- Android Build eri arhitektuuridega.
+- Android Build eri arhitektuuridega. -- requires cmake QT_ANDROID_BUILD_ALL_ABIS | Qt Core 6.5.2 https://doc.qt.io/qt-6/cmake-variable-qt-android-build-all-abis.html
 - Windows Client menuButton suurus mitte *1.5
 - webassembly -  disable sound
 - Mac//iOS - test MyIP (maybe show all that are found)

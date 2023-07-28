@@ -173,18 +173,21 @@ ApplicationWindow {
 
     }
 
-
+    // In version 3 (Qt 6.5) sounds don't work well on Linux -  not played or repeated or similar
     SoundEffect {
         id: sound1
+        volume: 0.6
         source: "qrc:///sounds/sound1.wav"
     }
 
     SoundEffect {
         id: sound2
+        volume: 0.6
         source: "qrc:///sounds/sound2.wav"
     }
     SoundEffect {
         id: sound3
+        volume: 0.6
         source: "qrc:///sounds/sound3.wav"
     }
 
@@ -1184,10 +1187,9 @@ ApplicationWindow {
                         redLed.width = ledRow.ledOnWidth;
                         ledOffTimer.object = redLed
                         ledOffTimer.start()
-
-                        if (soundCheckBox.checked) {
-                            sound1.play();
-                        }
+                    }
+                    if (soundCheckBox.checked) {
+                        sound1.play();
                     }
                 }
             }
@@ -1207,6 +1209,7 @@ ApplicationWindow {
                     }
                     if (soundCheckBox.checked) {
                         sound2.play();
+                        sound1.play();
                     }
                 }
             }

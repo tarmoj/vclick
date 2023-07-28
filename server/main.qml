@@ -116,7 +116,7 @@ ApplicationWindow {
 
     Connections {
         target: wsServer
-        function onNewConnection() {
+        function onNewConnection(connectionsCount) {
             //console.log(connectionsCount)
             clientsLabel.text = qsTr("Clients: ") + connectionsCount;
         }
