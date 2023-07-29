@@ -26,7 +26,11 @@ linux|android: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
-mac: ICON = vclick-server.icns
+mac: {
+    ICON = vclick-server.icns
+	QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+}
+
 win32: RC_FILE =  winicon.rc # for windows icon
 
 DESTDIR=bin #Target file directory
@@ -113,14 +117,14 @@ macx {
     # remove lbCsoundAc, võibolla libcsnd6
 
     third.path = $$PWD
-    third.commands = install_name_tool -change CsoundLib64.framework/Versions/6.0/CsoundLib64 @rpath/CsoundLib64.framework/Versions/6.0/CsoundLib64 $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/MacOS/vclick-server
-    third.commands += install_name_tool -change /Library/Frameworks/CsoundLib64.framework/libs/libsndfile.1.dylib @rpath/CsoundLib64.framework/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/.app/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
+    third.commands = install_name_tool -change /Library/Frameworks/CsoundLib64.framework/CsoundLib64 @rpath/CsoundLib64.framework/Versions/6.0/CsoundLib64 $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/MacOS/vclick-server ;
+    third.commands += install_name_tool -change /Library/Frameworks/CsoundLib64.framework/libs/libsndfile.1.dylib @rpath/CsoundLib64.framework/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
 
     final.path = $$PWD
     #final.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -dmg# deployment BETTER: use hdi-util
     final.commands = hdiutil create -fs HFS+ -srcfolder $$OUT_PWD/$$DESTDIR/$${TARGET}.app -volname \"vClick Server\" $$OUT_PWD/$$DESTDIR/$${TARGET}.dmg
 
-    INSTALLS += first third  final #final don't forget second!!!
+    INSTALLS += first second third  final #final don't forget second on first compile!!! (later makes sense to remove extra folders from Csound.Frameworks)
 
 }
 
@@ -131,7 +135,7 @@ win32 {
     # make dir plugins64 in output bin directory and copy rtpa.dll and osc.dll there
 #missing libs after windeployqt: csound64.dll portaduio_x64.dll (to bin)
     # enne installeri tegemist kopeeri klientist kõik deployga sinna saanud failid serveri bin-i
-    INSTALLS += first
+	INSTALLS += first
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
