@@ -3,13 +3,15 @@
 
 ; Copy the file into where binaries are! 
 
-#define MyAppName "vClick server"
-#define MyApp2Name "vClick cient"
-#define MyAppVersion "2.0.0-rc1"
+#define MyAppName "vClick Server"
+#define MyApp2Name "vClick Cient"
+#define MyAppVersion "3.0.0"
 #define MyAppPublisher "Tarmo Johannes"
 #define MyAppURL "http://tarmoj.github.io/vclick/"
 #define MyAppExeName "vclick-server.exe"
 #define MyApp2ExeName "vclick-client.exe"
+#define ServerDir ".\build-vclick-server-Desktop_Qt_6_5_2_MSVC2019_64bit-Release\bin"
+#define ClientDir   ".\build-vclick-client-Desktop_Qt_6_5_2_MSVC2019_64bit-Release\bin"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -25,8 +27,8 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\vClick/server+client
 DisableProgramGroupPage=yes
-LicenseFile=..\..\LICENSE
-InfoBeforeFile=..\..\README.md
+LicenseFile=LICENSE
+InfoBeforeFile=README.md
 OutputBaseFilename=vclick-server+client-setup-64bit-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
@@ -41,9 +43,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 
-Source: "vclick-server.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "vclick-client.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#ServerDir}\\vclick-server.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ClientDir}\vclick-client.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ServerDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#ClientDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 ; if several builds, does it copy Output to new installer, too?
 

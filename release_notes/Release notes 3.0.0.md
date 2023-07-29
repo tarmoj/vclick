@@ -10,7 +10,7 @@ v3.0.0 brings vClick to a new level, with lots of fixes, better look (especially
 
 Downloads: <https://github.com/tarmoj/vclick/releases/tag/v3.0.0>.
 
-vClick CLient for **Android** can be installed also from Google Play.
+vClick CLient for **Android** can be installed also from [Google Play](https://play.google.com/store/apps/details?id=org.vclick.client2).
 
 vClick CLient for **iOS**- preparing an iOS version is possible but is waiting for kind [donations](https://www.paypal.com/paypalme/tarmojohannes) to pay for Apple Developer license, renting a recent virtual Mac and getting the app to App Store.
 
