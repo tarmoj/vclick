@@ -29,8 +29,10 @@ qt_add_qml_module(vclick-client
 )
 
 target_compile_definitions(vclick-client PRIVATE
-    APP_VERSION="3.0.0"
+    APP_VERSION=${PROJECT_VERSION}
 )
+
+message("APP VERSION: ${PROJECT_VERSION}")
 
 target_link_libraries(vclick-client PRIVATE
     Qt::Core
@@ -61,6 +63,7 @@ qt_add_resources(vclick-client "vclick-client"
         ${vclick-client_resource_files}
 )
 
+# very good platform for android testing (different models and OSs virtually: https://appetize.io/
 if(ANDROID)
     target_link_libraries(vclick-client PRIVATE
         Qt::CorePrivate
@@ -72,11 +75,15 @@ if(ANDROID)
     )
 
 # TRY something like  - does not seem to work
-set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_BUILD_ALL_ABIS true) # does not seem to affect
-set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_NAME ${APP_VERSION})
-set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
+#set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_BUILD_ALL_ABIS true) # does not seem to affect
+#set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_NAME ${APP_VERSION})
+#set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
 
-
+set_target_properties(vclick-client PROPERTIES
+            QT_ANDROID_VERSION_CODE 22
+            QT_ANDROID_BUILD_ALL_ABIS true
+            QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
+        )
 
 endif()
 
