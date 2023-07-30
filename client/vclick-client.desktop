@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment[en_US]=vClick client
+Comment=
+Exec=vclick-client
+GenericName[en_US]=vClick Client
+GenericName=vClick client
+Icon=vclick-client
+MimeType=
+Name[en_US]=vClick client
+Name=vClick client
+Categories=AudioVideo;
+StartupNotify=true
+Terminal=false
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

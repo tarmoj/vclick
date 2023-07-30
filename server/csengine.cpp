@@ -41,14 +41,8 @@ CsEngine::CsEngine(QObject *parent) : QObject(parent)
 CsEngine::~CsEngine()
 {
     //cs->Stop();
-    //delete cs;  // this is probably not necessary
 }
 
-
-//void CsEngine::setOrcSco(QString orc, QString sco)
-//{
-//	m_orc=orc; m_sco=sco;
-//}
 
 
 void CsEngine::startTime(int startSecond,bool countDown, QString soundFile)
@@ -93,13 +87,11 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
     if (isRunning) {
         //stop();
         qDebug()<<"vClick is running. Stopping now. Please press Start again!";
-        //QThread::sleep(1); // sleep and continue caused crash when start was pressed twice within one second.
         emit newNotification("Already running.", 1.0);
         return;
 	}
 	// check for starting bar number and construct a temporary score with necessary changes:
 	// load scoreFile
-	//QUrl scoreUrl(scoFile); //QUrl::fromLocalFile(scoFile); // to get rid of file:/// e
     QString testname = (scoFile.toString().startsWith("file:") ) ? scoFile.toLocalFile() : scoFile.path(); //":/csound/test.sco"; //scoreUrl.toLocalFile();
     QFile scoreFile(testname);
 
@@ -152,7 +144,6 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 			contents.replace( "#define REPTEMPO #60#", "#define REPTEMPO #" + tempo + "#"); // another version, since sometimes it is not #$TEMPO1# but #60# (Murail Winter Fragments)
 		}
 
-		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco"); // TODO: use temporary file! - see how not to close it too soon
         QString tempName = QDir::tempPath() + "/temp.sco";
         QFile tempFile(tempName);
 		if (tempFile.open(QFile::WriteOnly  |QFile::Text) ) {
@@ -185,7 +176,6 @@ void CsEngine::play(QString scoFile) {
 #endif
     Q_ASSERT(cs);
 
-	// must check here, if it is already running. stop if is running. Tink, see CsoundQT and test....
 	QString message;
     cs->CreateMessageBuffer(0); // also to stdout for debugging
 	// options from settings
@@ -206,7 +196,6 @@ void CsEngine::play(QString scoFile) {
 
 
 	if (!csoundOptions.contains("SFIDR") && !sfdir.isEmpty() && !csoundOptions.contains("null")) { // set SFDIR chosen in UI
-		//sfdir = (sfdir.toString().startsWith("file:") ) ? sfdir.toLocalFile() : sfdir.path();
 
         // for windows remove the first /
 #ifdef Q_OS_WIN
@@ -327,9 +316,7 @@ void CsEngine::setChannel(QString channel, double value) {
 double CsEngine::getChannel(QString channel)
 {
 	if (cs) {
-		double value = cs->GetChannel(channel.toLocal8Bit()); // value is
-//		if (channel=="tempo")
-//				qDebug()<<"channel: "<<channel << " value: "<<value;
+        double value = cs->GetChannel(channel.toLocal8Bit());
 		return value;
 	} else
 		return -1;
@@ -341,8 +328,7 @@ QString CsEngine::getStringChannel(QString channel)
 	char string[2048]; // to assume the message is not longer...
 	cs->GetStringChannel(channel.toLocal8Bit(),string);
 	return QString(string);
-	} else
-		return QString();
+    } else return QString();
 
 }
 

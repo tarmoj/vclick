@@ -10,10 +10,10 @@
 
 
 BINARY="vclick-server"
-BUILD_DIR="../build-vclick-server-Desktop_Qt_5_15_2_GCC_64bit-Release/bin/"
+BUILD_DIR="../build-vclick-server-Desktop_Qt_6_5_1_GCC_64bit-Release/bin/"
 # EXECUTABLE="$BUILD_DIR/bin/$BINARY"
 EXECUTABLE="$BUILD_DIR/$BINARY"
-VERSION="2.1.2"
+VERSION="3.0.0"
 CSOUND_PREFIX="/usr/local"
 CSOUND_PLUGINS_DIR="$CSOUND_PREFIX/lib/csound/plugins64-6.0" 
 BUNDLE_CSOUND=true # for now: always bundle Csound
@@ -34,7 +34,7 @@ LINUXDEPLOY="$HOME/bin/linuxdeploy-x86_64.AppImage"
 #1 export necessary environment variables
 export VERSION=$VERSION 
 export QML_SOURCES_PATHS="$SRC_DIR"; 
-
+export QMAKE=/home/tarmo/src/Qt/6.5.1/gcc_64/bin/qmake # for Qt6
 
 # correct desktop file -  instead of csoundqt as command use the actual binary name
 #TODO: desktop file path should be changed somehow! Not sure if it matters however...
@@ -45,7 +45,9 @@ export QML_SOURCES_PATHS="$SRC_DIR";
 #LIBPORTMIDI=$(locate --limit 1 libportmidi.so)
 
 
-$LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE  --icon-file=vclick-server.png --plugin=qt # --desktop-file=vclick-server.desktop
+$LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE --desktop-file=vclick-server.desktop  --icon-file=vclick-server.png 
+
+linuxdeploy-plugin-qt-x86_64.AppImage --appdir AppDir # QT business. Forr Qt6 does not work as --plugin=qt
 
 
 # copy Csound binary, plugins and and Csound Manual - probably copied by default
@@ -58,6 +60,6 @@ mkdir -p $APP_DIR/apprun-hooks
 echo 'export OPCODE6DIR64="${APPDIR}/usr/lib/csound/plugins64-6.0/"' >  $APP_DIR/apprun-hooks/csound-plugins-hook.sh
 
 # and create final AppImage
-$LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE  --icon-file=vclick-server.png --plugin=qt --output appimage # --desktop-file=vclick-server.desktop
+$LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE  --icon-file=vclick-server.png  --desktop-file=vclick-server.desktop --output appimage # --desktop-file=vclick-server.desktop
 
 

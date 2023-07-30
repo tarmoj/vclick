@@ -1,28 +1,21 @@
+23.07.23
 
+- kontrolli, kas Time - helifaili mängimine töötab
+- Windows heli (server) -  OK
+- Android Client -  About Dialog ei sule - Tehtud
+- MacOS build, iOS emulator (remote Mac)
+- Windows installer (lisa Client komponendid, nii ei saa, et copyd ühte kataloogi ja sealt läheb...)
+- release notes
+- video
+- teade veebi; veebi haldamine...
+- Android Build eri arhitektuuridega. -- requires cmake QT_ANDROID_BUILD_ALL_ABIS | Qt Core 6.5.2 https://doc.qt.io/qt-6/cmake-variable-qt-android-build-all-abis.html
+- Windows Client menuButton suurus mitte *1.5
+- webassembly -  disable sound
+- Mac//iOS - test MyIP (maybe show all that are found)
+-Client click Volume too high?
 
+In future: qosc requires more rewrite (get rid of warnings), for Qt6, move to separate repo
 
-Uus ikoon OK
-Versiooni number OK
-Help-about leht (Lisa veebileht, Csound, Qt)
-klient - numbrid keskele OK
-Android app nimetus vClick client OK
-License iga faili juurde TODO!
-? http://doc.qt.io/qtcreator/creator-tips.html#adding-a-license-header-template-for-c-code
-? http://stackoverflow.com/questions/12279425/qtcreator-central-header-for-source-code-copyright-author
-
-
-- mõtle, kuidas teha, et ka 1/4 saaks alajaotusi mängida, ja ka siis, kui selle kestus nt 1.5 või mistahes ühik
-- server  - kui fail audioga, siis sea SFDIR orc parameetrisse
-- eraldi dialoog OSC aadresside jaosk. Tabel: / instrument / aadress / viivis . Erista, mis määratud, mis juurde tulnud (väljad read-only, kiri tuhmim vms)
-- Csound - eraldi moodulid helile (null / jack ) <- vt CsoundQt kood 
-
-- Csoundis proge eraldi kanalid // ? sün // ? kuidas saata info sündmusest? poratiivsuse mõttes python v osc ei ole head... vbolla sündmuste kanalid: red, green, blue - kui mitte 0 siis duration; seal kõrval kanal "channels", kus milliste bittidega saata [kas võib juhtuda, et seal kaks korraga? liida, muidu 0]; bar, beat - csound seab numbri, host loeb ja kustutab 0-i.
-
-
-
-
-
-Raspberry?
 
 metronoomi ikoon:
 License: Linkware (Backlink to http://www.icons-land.com required)

@@ -36,9 +36,10 @@
 
 #define OSCPORT 57878
 
+// for changes in Qt6, see: https://www.qt.io/blog/qt-extras-modules-in-qt-6
 #ifdef Q_OS_ANDROID
-	#include <QtAndroid>
-	#include <QAndroidJniEnvironment>
+    #include <QtCore/private/qandroidextras_p.h>
+    #include <QJniEnvironment>
 #endif
 
 
@@ -57,21 +58,19 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_ANDROID
 	//keep screen on:
-	QAndroidJniObject activity = QtAndroid::androidActivity();
+    QJniObject activity =  QNativeInterface::QAndroidApplication::context(); //  QtAndroid::androidActivity();
 	if (activity.isValid()) {
-		QAndroidJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
+        QJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
 
 		if (window.isValid()) {
 			const int FLAG_KEEP_SCREEN_ON = 128;
 			window.callMethod<void>("addFlags", "(I)V", FLAG_KEEP_SCREEN_ON);
 		}
-		QAndroidJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
+        QJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
 	}
 #endif
 
 
-	//SettingsHandler settings;
-	//settings.setSettingsValue("serverAddress","ws:test");
 	app.setOrganizationName("vclick"); // for settings
 	app.setApplicationName("client");
 	app.setWindowIcon(QIcon(":/vclick-client.png"));

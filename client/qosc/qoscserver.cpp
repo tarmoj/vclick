@@ -19,7 +19,7 @@
 #include "qoscserver.h"
 
 #include <QDebug>
-#include <QtCore/QRegExp>
+#include <QRegularExpression>
 #include <QtNetwork/QUdpSocket>
 
 QOscServer::QOscServer( quint16 port, QObject* p )
@@ -121,13 +121,13 @@ void QOscServer::readyRead() {
 		replacements[ "?" ] = ".";
 
 		foreach( QString rep, replacements.keys() )
-			path.replace( rep, replacements[ rep ] );
+            path.replace( rep, replacements[ rep ] );
 
 		//qDebug() << " after transformation to OSC-RegExp path is" << path;
 
-		QRegExp exp( path );
+        QRegularExpression exp( path );
 		foreach( PathObject* obj, paths ) {
-			if ( exp.exactMatch( obj->_path ) )
+            if ( exp.match(obj->_path).hasMatch() )
 				obj->signalData( arguments );
 		}
 	}

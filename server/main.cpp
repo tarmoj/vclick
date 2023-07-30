@@ -65,8 +65,9 @@ int main(int argc, char *argv[])
 #ifdef CONSOLE_APP
 	QCoreApplication app(argc, argv);
 #else
-	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // maybe bad for destop?
-	QApplication app(argc, argv);
+    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QApplication app(argc, argv);
 
 	//app.setFont(QFont("Helvetica")); // otherwise OSX might do strange things
 	app.setWindowIcon(QIcon(":/vclick-server.png"));
@@ -148,7 +149,7 @@ int main(int argc, char *argv[])
 	QObject::connect(&app, SIGNAL(aboutToQuit()), csound, SLOT(stop()) ); // BETTER: closeEvent somwhere, but no MainWindow...
 
 
-	QObject::connect(csound,&CsEngine::newBeatBar, wsServer, &WsServer::handleBeatBar ); // QT5 style of connection
+    QObject::connect(csound,&CsEngine::newBeatBar, wsServer, &WsServer::handleBeatBar );
 	QObject::connect(csound,&CsEngine::newLed, wsServer, &WsServer::handleLed );
 	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
 	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
@@ -191,8 +192,6 @@ int main(int argc, char *argv[])
 	QObject::connect(jackReader,  SIGNAL(newTempo(double)), wsServer, SLOT(handleTempo(double)));
 
 #endif
-
-
 
     return app.exec();
 }

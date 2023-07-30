@@ -90,19 +90,19 @@ float QOscBase::toFloat( const QByteArray& b ) {
 }
 
 void QOscBase::oscMessageParseArgs( const QVariant& data, QString& argtypes, QByteArray& arguments ) {
-	if ( data.type() == QVariant::Int ) {
+    if ( data.typeId() == QMetaType::Int ) {
 		argtypes += "i";
 		arguments = arguments + fromInt32( data.toInt() );
 	}
-	if ( data.type() == QVariant::Double ) {
+    if ( data.typeId() == QMetaType::Double ) {
 		argtypes += "f";
 		arguments += fromFloat( data.toDouble() );
 	}
-	if ( data.type() == QVariant::String ) {
+    if ( data.typeId() == QMetaType::QString ) {
 		argtypes += "s";
 		arguments += fromString( data.toString() );
 	}
-	if ( data.type() == QVariant::List ) {
+    if ( data.typeId() == QMetaType::QVariantList ) {
 		QList<QVariant> list = data.toList();
 		foreach( QVariant v, list )
 			oscMessageParseArgs( v, argtypes, arguments );

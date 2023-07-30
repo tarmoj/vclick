@@ -1,6 +1,8 @@
+lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
+
 TEMPLATE = app
 
-VERSION = 2.2.0
+VERSION = 3.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
@@ -24,7 +26,11 @@ linux|android: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
-mac: ICON = vclick-server.icns
+mac: {
+    ICON = vclick-server.icns
+	QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+}
+
 win32: RC_FILE =  winicon.rc # for windows icon
 
 DESTDIR=bin #Target file directory
@@ -74,6 +80,7 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 
+# android build not fixed to Qt6 yet. Plan to Drop it.
 android {
   QT += androidextras
   INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library
@@ -88,6 +95,7 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
+    folder.png \
     winicon.rc \
     android/AndroidManifest.xml \
     android/gradle/wrapper/gradle-wrapper.jar \
@@ -127,7 +135,7 @@ win32 {
     # make dir plugins64 in output bin directory and copy rtpa.dll and osc.dll there
 #missing libs after windeployqt: csound64.dll portaduio_x64.dll (to bin)
     # enne installeri tegemist kopeeri klientist kõik deployga sinna saanud failid serveri bin-i
-    INSTALLS += first
+	INSTALLS += first
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

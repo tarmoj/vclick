@@ -24,6 +24,7 @@
 #include <QtCore/QDebug>
 #include <QDir>
 #include <QNetworkInterface>
+#include <QRegularExpression>
 
 
 QT_USE_NAMESPACE
@@ -76,7 +77,7 @@ void WsServer::updateScoreFiles()
     } else {
         scoreFiles = userScoreFiles.split(";");
     }
-    qDebug() << Q_FUNC_INFO << scoreFiles;
+    //qDebug() << Q_FUNC_INFO << scoreFiles;
 
 }
 
@@ -85,7 +86,6 @@ void WsServer::onNewConnection()
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
 
     connect(pSocket, &QWebSocket::textMessageReceived, this, &WsServer::processTextMessage);
-    //connect(pSocket, &QWebSocket::binaryMessageReceived, this, &WsServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &WsServer::socketDisconnected);
 
     m_clients << pSocket;
@@ -173,9 +173,8 @@ void WsServer::processTextMessage(QString message)
 
 		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
 #endif
-        // TODO: the start problem is here: sometimes there is no scoreFile
+
         if (!useTime) {
-            // Something wrong here: ....
             emit start(scoreFile); // message to QML to set the scorename and start Csound // NB! Was QString before
         } else {
 #ifdef CONSOLE_APP
@@ -308,13 +307,6 @@ void WsServer::processTextMessage(QString message)
 
 }
 
-//void WsServer::processBinaryMessage(QByteArray message)
-//{
-//    QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-//    if (pClient) {
-//        pClient->sendBinaryMessage(message);
-//    }
-//}
 
 void WsServer::socketDisconnected()
 {
@@ -340,8 +332,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 		}
 	}
 	if (sendWs) {
-		QString message;
-		message.sprintf("b %d %d", bar, beat); // short form to send out for javascript and app
+        QString message = QString("b %1 %2 ").arg(bar).arg(beat);
 		send2all(message);
 	}
 
@@ -360,9 +351,8 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	}
 
 	if (sendWs) {
-		QString message;
-		message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
-		send2all(message);
+        QString message = QString("l %1 %2").arg(ledNumber).arg(duration);
+        send2all(message);
 	}
 
 
@@ -388,12 +378,9 @@ void WsServer::handleNotification(QString message, float duration)
 
 void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
-	//tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
 	//qDebug()<<"Tempo: "<<tempo;
 	if (sendOsc) {
 		foreach(QOscClient * target, m_oscClients) {
-			//QList<QVariant> data;
-			//data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/tempo", tempo);
 		}
 
@@ -433,9 +420,7 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
     int instrument = 0;
     foreach (QString address, addresses.split(",")) {
         address = address.simplified();
-        int index = -1;
-        index = QRegExp("(^[0-9]{1,2}):").indexIn(address); // should I check for port at all?
-        if (index>=0) {
+        if (QRegularExpression("(^[0-9]{1,2}):").match(address).hasMatch()) {
 
             instrument = address.split(":")[0].toInt();
             address = address.split(":")[1];
@@ -511,7 +496,7 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-	foreach (QWebSocket *socket, m_clients) {
+    foreach (QWebSocket *socket, m_clients) {
 		socket->sendTextMessage(message);
 	}
 }
@@ -540,9 +525,9 @@ QString WsServer::getOscAddresses()
 {
 	if (settings) {
 		QVariant value = settings->value("oscaddresses");
-		if (value.type()==QMetaType::QString)
+        if (value.typeId()==QMetaType::QString)
 			return value.toString();
-		else if (value.type()==QMetaType::QStringList)
+        else if (value.typeId()==QMetaType::QStringList)
 			return value.toStringList().join(",");
 		else
 			return QString();
