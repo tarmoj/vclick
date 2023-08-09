@@ -18,7 +18,3 @@ Please have a look at  `known issues <pages/download.html#issues011>`_, be activ
 
 See more: `Getting started <pages/getting-started.html>`_
 
-Or watch a demo in youtube 
-
-.. youtube:: 80av5Aq36Gk
-

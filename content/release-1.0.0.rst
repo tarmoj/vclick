@@ -28,9 +28,6 @@ It is supposed to be fully functional and ready to use, including multichannel m
 
 Windows, MacOS and source code downloads are `here <https://github.com/tarmoj/vclick/releases/tag/v1.0.0>`_
 
-See a demo:
-
-.. youtube:: -w_sGl_7SuQ
 
 
 See also: `Getting started <pages/getting-started.html>`_

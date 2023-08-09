@@ -28,7 +28,6 @@ See more about score file syntax etc [here](score-files.html).
 **Páll Ragnar Pállson** ["Lucidity"](../scores/lucidity.sco)
 
 
-
 <br>
 ### Private scores
 
@@ -36,3 +35,6 @@ See more about score file syntax etc [here](score-files.html).
 
 **Brian Ferneyhough** ["In nomine a 12"](../scores/in-nomine-a-12.sco)
 
+<br>
+
+There are more if you open and browse the folder [scores](../scores/)

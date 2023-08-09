@@ -115,40 +115,37 @@
 <p>* Led numbers: 0 - red, 1 -  green, 2 - blue<br>
 ** If no duration given, 4 seconds is taken as default.</p>
 <p>For example (using oscsend on Linux), send following messages to client with IP address 192.168.1.151:</p>
-<div class="highlight"><pre><span></span>oscsend 192.168.1.151 87878 /metronome/led if 0 0.5
+<div class="highlight"><pre><span></span><code><span class="nv">oscsend</span><span class="w"> </span><span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">1</span>.<span class="mi">151</span><span class="w"> </span><span class="mi">87878</span><span class="w"> </span><span class="o">/</span><span class="nv">metronome</span><span class="o">/</span><span class="nv">led</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span>.<span class="mi">5</span>
 
-    - blink red led for 0.5 seconds
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">blink</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="nv">led</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="mi">0</span>.<span class="mi">5</span><span class="w"> </span><span class="nv">seconds</span>
 
-oscsend 192.168.1.151 87878 /metronome/beatbar ii 12 4
+<span class="nv">oscsend</span><span class="w"> </span><span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">1</span>.<span class="mi">151</span><span class="w"> </span><span class="mi">87878</span><span class="w"> </span><span class="o">/</span><span class="nv">metronome</span><span class="o">/</span><span class="nv">beatbar</span><span class="w"> </span><span class="nv">ii</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="mi">4</span>
 
-    - set bar number to 12 and beat to 4
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="nv">set</span><span class="w"> </span><span class="nv">bar</span><span class="w"> </span><span class="nv">number</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">beat</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="mi">4</span>
 
-oscsend 192.168.1.151 87878 /metronome/notification s &quot;Are you there?&quot;
+<span class="nv">oscsend</span><span class="w"> </span><span class="mi">192</span>.<span class="mi">168</span>.<span class="mi">1</span>.<span class="mi">151</span><span class="w"> </span><span class="mi">87878</span><span class="w"> </span><span class="o">/</span><span class="nv">metronome</span><span class="o">/</span><span class="nv">notification</span><span class="w"> </span><span class="nv">s</span><span class="w"> </span><span class="s2">&quot;Are you there?&quot;</span>
 
-    - Send message, will be displayed for 4 seconds.
-</pre></div>
-
+<span class="w">    </span><span class="o">-</span><span class="w"> </span><span class="k">Send</span><span class="w"> </span><span class="nv">message</span>,<span class="w"> </span><span class="nv">will</span><span class="w"> </span><span class="nv">be</span><span class="w"> </span><span class="nv">displayed</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="nv">seconds</span>.
+</code></pre></div>
 
 <h3>The Server</h3>
 <p>The <strong>eclick Server</strong> is running a websocket server on port 6006. It is used mostly for registering clients (clients send a "hello" websocket message when "Hello, Server" button is pressed), but it can be used also in two other ways:</p>
 <p>It can send out websocket messages about beats, leds etc, when "Send ws" is ticked on the Server window. This way the client can be aslo be web based. In fact I developed the system at first this way - the users don't need a special app but just open one page in their browser. It works but is less stable. These files are not part of the git-project, if you are interested to have a look or try it out, please send me an e-mail.</p>
 <p>Also eClick server can be driven via websockest messages - you can start/stop the playback, send in messages about beats, led blinks, tempo changes etc and the server will send according OSC messages to all registered clients.  This way you can develop your own programs, scipts or web applications that can work together with eClick system according to your better needs.</p>
 <p>The messages expected are strings in following format:</p>
-<div class="highlight"><pre><span></span>&quot;start&quot; -  as if &quot;Start&quot; had been pressed on Server. Starting from given bar not implemented yet.
-&quot;stop&quot; -  as if &quot;Stop&quot; had been pressed on Server
-&quot;bar &lt; number&gt;&quot; - set bar number to &quot;number&quot;
-&quot;beat &lt; number&gt;&quot; - set beat number to &quot;number&quot;
-&quot;duration &lt; duration&gt;&quot; -  set duration of either led blink or notification
-&quot;led &lt; number&gt; &quot; - blink led number 0-red|1-green|2-blue for &lt; duration&gt; seconds
-&quot;tempo &lt; tempo&gt;&quot; -  set tempo
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="s">&quot;start&quot;</span><span class="w"> </span><span class="o">-</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="s">&quot;Start&quot;</span><span class="w"> </span><span class="nx">had</span><span class="w"> </span><span class="nx">been</span><span class="w"> </span><span class="nx">pressed</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">Server</span><span class="p">.</span><span class="w"> </span><span class="nx">Starting</span><span class="w"> </span><span class="nx">from</span><span class="w"> </span><span class="nx">given</span><span class="w"> </span><span class="nx">bar</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="nx">implemented</span><span class="w"> </span><span class="nx">yet</span><span class="p">.</span>
+<span class="s">&quot;stop&quot;</span><span class="w"> </span><span class="o">-</span><span class="w">  </span><span class="k">as</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="s">&quot;Stop&quot;</span><span class="w"> </span><span class="nx">had</span><span class="w"> </span><span class="nx">been</span><span class="w"> </span><span class="nx">pressed</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">Server</span>
+<span class="s">&quot;bar &lt; number&gt;&quot;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">set</span><span class="w"> </span><span class="nx">bar</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="s">&quot;number&quot;</span>
+<span class="s">&quot;beat &lt; number&gt;&quot;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">set</span><span class="w"> </span><span class="nx">beat</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="s">&quot;number&quot;</span>
+<span class="s">&quot;duration &lt; duration&gt;&quot;</span><span class="w"> </span><span class="o">-</span><span class="w">  </span><span class="nx">set</span><span class="w"> </span><span class="nx">duration</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">either</span><span class="w"> </span><span class="nx">led</span><span class="w"> </span><span class="nx">blink</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nx">notification</span>
+<span class="s">&quot;led &lt; number&gt; &quot;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">blink</span><span class="w"> </span><span class="nx">led</span><span class="w"> </span><span class="nx">number</span><span class="w"> </span><span class="mi">0</span><span class="o">-</span><span class="nx">red</span><span class="o">|</span><span class="mi">1</span><span class="o">-</span><span class="nx">green</span><span class="o">|</span><span class="mi">2</span><span class="o">-</span><span class="nx">blue</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nx">duration</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">seconds</span>
+<span class="s">&quot;tempo &lt; tempo&gt;&quot;</span><span class="w"> </span><span class="o">-</span><span class="w">  </span><span class="nx">set</span><span class="w"> </span><span class="nx">tempo</span>
+</code></pre></div>
 
 <p>The info can be combined also into one string:</p>
-<div class="highlight"><pre><span></span>&quot;bar 10 beat 4 led 1 druation 0.25&quot;
-    -set bar to 10, beat 4, blink green led for 0.25 seconds
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;bar 10 beat 4 led 1 druation 0.25&quot;</span>
+<span class="w">    </span><span class="o">-</span><span class="nv">set</span><span class="w"> </span><span class="nv">bar</span><span class="w"> </span><span class="nv">to</span><span class="w"> </span><span class="mi">10</span>,<span class="w"> </span><span class="nv">beat</span><span class="w"> </span><span class="mi">4</span>,<span class="w"> </span><span class="nv">blink</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="nv">led</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="mi">0</span>.<span class="mi">25</span><span class="w"> </span><span class="nv">seconds</span>
+</code></pre></div>
 
 <p><br></p>
 <p>The source code is available at <a href="https://github.com/tarmoj/vclick">https://github.com/tarmoj/vclick</a>. Feel free to study it, improve or develop further or use in any other context! (obeying to GNU GPL license included in the sources).</p>  </div>
