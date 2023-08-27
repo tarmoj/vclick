@@ -16,7 +16,7 @@ v3.0.0 brings vClick to a new level, with lots of fixes, better look (especially
 
 See demo about vClick:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="898" height="505" src="https://www.youtube.com/embed/5Xw0KSh3TMQ" title="vClick v3.0.0 Presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 
 The source and binaries can be downloaded from: <https://github.com/tarmoj/vclick/releases/tag/v3.0.0>.

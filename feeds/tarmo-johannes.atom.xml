@@ -5,7 +5,7 @@
 &lt;p&gt;&lt;a href="pages/about.html"&gt;vClick&lt;/a&gt; is a free wireless visual click-track system for musicians.   &lt;/p&gt;
 &lt;p&gt;v3.0.0 brings vClick to a new level, with lots of fixes, better look (especially in Client) and new possibilities. v3.0.0 is meant to be built with Qt6. The last version (very close in functionality) that builds still with Qt5 is v2.2.0 - if you have an older system, you might need to stick to that.&lt;/p&gt;
 &lt;p&gt;See demo about vClick:&lt;/p&gt;
-&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/pdnaTG0Tk3U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;iframe width="898" height="505" src="https://www.youtube.com/embed/5Xw0KSh3TMQ" title="vClick v3.0.0 Presentation" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen&gt;&lt;/iframe&gt;
 
 &lt;p&gt;The source and binaries can be downloaded from: &lt;a href="https://github.com/tarmoj/vclick/releases/tag/v3.0.0"&gt;https://github.com/tarmoj/vclick/releases/tag/v3.0.0&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;vClick CLient for &lt;strong&gt;Android&lt;/strong&gt; can be installed also from &lt;a href="https://play.google.com/store/apps/details?id=org.vclick.client2"&gt;Google Play&lt;/a&gt;.&lt;/p&gt;
