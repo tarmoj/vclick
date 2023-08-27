@@ -9,7 +9,7 @@ This is a bit more techical stuff but probably interesting to many people, who u
 
 ###The Client
 
-The client is listening to **incoming OSC messages on port 87878**. (It was 8008 for version 0.1.* but must have been changed from version 0.2.0 on).
+The client is listening by default to **incoming OSC messages on port 57878**. (It was 87878 for version 1.* but the port can be set from the Client's menu.
 
 
 The messages' format is:
@@ -29,15 +29,15 @@ The types stand for: i - integer, f- floating point number, s - string.
 
 For example (using oscsend on Linux), send following messages to client with IP address 192.168.1.151:
 
-	oscsend 192.168.1.151 87878 /metronome/led if 0 0.5
+	oscsend 192.168.1.151 57878 /metronome/led if 0 0.5
 
 		- blink red led for 0.5 seconds
 
-	oscsend 192.168.1.151 87878 /metronome/beatbar ii 12 4
+	oscsend 192.168.1.151 57878 /metronome/beatbar ii 12 4
 
 		- set bar number to 12 and beat to 4
 
-	oscsend 192.168.1.151 87878 /metronome/notification s "Are you there?"
+	oscsend 192.168.1.151 57878 /metronome/notification s "Are you there?"
 
 		- Send message, will be displayed for 4 seconds.
 
@@ -46,21 +46,22 @@ For example (using oscsend on Linux), send following messages to client with IP 
 
 ###The Server	
 
-The **eclick Server** is running a websocket server on port 6006. It is used mostly for registering clients (clients send a "hello" websocket message when "Hello, Server" button is pressed), but it can be used also in two other ways:
+The **vclick Server** is running a websocket server on port 6006. It is used mostly for registering clients (clients send a "hello" websocket message when "Hello, Server" button is pressed), but it can be used also in two other ways:
 
 It can send out websocket messages about beats, leds etc, when "Send ws" is ticked on the Server window. This way the client can be aslo be web based. In fact I developed the system at first this way - the users don't need a special app but just open one page in their browser. It works but is less stable. These files are not part of the git-project, if you are interested to have a look or try it out, please send me an e-mail.
 
-Also eClick server can be driven via websockest messages - you can start/stop the playback, send in messages about beats, led blinks, tempo changes etc and the server will send according OSC messages to all registered clients.  This way you can develop your own programs, scipts or web applications that can work together with eClick system according to your better needs.
+Also vClick server can be driven via websockest messages - you can start/stop the playback, send in messages about beats, led blinks, tempo changes etc and the server will send according OSC messages to all registered clients.  This way you can develop your own programs, scripts or web applications that can work together with vClick system according to your better needs.
 
 The messages expected are strings in following format:
 
 	"start" -  as if "Start" had been pressed on Server. Starting from given bar not implemented yet.
 	"stop" -  as if "Stop" had been pressed on Server
-	"bar < number>" - set bar number to "number"
-	"beat < number>" - set beat number to "number"
-	"duration < duration>" -  set duration of either led blink or notification
-	"led < number> " - blink led number 0-red|1-green|2-blue for < duration> seconds
-	"tempo < tempo>" -  set tempo
+	"bar <number>" - set bar number to "number"
+	"beat <number>" - set beat number to "number"
+	"duration <duration>" -  set duration of either led blink or notification
+	"led < number> <duration>" - blink led number 0-red|1-green|2-blue for < duration> seconds
+	"tempo <tempo>" -  set tempo
+	"notification <text>" -  send notification, shown for <durtaion>  seconds.
 
 
 The info can be combined also into one string:
