@@ -614,8 +614,9 @@ ApplicationWindow {
             z:2
             Column {
                 anchors.fill: parent
+                anchors.leftMargin: 5
                 spacing:10
-                RowLayout {
+                Flow {
 
                     id: controlRow
 
