@@ -53,6 +53,15 @@ ApplicationWindow {
             Column {
                 x: 5
                 width: parent.width-10
+                spacing: 2
+
+                MenuItem {
+                    text: qsTr("Getting started")
+                    onTriggered: Qt.openUrlExternally("https://tarmoj.github.io/vclick/pages/getting-started.html#getting-started")
+                }
+
+
+
 
                 Label { text: qsTr("OSC port:"); }
                 Row { // Not shown with Qt.labs.platform...
@@ -117,13 +126,13 @@ ApplicationWindow {
                     text: qsTr("Update IP address")
                     onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
                 }
-                MenuItem {
-                    text: qsTr("Show/Hide test leds")
-                    onTriggered:  {
-                        testRow.visible = !testRow.visible;
-                        mainMenu.close()
-                    }
-                }
+//                MenuItem {
+//                    text: qsTr("Show/Hide test leds")
+//                    onTriggered:  {
+//                        testRow.visible = !testRow.visible;
+//                        mainMenu.close()
+//                    }
+//                }
                 MenuItem {
                     text: qsTr("Show delay row")
                     onTriggered: {
@@ -138,6 +147,7 @@ ApplicationWindow {
                         mainMenu.close()
                     }
                 }
+
                 MenuItem {
                     text: qsTr("About")
                     onTriggered: {
@@ -146,6 +156,12 @@ ApplicationWindow {
                         mainMenu.close()
                     }
                 }
+
+                MenuItem {
+                 text: qsTr("Buy me a coffee")
+                 onTriggered: Qt.openUrlExternally("https://ko-fi.com/tarmojohannes")
+                }
+
                 MenuItem {
                     text: qsTr("Exit")
                     onTriggered: Qt.quit();
