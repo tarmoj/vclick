@@ -14,5 +14,9 @@
             <meta-data android:name="android.app.extract_android_style" android:value="minimal"/>
         </activity>
     </application>
+    <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+        <background android:drawable="@color/ic_launcher_background" />
+        <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    </adaptive-icon>
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
 </manifest>

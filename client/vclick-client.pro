@@ -4,13 +4,13 @@ TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 3.0.0
+VERSION = 3.0.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 
 #!NB use cmake to build for android qt Qt6! (supports multi-abi)
 ANDROID_VERSION_NAME = $$VERSION
-ANDROID_VERSION_CODE = 22 # build number
+ANDROID_VERSION_CODE = 23 # build number
 #ANDROID_APP_NAME = "vClick Client"
 
 

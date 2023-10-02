@@ -1,3 +1,10 @@
 build-*
 *.backup
 *.pro.user
+*.pro.user.*
+*.txt.user
+*.copy
+client/for-google-play
+client/ic_launcher-icons
+*.old
+
