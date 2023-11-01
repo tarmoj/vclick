@@ -47,8 +47,8 @@ ApplicationWindow {
         Menu {
             id: mainMenu
             title: qsTr("Menu")
-            width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
-
+            //width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
+            width: oscPortRow.width + 20
 
             Column {
                 x: 5
@@ -65,6 +65,7 @@ ApplicationWindow {
 
                 Label { text: qsTr("OSC port:"); }
                 Row { // Not shown with Qt.labs.platform...
+                    id: oscPortRow
                     spacing: 4
                     SpinBox {
                         id: oscPortSpinbox;
