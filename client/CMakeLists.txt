@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vclick-client VERSION 3.0.0 LANGUAGES C CXX)
+project(vclick-client VERSION 3.0.1 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -29,7 +29,7 @@ qt_add_qml_module(vclick-client
 )
 
 target_compile_definitions(vclick-client PRIVATE
-    APP_VERSION=${PROJECT_VERSION}
+    APP_VERSION="${PROJECT_VERSION}"
 )
 
 message("APP VERSION: ${PROJECT_VERSION}")

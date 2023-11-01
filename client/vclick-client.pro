@@ -10,7 +10,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #!NB use cmake to build for android qt Qt6! (supports multi-abi)
 ANDROID_VERSION_NAME = $$VERSION
-ANDROID_VERSION_CODE = 23 # build number
+ANDROID_VERSION_CODE = 24 # build number
 #ANDROID_APP_NAME = "vClick Client"
 
 
