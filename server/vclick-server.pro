@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-VERSION = 2.2.1
+VERSION = 2.2.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server

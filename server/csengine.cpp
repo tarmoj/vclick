@@ -227,8 +227,9 @@ void CsEngine::play(QString scoFile) {
 #endif
 
 
-	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
-	if (!result && !oscLineToCompile.isEmpty()) {
+    int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+    tempOrcFile->close();
+    if (!result && !oscLineToCompile.isEmpty()) {
 		cs->CompileOrc(oscLineToCompile.toLocal8Bit());
 	}
 	while (cs->GetMessageCnt()>0) { // HOW to get error message here?
