@@ -47,7 +47,8 @@ signals:
 	void newBeatBar(int bar, int beat);
 	void newLed(int ledNumber, float duration);
 	void newNotification(QString message, float duration);
-	void newTempo(double tempo); // TODO: change to double/float
+    void newTempo(double tempo);
+    void newStartMessage();
 	void csoundMessage(QString message);
 
 public slots:
@@ -72,7 +73,7 @@ private:
 #else
 	Csound  *cs;
 #endif
-	QString m_sco, m_orc, m_options; // resolve later
+    QString m_sco, m_orc, m_options;
 	bool stopNow, isRunning;
 	QString SFDIR, oscLineToCompile;
 	int oscPort;

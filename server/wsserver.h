@@ -90,6 +90,8 @@ public Q_SLOTS:
 	void handleNotification(QString message, float duration=4);
 	void handleTempo(double tempo); // TODO: change to double/float
 	void setScoreIndex(int index);
+    void sendDawStartCommand();
+    void sendDawStopCommand();
 
 	void setOscPort(int port);
 
@@ -102,6 +104,7 @@ private:
     QHash <QString, int> m_clientsHash;
 	QSettings * settings;
 	QList <QOscClient *> m_oscClients;
+    QOscClient * m_dawClient;
 	void createOscClientsList(QString addresses);
     void createOscClientsList(); // takes data from m_clientsHash
 	QStringList scoreFiles;

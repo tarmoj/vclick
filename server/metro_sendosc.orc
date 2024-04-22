@@ -52,6 +52,7 @@ gSnotification chnexport "notification",1
 gkInstrument chnexport "channels",1
 gkNewNotification chnexport "new_notification",1
 gkVolume chnexport "volume", 1
+gkStart chnexport "start", 1
 
 instr 1, tempochange ; change tempo: i 1 0 <duration>|0 <starttempo> <endtempo>|0 <duration_of_change_beats>|0
   	istarttmp=p4
@@ -328,4 +329,12 @@ instr 999, test
 	
 	
 endin
+
+; notifies about start -  must be added to the score to the beginning of play block
+instr start
+	p3 = 1/kr
+	chnset 1, "start"
+endin
+
+
 

@@ -45,6 +45,9 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
 	}
 
+    //temporary: hardcode daw client:
+    m_dawClient = new QOscClient(QHostAddress::LocalHost, 8000, this);
+
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
 	// if used as no-gui server application, always send ws out, too
@@ -398,8 +401,23 @@ void WsServer::setScoreIndex(int index)
 	if (index>=0 && index<scoreFiles.count()) {
 		scoreIndex = index;
 	} else {
-		qDebug() << "Cannot set score index: " << index;
-	}
+        qDebug() << "Cannot set score index: " << index;
+    }
+}
+
+void WsServer::sendDawStartCommand()
+{
+    qDebug() << Q_FUNC_INFO;
+    if (m_dawClient) {
+        m_dawClient->sendData("/start");
+    }
+}
+
+void WsServer::sendDawStopCommand()
+{
+    if (m_dawClient) {
+        m_dawClient->sendData("/stop");
+    }
 }
 
 

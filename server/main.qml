@@ -687,6 +687,7 @@ ApplicationWindow {
                                 console.log("executing command: ", stopCommand)
                                 wsServer.runSystemCommand(stopCommand)
                             }
+                            wsServer.sendDawStopCommand();
                         }
                     }
 

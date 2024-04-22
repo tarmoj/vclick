@@ -123,6 +123,12 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 		}
 
+        // NB! Experimental -  add a line to notify about start (for signalling a DAW)
+        int advanceIndex = contents.indexOf(";ADVANCE");
+        if (advanceIndex>=0) {
+            contents.insert(advanceIndex, "i \"start\" 0 0.1 \n"  ); // instr "start" set channel "start" to 1 so that vClick server can read it
+        }
+
 		if (startBar>1) {
 			QString tempo = "#TEMPO1#";
 			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
@@ -232,8 +238,8 @@ void CsEngine::play(QString scoFile) {
 
     if (!result ) {
 		isRunning = true;
-		double bar, beat, tempo, flagUp; // flagUp - for how many seconds show a new notification
-		double oldTempo=0, oldBar=-1, oldBeat=-1;
+        double bar, beat, tempo, flagUp, start; // flagUp - for how many seconds show a new notification
+        double oldTempo=0, oldBar=-1, oldBeat=-1, oldStart=0;
 		QStringList leds = QStringList() <<"red"<<"green"<<"blue";
 		while (cs->PerformKsmps()==0 && !stopNow) {
 			// TODO: move websocket sepecific stuff to separate block and handle it only if nexcessary (Send OSC/Send WS is selected)
@@ -269,6 +275,14 @@ void CsEngine::play(QString scoFile) {
 				emit newNotification(notification, flagUp);
 				setChannel("new_notification",0);
 			}
+
+            // start flag - used to send OSC message to a DAW (like Reaper)
+            start = getChannel("start"); // duration > 0 if new message in the string channel
+            if (start>0) {
+                qDebug()<<"Start triggered from score.";
+                emit newStartMessage();
+                setChannel("start",0);
+            }
 
 			if (cs->GetMessageCnt()>0) {
                 message = QString(cs->GetFirstMessage());

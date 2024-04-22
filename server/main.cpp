@@ -154,8 +154,11 @@ int main(int argc, char *argv[])
 	QObject::connect(csound,&CsEngine::newTempo, wsServer, &WsServer::handleTempo );
 	QObject::connect(csound,&CsEngine::newNotification, wsServer, &WsServer::handleNotification );
 	QObject::connect(csound,&CsEngine::csoundMessage, wsServer, &WsServer::csoundMessage );
+    QObject::connect(csound,&CsEngine::newStartMessage, wsServer, &WsServer::sendDawStartCommand );
 
 	QObject::connect(wsServer ,&WsServer::newOscPort, csound, &CsEngine::setOscPort );
+
+
 
 #ifdef CONSOLE_APP
 	QObject::connect(wsServer, &WsServer::stop, csound, &CsEngine::stop);
