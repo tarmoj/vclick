@@ -217,6 +217,7 @@ void CsEngine::play(QString scoFile) {
 
 
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );
+    tempOrcFile->close();
 	if (!result && !oscLineToCompile.isEmpty()) {
 		cs->CompileOrc(oscLineToCompile.toLocal8Bit());
 	}

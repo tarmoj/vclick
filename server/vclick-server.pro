@@ -2,7 +2,7 @@ lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
 TEMPLATE = app
 
-VERSION = 3.0.0
+VERSION = 3.0.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
