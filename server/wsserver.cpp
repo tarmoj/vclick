@@ -36,7 +36,8 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
     m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
                                             QWebSocketServer::NonSecureMode, this)),
     m_clients(),
-    m_oscClients(), userScoreFiles(userScoreFiles)
+    m_oscClients(),
+    m_dawClient(nullptr), userScoreFiles(userScoreFiles)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
@@ -46,7 +47,7 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
 	}
 
     //temporary: hardcode daw client:
-    m_dawClient = new QOscClient(QHostAddress::LocalHost, 8000, this);
+    setDawAddress("127.0.0.1", 8000);
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
@@ -195,6 +196,7 @@ void WsServer::processTextMessage(QString message)
 		sendOsc = true;
 		handleNotification("Stop", 2);
 		sendOsc = oldSendOsc;
+        sendDawStopCommand();
 
 	}
 
@@ -218,6 +220,7 @@ void WsServer::processTextMessage(QString message)
 		sendOsc = true;
 		handleNotification(QString("Bar %1").arg(startBar), 2);
 		sendOsc = oldSendOsc;
+        sendDawSeekCommand(startBar);
 	}
 
     if (messageParts[0]=="useScore") {
@@ -409,7 +412,7 @@ void WsServer::sendDawStartCommand()
 {
     qDebug() << Q_FUNC_INFO;
     if (m_dawClient) {
-        m_dawClient->sendData("/start");
+        m_dawClient->sendData("/play");
     }
 }
 
@@ -420,26 +423,45 @@ void WsServer::sendDawStopCommand()
     }
 }
 
+void WsServer::sendDawSeekCommand(int bar)
+{
+    if (m_dawClient) {
+        m_dawClient->sendData("/beat/str", QString("%1.1.00").arg(bar));
+    }
+}
 
-void WsServer::setOscPort(int port) {
-	oscPort = port;
-	qDebug() << Q_FUNC_INFO << port;
+
+void WsServer::setOscPort(quint16 port) {
+    oscPort = port;
+    qDebug() << Q_FUNC_INFO << port;
 #ifdef CONSOLE_APP
 	if (settings) { // not needed any more -  value stored in qml
 		settings->setValue("oscPort", oscPort);
 	}
 #endif
-	emit newOscPort(oscPort);
+    emit newOscPort(oscPort);
+}
+
+void WsServer::setDawAddress(QString ip, quint16 port)
+{
+//    if (m_dawClient) { // do we
+//        m_dawClient->deleteLater();
+//    }
+    QHostAddress test(ip);
+    m_dawClient = new QOscClient(QHostAddress(ip), port, this);
+    qDebug() << "Set DAW adress to: " << ip << ":" << port;
+
 }
 
 void WsServer::createOscClientsList(QString addresses) // info from string to hash
 {
     m_clientsHash.clear();
     int instrument = 0;
+    QRegularExpression re("(^[0-9]{1,2}):");
+
     foreach (QString address, addresses.split(",")) {
         address = address.simplified();
-        if (QRegularExpression("(^[0-9]{1,2}):").match(address).hasMatch()) {
-
+        if (re.match(address).hasMatch()) {
             instrument = address.split(":")[0].toInt();
             address = address.split(":")[1];
             address = (address=="localhost") ? "127.0.0.1" : address;

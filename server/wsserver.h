@@ -92,8 +92,10 @@ public Q_SLOTS:
 	void setScoreIndex(int index);
     void sendDawStartCommand();
     void sendDawStopCommand();
+    void sendDawSeekCommand(int bar);
 
-	void setOscPort(int port);
+    void setOscPort(quint16 port);
+    void setDawAddress(QString ip, quint16 port);
 
 private:
     QWebSocketServer *m_pWebSocketServer;

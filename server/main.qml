@@ -651,6 +651,7 @@ ApplicationWindow {
 
                         onClicked: {
                             if (useScore.checked) {
+                                wsServer.sendDawSeekCommand(startBarSpinBox.value)
                                 cs.setOscAddresses(oscAddresses.text);
                                 cs.start(scoField.text, startBarSpinBox.value)
                                 messageModel.clear()
