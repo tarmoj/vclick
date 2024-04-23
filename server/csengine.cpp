@@ -55,6 +55,9 @@ void CsEngine::startTime(int startSecond,bool countDown, QString soundFile)
 i "countdown" 0 4 4 $TUTTI
 i "notification" 3 1  "READY"
 s
+
+i "start" 0 0.1
+
 	)";
 	}
 

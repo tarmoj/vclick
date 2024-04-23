@@ -688,20 +688,22 @@ ApplicationWindow {
 
                         onClicked: {
                             if (useScore.checked) {
-                                wsServer.sendDawSeekCommand(startBarSpinBox.value)
+                                wsServer.sendDawSeekBarCommand(startBarSpinBox.value)
                                 cs.setOscAddresses(oscAddresses.text);
                                 cs.start(scoField.text, startBarSpinBox.value)
                                 messageModel.clear()
                             }
                             if (useTime.checked) {
+                                startTimeField.convertToTime(); // text to minutes/seconds
+                                var time=parseFloat(startTimeField.minutes*60+startTimeField.seconds)
+                                wsServer.sendDawSeekTimeCommand(time)
                                 if (playSoundfile.checked && csoundOptions.text.indexOf("null")>=0) {
                                     console.log("Seems that Csound is set to no audio output. Use -odac (or similar) as Csound option")
                                     //TODO: Options
                                 }
 
                                 // TODO: check if rtaudio=null in settings, print warning!
-                                startTimeField.convertToTime(); // text to minutes/seconds
-                                cs.startTime(startTimeField.minutes*60+startTimeField.seconds, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
+                                cs.startTime(time, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
                             }
 
                             // set volume somewhat later when Csound will be loaded

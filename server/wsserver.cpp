@@ -220,7 +220,7 @@ void WsServer::processTextMessage(QString message)
 		sendOsc = true;
 		handleNotification(QString("Bar %1").arg(startBar), 2);
 		sendOsc = oldSendOsc;
-        sendDawSeekCommand(startBar);
+        sendDawSeekBarCommand(startBar);
 	}
 
     if (messageParts[0]=="useScore") {
@@ -423,13 +423,22 @@ void WsServer::sendDawStopCommand()
     }
 }
 
-void WsServer::sendDawSeekCommand(int bar)
+void WsServer::sendDawSeekBarCommand(int bar)
 {
     if (m_dawClient) {
         m_dawClient->sendData("/beat/str", QString("%1.1.00").arg(bar));
     }
 }
 
+
+void WsServer::sendDawSeekTimeCommand(double time)
+{
+    qDebug() << Q_FUNC_INFO << time;
+
+    if (m_dawClient) {
+        m_dawClient->sendData("/time", time);
+    }
+}
 
 void WsServer::setOscPort(quint16 port) {
     oscPort = port;

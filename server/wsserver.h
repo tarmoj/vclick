@@ -92,7 +92,9 @@ public Q_SLOTS:
 	void setScoreIndex(int index);
     void sendDawStartCommand();
     void sendDawStopCommand();
-    void sendDawSeekCommand(int bar);
+    void sendDawSeekBarCommand(int bar);
+    void sendDawSeekTimeCommand(double time);
+
 
     void setOscPort(quint16 port);
     void setDawAddress(QString ip, quint16 port);
