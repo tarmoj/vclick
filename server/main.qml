@@ -108,10 +108,13 @@ ApplicationWindow {
         property alias scoreFiles: scoreFilesModel.scoreFiles
         property alias lastScoreIndex: scoreFilesList.currentIndex
         property alias useTime: useTime.checked
+        property alias dawIP: dawIP.text
+        property alias dawPortSpinbox: dawPortSpinbox.value
     }
 
     Component.onCompleted: {
         wsServer.setOscPort(oscPortSpinbox.value)
+        wsServer.setDawAddress(dawIP.text, dawPortSpinbox.value)
     }
 
     Connections {
@@ -445,7 +448,7 @@ ApplicationWindow {
                 anchors.leftMargin: 5
                 anchors.bottomMargin: 10
                 anchors.topMargin: 5
-                anchors.fill: parent
+                anchors.fill: parent            
 
                 Label {
                     id: ipLabel
@@ -458,37 +461,72 @@ ApplicationWindow {
                     text: qsTr("WS clients: ")
                 }
 
-                //            Label {
-                //                id: oscCountLabel
-                //                text: qsTr("OSC targets: ")
-                //            }
+                RowLayout {
+                    id: sendOptionsRow
+                    spacing: 5
 
-                CheckBox {
-                    id: wsCheckBox
-                    //enabled: false
-                    visible: false
-                    text: qsTr("Send WS signals")
-                    checked: false
-                    onCheckedChanged: wsServer.setSendWs(checked);
+                    CheckBox {
+                        id: wsCheckBox
+                        //enabled: false
+                        visible: false
+                        text: qsTr("Send WS signals")
+                        checked: false
+                        onCheckedChanged: wsServer.setSendWs(checked);
+                    }
+
+                    CheckBox {
+                        id: oscCheckBox
+                        //enabled: false
+                        visible: false
+                        text: qsTr("Send server's OSC signals")
+                        checked: false
+                        onCheckedChanged: wsServer.setSendOsc(checked);
+
+                    }
+
                 }
 
-                CheckBox {
-                    id: oscCheckBox
-                    //enabled: false
-                    visible: false
-                    text: qsTr("Send server's OSC signals")
-                    checked: false
-                    onCheckedChanged: wsServer.setSendOsc(checked);
+                RowLayout {
+                    id: dawRow
+                    spacing: 5
 
+                    Label {
+                        text: qsTr("OSC for Reaper")
+                    }
+
+                    TextField {
+                        id: dawIP
+                        Layout.preferredWidth: 200
+                        placeholderText: qsTr("Reaper IP")
+                        text: "127.0.0.1"
+                    }
+
+                    Label { text: qsTr("port:")}
+
+                    SpinBox {
+                        id: dawPortSpinbox;
+                        editable: true
+                        to: 65323
+                        from: 1025
+                        value: 8000
+                    }
+
+                    Button {
+                        id: updateDawAdressButton
+                        text: qsTr("Update")
+                        onClicked: wsServer.setDawAddress(dawIP.text, dawPortSpinbox.value)
+                    }
                 }
 
-                Row {
-                    spacing:5
+
+                RowLayout {
                     id: jackRow
+                    spacing:5
+                    visible: (Qt.platform.os === "linux")
 
                     CheckBox {
                         id: jackCheckBox
-                        visible: (Qt.platform.os === "linux")
+
                         text: "Read from Jack"
                         checked: false
                         onCheckedChanged: {
@@ -499,7 +537,6 @@ ApplicationWindow {
 
                     CheckBox {
                         id: timeCodeCheckBox
-                        visible: (Qt.platform.os === "linux")
                         text: "BBT to timecode hack"
                         checked: false
                         onCheckedChanged: jackReader.setZeroHack(checked)
@@ -515,7 +552,7 @@ ApplicationWindow {
                     onCheckedChanged: wsServer.setTesting(checked);
                 }
 
-                Row {
+                RowLayout {
                     id: csOptionsRow
                     spacing: 5
 
@@ -526,7 +563,7 @@ ApplicationWindow {
 
                     TextField {
                         id: csoundOptions
-                        width: 400
+                        Layout.preferredWidth: 400
                         placeholderText: qsTr("Csound options")
                         text: "-odac -+rtaudio=null -d"
 
@@ -545,7 +582,7 @@ ApplicationWindow {
 
                 }
 
-                Row {
+                RowLayout {
                     id: soundFilesFolderRow
                     spacing: 5
                     visible: volumeLabel.visible // don't show if there is no audio output. volumeLabel checks that
@@ -556,7 +593,7 @@ ApplicationWindow {
 
                     TextField {
                         id: sfdirField
-                        width: 300
+                        Layout.preferredWidth:  300
                         placeholderText: qsTr("SFDIR for Csound")
                         text: "./";
 
