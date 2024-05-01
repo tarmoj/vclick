@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     // Process the actual command line arguments given by the user
     parser.process(app);
 
-    qDebug() << "Options: " << parser.isSet(noOscOption) << parser.value(port) << parser.value(scoreFiles) ;
+    qDebug() << "No OSC: " << parser.isSet(noOscOption) << "ws port: " <<  parser.value(port) << "score files from arguments: "  << parser.value(scoreFiles) ;
 
 
 
@@ -160,8 +160,10 @@ int main(int argc, char *argv[])
 	QObject::connect(wsServer, &WsServer::stop, csound, &CsEngine::stop);
 	QObject::connect(wsServer, &WsServer::start, csound, &CsEngine::startScore);
 	QObject::connect(wsServer, &WsServer::newStartBar, csound, &CsEngine::setStartBar);
-	QObject::connect(wsServer, &WsServer::updateOscAddresses, csound, &CsEngine::setOscAddresses);
     QObject::connect(wsServer, &WsServer::startTime, csound, &CsEngine::startTime);
+    if (!parser.isSet(noOscOption))  {   // don't connect and hence don't use when --no-osc is set from command line
+        QObject::connect(wsServer, &WsServer::updateOscAddresses, csound, &CsEngine::setOscAddresses);
+    }
 #endif
 
 	//wsServer->setOscPort(87878);

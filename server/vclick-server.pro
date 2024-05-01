@@ -1,10 +1,10 @@
 TEMPLATE = app
 
-VERSION = 2.2.2
+VERSION = 2.2.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
-#CONFIG += no-gui
+CONFIG += no-gui
 
 no-gui {
     QT += core network websockets

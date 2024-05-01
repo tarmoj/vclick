@@ -380,7 +380,7 @@ void WsServer::handleNotification(QString message, float duration)
 	}
 
 	if (sendWs) {
-        message = "n "+message + " " + QString::number(duration); // NB! adding duration to the end breaks it for normal clients! This is just for Andrus's event now!
+        message = "n "+message; // no duration sent to client over ws, use default
 		send2all(message);
 	}
 
