@@ -820,9 +820,18 @@ ApplicationWindow {
                         onClicked: socket.sendTextMessage("scoreIndex 2")
                     }
 
-                    RoundButton {
-                        text: "4";
-                        onClicked: socket.sendTextMessage("scoreIndex 3")
+//                    RoundButton {
+//                        text: "4";
+//                        onClicked: socket.sendTextMessage("scoreIndex 3")
+//                    }
+
+                    ComboBox {
+                        id: activeScoreCombobox
+
+                        model: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] // later: listmodel from what server sends
+
+                        onCurrentIndexChanged: socket.sendTextMessage("scoreIndex "+ currentIndex.toString())
+
                     }
 
                     Item { Layout.fillWidth: true}

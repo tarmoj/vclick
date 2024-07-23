@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vclick-client VERSION 3.0.1 LANGUAGES C CXX)
+project(vclick-client VERSION 3.0.2 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -80,7 +80,7 @@ if(ANDROID)
 #set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
 
 set_target_properties(vclick-client PROPERTIES
-            QT_ANDROID_VERSION_CODE 22
+            QT_ANDROID_VERSION_CODE 25
             QT_ANDROID_BUILD_ALL_ABIS true
             QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
         )
