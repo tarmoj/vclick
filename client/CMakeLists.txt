@@ -80,7 +80,7 @@ if(ANDROID)
 #set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
 
 set_target_properties(vclick-client PROPERTIES
-            QT_ANDROID_VERSION_CODE 25
+            QT_ANDROID_VERSION_CODE 26
             QT_ANDROID_BUILD_ALL_ABIS true
             QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
         )
