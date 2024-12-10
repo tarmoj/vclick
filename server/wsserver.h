@@ -44,7 +44,7 @@ class WsServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit WsServer(quint16 port, QString userScoreFiles=QString(), QObject *parent = NULL);
+    explicit WsServer(quint16 port, QString userScoreFiles=QString(),  bool noOsc=false, QObject *parent = NULL);
     ~WsServer();
 
 	void sendMessage(QWebSocket *socket, QString message);
@@ -55,6 +55,7 @@ public:
 	Q_INVOKABLE QString getOscAddresses();
 	Q_INVOKABLE QString getLocalAddress();
 	Q_INVOKABLE void runSystemCommand(QString command);
+
 
     void updateScoreFiles();
 Q_SIGNALS:
@@ -114,6 +115,7 @@ private:
     bool useTime;
     int startSecond;
     bool countDown;
+    bool useOsc;
 
 
 };
