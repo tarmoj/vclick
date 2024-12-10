@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 
     quint16 wsPort = parser.isSet(port) ?  parser.value(port).toUInt() :  6006;
     QString userScoreFiles = parser.isSet(scoreFiles) ? parser.value(scoreFiles) : "";
-    wsServer = new WsServer(wsPort, userScoreFiles);
+    wsServer = new WsServer(wsPort, userScoreFiles, parser.isSet(noOscOption));
 
 #ifdef USE_JACK
 	JackReader *jackReader = new JackReader();  // started from qml

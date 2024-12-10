@@ -2,7 +2,7 @@ lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
 TEMPLATE = app
 
-VERSION = 3.1.0 # v3.1.0  - inroduce sending OSC to  DAW like reaper
+VERSION = 3.1.1 # v3.1.0  - inroduce sending OSC to  DAW like reaper
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 #uncomment or add to qmake parameters to build console version of the server
