@@ -131,7 +131,7 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 		}
 
-		if (startBar>1) {
+        if (startBar>1 && startTime>0) {
 			QString tempo = "#TEMPO1#";
 			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
 
@@ -152,7 +152,6 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 			contents.replace( "#define REPTEMPO #60#", "#define REPTEMPO #" + tempo + "#"); // another version, since sometimes it is not #$TEMPO1# but #60# (Murail Winter Fragments)
 		}
 
-		//QTemporaryFile tempFile(QDir::tempPath()+"/XXXXXX.sco"); // TODO: use temporary file! - see how not to close it too soon
         QString tempName = QDir::tempPath() + "/temp.sco";
         QFile tempFile(tempName);
 		if (tempFile.open(QFile::WriteOnly  |QFile::Text) ) {
