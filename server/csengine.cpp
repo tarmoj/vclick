@@ -126,13 +126,13 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 		}
 
+
         // NB! Experimental -  add a line to notify about start (for signalling a DAW)
         int advanceIndex = contents.indexOf(";ADVANCE");
         if (advanceIndex>=0) {
             contents.insert(advanceIndex, "i \"start\" 0 0.1 \n"  ); // instr "start" set channel "start" to 1 so that vClick server can read it
         }
-
-		if (startBar>1) {
+        if (startBar>1 && startTime>0) {
 			QString tempo = "#TEMPO1#";
 			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
 
