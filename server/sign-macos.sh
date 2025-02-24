@@ -1,17 +1,16 @@
 BUILD_DIR="../build-vclick-server-Qt_6_5_3_for_macOS-Release/bin"
 APP="vclick-server.app"
+DMG="vclick-server-3.1.1-MacOS.dmg"
 
-find $BUILD_DIR/$APP/Contents/Frameworks/CsoundLib64.framework/libs -name "*.dylib" -exec codesign --force --timestamp  --sign "Developer ID Application: Tarmo Johannes (DRQ77GKK9V)" {} \;
+#notarize:
+xcrun notarytool submit --apple-id "trmjhnns@gmail.com" --password "bcuk-uufc-kxcc-wffw" --team-id "DRQ77GKK9V" --wait $BUILD_DIR/$DMG
 
-find $BUILD_DIR/$APP/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/Resources/Opcodes64 -name "*.dylib" -exec codesign --force --timestamp  --sign "Developer ID Application: Tarmo Johannes (DRQ77GKK9V)" {} \;
+# log:
+xcrun notarytool log 2a65e696-aef7-4609-a958-941ae0b9914e  --apple-id "trmjhnns@gmail.com" --password "bcuk-uufc-kxcc-wffw" --team-id "DRQ77GKK9V"
 
-codesign --options=runtime --timestamp  --force --sign "Developer ID Application: Tarmo Johannes (DRQ77GKK9V)" $BUILD_DIR/$APP/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
+#staple
+xcrun stapler staple $BUILD_DIR/$DMG
 
-codesign --options=runtime --timestamp  --force --sign "Developer ID Application: Tarmo Johannes (DRQ77GKK9V)" $BUILD_DIR/$APP
 
-#check:
-codesign -vvv --deep --strict $BUILD_DIR/$APP
-
-# ha - unsealed contents present in the root directory of an embedded framework In subcomponent: vclick-server.app/Contents/Frameworks/CsoundLib64.framework -- problem with libs there.
 
 
