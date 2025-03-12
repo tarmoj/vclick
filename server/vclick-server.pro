@@ -3,6 +3,8 @@ TEMPLATE = app
 VERSION = 2.2.4
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+CONFIG += c++17
+
 #uncomment or add to qmake parameters to build console version of the server
 CONFIG += no-gui
 

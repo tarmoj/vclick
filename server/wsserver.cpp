@@ -360,7 +360,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 	// for testing:
 //	int now, difference=0;
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for(QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
@@ -379,7 +379,7 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/led", data);
@@ -399,7 +399,7 @@ void WsServer::handleNotification(QString message, float duration)
 {
 	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << message << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/notification", data);
@@ -418,12 +418,9 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 	//tempo = tempo.left((tempo.indexOf("."))+3); // cut to 2 decimals
 	//qDebug()<<"Tempo: "<<tempo;
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
-			//QList<QVariant> data;
-			//data << ledNumber << (double)duration; // QOsc types does not recognise float...
+        for (QOscClient * target: m_oscClients) {
 			target->sendData("/metronome/tempo", tempo);
 		}
-
 	}
 	QString tempoString = QString::number(tempo, 'f',2);
 	emit newTempo(tempoString); // construct string here!
@@ -458,7 +455,8 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
 {
     m_clientsHash.clear();
     int instrument = 0;
-    foreach (QString address, addresses.split(",")) {
+
+    for (QString address: addresses.split(",")) {
         address = address.simplified();
         int index = -1;
         index = QRegExp("(^[0-9]{1,2}):").indexIn(address); // should I check for port at all?
@@ -486,7 +484,7 @@ void WsServer::createOscClientsList()
 
     QString joinedString;
 
-    foreach (QString address, m_clientsHash.keys()) {
+    for (QString address: m_clientsHash.keys()) {
         address = address.simplified();
         address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
         if (m_clientsHash[address]==0) {
@@ -538,7 +536,8 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-	foreach (QWebSocket *socket, m_clients) {
+
+    for (QWebSocket *socket: m_clients) {
 		socket->sendTextMessage(message);
 	}
 }
