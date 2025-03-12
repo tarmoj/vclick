@@ -335,7 +335,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 	// for testing:
 //	int now, difference=0;
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for(QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
@@ -353,7 +353,7 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/led", data);
@@ -372,7 +372,7 @@ void WsServer::handleNotification(QString message, float duration)
 {
 	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << message << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/notification", data);
@@ -390,7 +390,7 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
 	//qDebug()<<"Tempo: "<<tempo;
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			target->sendData("/metronome/tempo", tempo);
 		}
 
@@ -472,7 +472,7 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
     int instrument = 0;
     QRegularExpression re("(^[0-9]{1,2}):");
 
-    foreach (QString address, addresses.split(",")) {
+    for (QString address: addresses.split(",")) {
         address = address.simplified();
         if (re.match(address).hasMatch()) {
             instrument = address.split(":")[0].toInt();
@@ -497,7 +497,7 @@ void WsServer::createOscClientsList()
 
     QString joinedString;
 
-    foreach (QString address, m_clientsHash.keys()) {
+    for (QString address: m_clientsHash.keys()) {
         address = address.simplified();
         address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
         if (m_clientsHash[address]==0) {
@@ -549,7 +549,7 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-    foreach (QWebSocket *socket, m_clients) {
+    for (QWebSocket *socket: m_clients) {
 		socket->sendTextMessage(message);
 	}
 }
