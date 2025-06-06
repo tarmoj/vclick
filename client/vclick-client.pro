@@ -135,11 +135,16 @@ ios {
 
 macx {
     installer.path = $$PWD
-    #installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0  -codesign=\"Mac Developer: Tarmo Johannes (ND7C9HZ522)\" -dmg # deployment
-    installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0  -dmg # deployment
+    installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=2   -sign-for-notarization=\"Developer ID Application: Tarmo Johannes (DRQ77GKK9V)\" -dmg # deployment
+    #installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0 -dmg # deployment
     INSTALLS += installer
 
 }
+
+#MAC notarize:
+# App  Specific password for vClickClient rwjw-dnen-sklo-zrtu
+# xcrun notarytool submit --apple-id <id-email> --password <password> --team-id "DRQ77GKK9V" --wait
+#staple: xcrun stapler staple vclick-client.dmg
 
 win32 {
     first.path = $$PWD
