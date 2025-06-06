@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vclick-client VERSION 3.0.2 LANGUAGES C CXX)
+project(vclick-client VERSION 3.1.0 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -45,16 +45,16 @@ target_link_libraries(vclick-client PRIVATE
 )
 
 
-# Resources:
-set(vclick-client_resource_files
-    "menu.png"
-    "radio.png"
-    "sounds/sound1.wav"
-    "sounds/sound2.wav"
-    "sounds/sound3.wav"
-    "vclick-client.png"
-    "xmark-solid.png"
-)
+    # Resources:
+    set(vclick-client_resource_files
+        "menu.png"
+        "radio.png"
+        "sounds/sound1.wav"
+        "sounds/sound2.wav"
+        "sounds/sound3.wav"
+        "vclick-client.png"
+        "xmark-solid.png"
+    )
 
 qt_add_resources(vclick-client "vclick-client"
     PREFIX

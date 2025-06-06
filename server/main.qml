@@ -723,6 +723,7 @@ ApplicationWindow {
                         text: qsTr("Stop")
                         onClicked: {
                             cs.stop()
+                            wsServer.handleNotification("Stop", 2)
                             if (stopCommand.length > 0) {
                                 console.log("executing command: ", stopCommand)
                                 wsServer.runSystemCommand(stopCommand)
