@@ -58,6 +58,8 @@ public:
 
 
     void updateScoreFiles();
+    QString getScoreList();
+
 Q_SIGNALS:
     void closed();
     void newConnection(int connectionsCount);

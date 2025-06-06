@@ -84,6 +84,26 @@ void WsServer::updateScoreFiles()
 
 }
 
+QString WsServer::getScoreList()
+{
+    QString scoreList = QString("scoreFiles:");
+    for (QString scoreFile: scoreFiles) {
+        QString fileName = scoreFile.trimmed().split('/').last(); // get only the filename;
+        if (fileName.endsWith(".sco", Qt::CaseInsensitive)) {
+            fileName = fileName.chopped(4);
+        }
+        if (!fileName.isEmpty()) {
+            scoreList += fileName + ";";
+        }
+    }
+    if (scoreList.right(1) == ";") {
+        scoreList.chop(1); // remove last semicolon
+    }
+    qDebug() << Q_FUNC_INFO << scoreList;
+    return scoreList;
+
+}
+
 void WsServer::onNewConnection()
 {
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
@@ -117,6 +137,9 @@ void WsServer::processTextMessage(QString message)
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
+
+        // send the score list to client
+        pClient->sendTextMessage(getScoreList());
 
         if (useOsc) {
             QOscClient * target = nullptr;
