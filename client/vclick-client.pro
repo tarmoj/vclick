@@ -4,7 +4,7 @@ TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 3.0.2
+VERSION = 3.1.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 
