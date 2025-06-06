@@ -303,7 +303,9 @@ ApplicationWindow {
                 tempoLabel.text = qsTr("Tempo: ") + messageParts[1];
             }
         }
-        onStatusChanged: if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
+        onStatusChanged: {
+            console.log("WS status: ", socket.status, " error: ", socket.errorString, " url: ", url)
+            if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
                              console.log("Error: ", socket.errorString, url )
                              socket.active = false;
                              notification("Failed!", 1.0);
@@ -320,6 +322,7 @@ ApplicationWindow {
                          else if (socket.status == WebSocket.Connecting) {
                              console.log("Socket connecting", url)
                          }
+        }
         active: false
     }
 
@@ -830,7 +833,11 @@ ApplicationWindow {
 
                         model: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] // later: listmodel from what server sends
 
-                        onCurrentIndexChanged: socket.sendTextMessage("scoreIndex "+ currentIndex.toString())
+                        onCurrentIndexChanged: {
+                            if (socket.status === WebSocket.Open) {
+                                socket.sendTextMessage("scoreIndex "+ currentIndex.toString())
+                            }
+                        }
 
                     }
 
