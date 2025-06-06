@@ -263,6 +263,15 @@ ApplicationWindow {
 
         onTextMessageReceived: function (message) {
             // console.log("Received message: ",message);
+
+            if (message.startsWith("scoreFiles:")) {
+                const data = message.substring("scoreFiles:".length);
+                const files = data.split(";");
+                console.log("Score list received: ", files);
+                activeScoreCombobox.model = files;
+                return;
+            }
+
             var messageParts = message.trim().split(" ") // format: csound: led %d  duration %f channels %d  OR csound: bar %d beat %d channels %d\
             if (messageParts[0]==="b") {
                 barLabel.text = messageParts[1]
@@ -304,24 +313,23 @@ ApplicationWindow {
             }
         }
         onStatusChanged: {
-            console.log("WS status: ", socket.status, " error: ", socket.errorString, " url: ", url)
             if (socket.status == WebSocket.Error) { // TODO: still needs clicking twice on "Hello" button sometimes...
-                             console.log("Error: ", socket.errorString, url )
-                             socket.active = false;
-                             notification("Failed!", 1.0);
-                         } else if (socket.status == WebSocket.Open) {
-                             console.log("Socket open", url)
-                             settings.serverIP= socket.serverIP
-                             settings.serverPort=socket.serverPort
-                             socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
-                             // socket.active = false; // do not for remote control
-                         } else if (socket.status == WebSocket.Closed) {
-                             console.log("Socket closed")
-                             socket.active = false;                             
-                         }
-                         else if (socket.status == WebSocket.Connecting) {
-                             console.log("Socket connecting", url)
-                         }
+                console.log("Error: ", socket.errorString, url )
+                socket.active = false;
+                notification("Failed!", 1.0);
+            } else if (socket.status == WebSocket.Open) {
+                console.log("Socket open", url)
+                settings.serverIP= socket.serverIP
+                settings.serverPort=socket.serverPort
+                socket.sendTextMessage("hello "+instrument) // send info about instrument and also IP to server instr may not include blanks!
+                // socket.active = false; // do not for remote control
+            } else if (socket.status == WebSocket.Closed) {
+                console.log("Socket closed")
+                socket.active = false;
+            }
+            else if (socket.status == WebSocket.Connecting) {
+                console.log("Socket connecting", url)
+            }
         }
         active: false
     }
@@ -807,21 +815,21 @@ ApplicationWindow {
                     spacing: 5
                     enabled: socket.status === WebSocket.Open
 
-                    Label { text: qsTr("Active:")}
+                    Label { text: qsTr("Active score:")}
 
                     // for setting active index
-                    RoundButton {
-                        text: "1";
-                        onClicked: socket.sendTextMessage("scoreIndex 0")
-                    }
-                    RoundButton {
-                        text: "2";
-                        onClicked: socket.sendTextMessage("scoreIndex 1")
-                    }
-                    RoundButton {
-                        text: "3";
-                        onClicked: socket.sendTextMessage("scoreIndex 2")
-                    }
+                    // RoundButton {
+                    //     text: "1";
+                    //     onClicked: socket.sendTextMessage("scoreIndex 0")
+                    // }
+                    // RoundButton {
+                    //     text: "2";
+                    //     onClicked: socket.sendTextMessage("scoreIndex 1")
+                    // }
+                    // RoundButton {
+                    //     text: "3";
+                    //     onClicked: socket.sendTextMessage("scoreIndex 2")
+                    // }
 
 //                    RoundButton {
 //                        text: "4";
@@ -830,8 +838,9 @@ ApplicationWindow {
 
                     ComboBox {
                         id: activeScoreCombobox
+                        Layout.fillWidth: true
 
-                        model: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] // later: listmodel from what server sends
+                        model: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] // will be filled by server with file names
 
                         onCurrentIndexChanged: {
                             if (socket.status === WebSocket.Open) {
@@ -964,7 +973,7 @@ ApplicationWindow {
             Label {
                 id: serverLabel
                 visible: true
-                text: qsTr("Server IP: ")
+                text: qsTr("Server: ")
             }
 
             TextField {
@@ -982,7 +991,7 @@ ApplicationWindow {
 
             Button {
                 id: connectButton
-                text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Hello, Server") )
+                text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Connect") )
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
