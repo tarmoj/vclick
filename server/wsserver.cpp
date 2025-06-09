@@ -19,6 +19,7 @@
 	02111-1307 USA
 */
 #include "wsserver.h"
+#include "serverbroadcaster.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -44,7 +45,10 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
-	}
+        // broadcast
+        auto broadcaster = new ServerBroadcaster(port, this);
+        Q_UNUSED(broadcaster);
+    }
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
