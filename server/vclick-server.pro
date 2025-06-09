@@ -40,6 +40,7 @@ OBJECTS_DIR=generated_files #Intermediate object files directory
 MOC_DIR=generated_files #Intermediate moc files directory
 
 SOURCES += main.cpp \
+    serverbroadcaster.cpp \
     wsserver.cpp \ 
     csengine.cpp \
     qosc/qoscclient.cpp \
@@ -57,6 +58,7 @@ QML_IMPORT_PATH =
 #include(deployment.pri)
 
 HEADERS += \
+    serverbroadcaster.h \
     wsserver.h \
     csengine.h \
     qosc/qoscclient.h \

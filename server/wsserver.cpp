@@ -19,6 +19,7 @@
 	02111-1307 USA
 */
 #include "wsserver.h"
+#include "serverbroadcaster.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -46,7 +47,10 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
-	}
+        // broadcast
+        auto broadcaster = new ServerBroadcaster(port, this);
+        Q_UNUSED(broadcaster);
+    }
 
     //temporary: hardcode daw client:
     //setDawAddress("127.0.0.1", 8000);
