@@ -194,7 +194,6 @@ ApplicationWindow {
         onServerDiscovered: function(address, port)  {
             console.log("Found server at", address, ":", port)
             serverAddress.text = address; // that should connect the socket automatically
-            //connectButton.text = qsTr("Connect");
             connectSocket();
             discovery.stopDiscovery()
             notification(qsTr("Server found"), 2);
