@@ -24,6 +24,7 @@
 #ifdef USE_OSC
 #include "oschandler.h"
 #endif
+#include "serverdiscovery.h"
 
 #include <QQmlContext>
 #include <QIcon>
@@ -90,6 +91,8 @@ int main(int argc, char *argv[])
 # else
     engine.rootContext()->setContextProperty("oscServer", nullptr);
 #endif
+
+    qmlRegisterType<ServerDiscovery>("Discovery", 1, 0, "ServerDiscovery");
 
 	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

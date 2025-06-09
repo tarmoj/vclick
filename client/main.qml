@@ -31,6 +31,8 @@ import QtCore
 import QtMultimedia
 import QtWebSockets
 
+import Discovery 1.0 // to receive signals when ws server is discovered
+
 //import QtQuick.Controls.Material 2.12
 
 
@@ -44,136 +46,163 @@ ApplicationWindow {
     property int instrument: 0
     property string version: Qt.application.version
 
-        Menu {
-            id: mainMenu
-            title: qsTr("Menu")
-            //width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
-            width: oscPortRow.width + 20
+    Menu {
+        id: mainMenu
+        title: qsTr("Menu")
+        //width: (Qt.platform.os==="android" || Qt.platform.os==="ios") ?  Math.min(Screen.width, Screen.height)*0.85 :400
+        width: oscPortRow.width + 20
 
-            Column {
-                x: 5
-                width: parent.width-10
-                spacing: 2
+        Column {
+            x: 5
+            width: parent.width-10
+            spacing: 2
 
-                MenuItem {
-                    text: qsTr("Getting started")
-                    onTriggered: Qt.openUrlExternally("https://tarmoj.github.io/vclick/pages/getting-started.html#getting-started")
-                }
-
-
-
-
-                Label { text: qsTr("OSC port:"); }
-                Row { // Not shown with Qt.labs.platform...
-                    id: oscPortRow
-                    spacing: 4
-                    SpinBox {
-                        id: oscPortSpinbox;
-                        editable: true
-                        to: 100000 // to enable very large complex bar numbers like 10101
-                        from: 1025
-                        value: 57878
-                    }
-                    Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
-                    Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
-                }
-
-                Label { text: qsTr("Server port:") }
-                Row { // Not shown with Qt.labs.platform...
-                    spacing: 4
-                    SpinBox {
-                        id: serverPortSpinbox;
-                        editable: true
-                        to: 100000 // to enable very large complex bar numbers like 10101
-                        from: 1025
-                        value: 6006
-                    }
-                    Button { text: qsTr("Set");
-                        onClicked: {
-                            if (serverPortSpinbox.value===socket.serverPort) {
-                                socket.active = true
-                            } else {
-                                socket.active = false;
-                                socket.serverPort = serverPortSpinbox.value // this activates the socket as well, since server.url is bound to serverIP
-                                socket.active = true;
-                            }
-                        }
-
-                    }
-                    Button { text: qsTr("Reset"); onClicked: serverPortSpinbox.value = 6006 }
-                }
-
-                CheckBox {
-                    id: animationCheckBox
-                    checked: true
-                    text: qsTr("Animation")
-                }
-
-                CheckBox {
-                    id: soundCheckBox
-                    checked: false
-                    text: qsTr("Sound")
-                }
-
-                MenuItem {
-                    text: qsTr("Set instrument number")
-                    onTriggered: {
-                        instrumentRect.visible = !instrumentRect.visible;
-                        mainMenu.close()
-                    }
-                }
-
-                MenuItem {
-                    text: qsTr("Update IP address")
-                    onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
-                }
-//                MenuItem {
-//                    text: qsTr("Show/Hide test leds")
-//                    onTriggered:  {
-//                        testRow.visible = !testRow.visible;
-//                        mainMenu.close()
-//                    }
-//                }
-                MenuItem {
-                    text: qsTr("Show delay row")
-                    onTriggered: {
-                        delayRect.visible = !delayRect.visible;
-                        mainMenu.close()
-                    }
-                }
-                MenuItem {
-                    text: qsTr("Show remote control")
-                    onTriggered:  {
-                        remoteControlRect.visible = !remoteControlRect.visible
-                        mainMenu.close()
-                    }
-                }
-
-                MenuItem {
-                    text: qsTr("About")
-                    onTriggered: {
-                        messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK" );
-                        messageDialog.open()
-                        mainMenu.close()
-                    }
-                }
-
-                MenuItem {
-                 text: qsTr("Buy me a coffee")
-                 onTriggered: Qt.openUrlExternally("https://ko-fi.com/tarmojohannes")
-                }
-
-                MenuItem {
-                    text: qsTr("Exit")
-                    onTriggered: Qt.quit();
-                }
+            MenuItem {
+                text: qsTr("Getting started")
+                onTriggered: Qt.openUrlExternally("https://tarmoj.github.io/vclick/pages/getting-started.html#getting-started")
             }
 
 
 
+
+            Label { text: qsTr("OSC port:"); }
+            Row { // Not shown with Qt.labs.platform...
+                id: oscPortRow
+                spacing: 4
+                SpinBox {
+                    id: oscPortSpinbox;
+                    editable: true
+                    to: 100000 // to enable very large complex bar numbers like 10101
+                    from: 1025
+                    value: 57878
+                }
+                Button { text: qsTr("Set"); onClicked: oscServer.setPort(oscPortSpinbox.value)}
+                Button { text: qsTr("Reset"); onClicked: oscPortSpinbox.value = 57878 }
+            }
+
+            Label { text: qsTr("Server port:") }
+            Row { // Not shown with Qt.labs.platform...
+                spacing: 4
+                SpinBox {
+                    id: serverPortSpinbox;
+                    editable: true
+                    to: 100000 // to enable very large complex bar numbers like 10101
+                    from: 1025
+                    value: 6006
+                }
+                Button { text: qsTr("Set");
+                    onClicked: {
+                        if (serverPortSpinbox.value===socket.serverPort) {
+                            socket.active = true
+                        } else {
+                            socket.active = false;
+                            socket.serverPort = serverPortSpinbox.value // this activates the socket as well, since server.url is bound to serverIP
+                            socket.active = true;
+                        }
+                    }
+
+                }
+                Button { text: qsTr("Reset"); onClicked: serverPortSpinbox.value = 6006 }
+            }
+
+            CheckBox {
+                id: animationCheckBox
+                checked: true
+                text: qsTr("Animation")
+            }
+
+            CheckBox {
+                id: soundCheckBox
+                checked: false
+                text: qsTr("Sound")
+            }
+
+            MenuItem {
+                text: qsTr("Set instrument number")
+                onTriggered: {
+                    instrumentRect.visible = !instrumentRect.visible;
+                    mainMenu.close()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Update IP address")
+                onTriggered:  myIp.text = qsTr("My IP: ")+ oscServer.getLocalAddress();
+            }
+            //                MenuItem {
+            //                    text: qsTr("Show/Hide test leds")
+            //                    onTriggered:  {
+            //                        testRow.visible = !testRow.visible;
+            //                        mainMenu.close()
+            //                    }
+            //                }
+            MenuItem {
+                text: qsTr("Show delay row")
+                onTriggered: {
+                    delayRect.visible = !delayRect.visible;
+                    mainMenu.close()
+                }
+            }
+            MenuItem {
+                text: qsTr("Show remote control")
+                onTriggered:  {
+                    remoteControlRect.visible = !remoteControlRect.visible
+                    mainMenu.close()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("About")
+                onTriggered: {
+                    messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK" );
+                    messageDialog.open()
+                    mainMenu.close()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Buy me a coffee")
+                onTriggered: Qt.openUrlExternally("https://ko-fi.com/tarmojohannes")
+            }
+
+            MenuItem {
+                text: qsTr("Exit")
+                onTriggered: Qt.quit();
+            }
         }
 
 
+
+    }
+
+    Timer {
+            id: timeoutTimer
+            interval: 10000 // 10 seconds - keep it the same as notification time in searchServerButton.clicked()
+            running: false
+            repeat: false
+            onTriggered: {
+                console.log("Timeout: no server found.")
+                notification(qsTr("No server found"), 3)
+                discovery.stopDiscovery()
+                searchServerButton.enabled=true
+            }
+        }
+
+    ServerDiscovery {
+        id: discovery
+
+        onServerDiscovered: function(address, port)  {
+            console.log("Found server at", address, ":", port)
+            serverAddress.text = address; // that should connect the socket automatically
+            //connectButton.text = qsTr("Connect");
+            connectSocket();
+            discovery.stopDiscovery()
+            notification(qsTr("Server found"), 2);
+            searchServerButton.enabled = true;
+            timeoutTimer.stop()
+        }
+
+    }
 
     Component.onCompleted: {
         if (delaySpinBox.value>0) {
@@ -288,11 +317,11 @@ ApplicationWindow {
                     }
                 }
                 if (led===1)  {
-                        greenAnimation.restart();
-                        if (soundCheckBox.checked) {
-                            sound2.play();
-                        }
+                    greenAnimation.restart();
+                    if (soundCheckBox.checked) {
+                        sound2.play();
                     }
+                }
 
                 if (led===2) {
 
@@ -343,7 +372,7 @@ ApplicationWindow {
             if(Qt.application.state === Qt.ApplicationActive) {
                 //console.log("Active")
                 if (Qt.platform.os === "ios") {
-                        oscServer.restart() ;// to make sure it is running
+                    oscServer.restart() ;// to make sure it is running
                 }
             }
 
@@ -408,11 +437,11 @@ ApplicationWindow {
                     ledOffTimer.start()
                 }
             }
-            }
-
-            function onNewMessage(message, duration) {notification(message, duration);}
-
         }
+
+        function onNewMessage(message, duration) {notification(message, duration);}
+
+    }
 
     Settings {
         id: settings
@@ -831,10 +860,10 @@ ApplicationWindow {
                     //     onClicked: socket.sendTextMessage("scoreIndex 2")
                     // }
 
-//                    RoundButton {
-//                        text: "4";
-//                        onClicked: socket.sendTextMessage("scoreIndex 3")
-//                    }
+                    //                    RoundButton {
+                    //                        text: "4";
+                    //                        onClicked: socket.sendTextMessage("scoreIndex 3")
+                    //                    }
 
                     ComboBox {
                         id: activeScoreCombobox
@@ -859,7 +888,7 @@ ApplicationWindow {
             ColumnLayout {
                 id: timeOptions
                 anchors.fill: parent
-                anchors.margins:  5               
+                anchors.margins:  5
                 visible: !parent.isScore && !scoreOptions.visible
 
 
@@ -990,12 +1019,26 @@ ApplicationWindow {
             }
 
             Button {
+                id: searchServerButton
+                visible: socket.status !== WebSocket.Open
+                text: qsTr("Search")
+                onClicked: {
+                    console.log("Searching server")
+                    discovery.startDiscovery()
+                    notification(qsTr("Searching server..."), 10);
+                    timeoutTimer.start()
+                    searchServerButton.enabled = false;
+                }
+            }
+
+
+            Button {
                 id: connectButton
                 text: socket.status === WebSocket.Open ?  qsTr("Connected")  :  ( socket.status === WebSocket.Connecting ? qsTr("Connecting...") :  qsTr("Connect") )
                 onClicked: {
                     //console.log("Socket state, errorString: ", socket.status, socket.errorString, socket.active)
                     if (!socket.active) {
-                         connectSocket();
+                        connectSocket();
                     } else {
                         console.log("Already active")
                         socket.sendTextMessage("hello "+instrument)
@@ -1285,10 +1328,10 @@ ApplicationWindow {
         text: "Message"
         onButtonClicked: function (button, role) { // does not close on Android otherwise
             switch (button) {
-                case MessageDialog.Ok:
-                    messageDialog.close()
-                }
+            case MessageDialog.Ok:
+                messageDialog.close()
             }
+        }
     }
 }
 

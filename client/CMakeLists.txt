@@ -26,6 +26,7 @@ qt_add_qml_module(vclick-client
         qtquickcontrols2.conf
     NO_RESOURCE_TARGET_PATH
     OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+    SOURCES serverdiscovery.h serverdiscovery.cpp
 )
 
 target_compile_definitions(vclick-client PRIVATE
