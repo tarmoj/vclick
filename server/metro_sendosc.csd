@@ -13,7 +13,7 @@ nchnls = 2
 #define BLUE #2#
 #define TUTTI #0xFFFF# ; now 32 bits set to 1; think how to do it better...
 
-;#define OSCPORT #87878# ; was 87878 in verion 57878 v2,
+#define OSCPORT #57878# ; was 87878 in verion 1
 
 #define BEATBAR #0#
 #define LED #1#
@@ -38,7 +38,6 @@ gSclients[] init 100
 ;gSclients fillarray "1:127.0.0.1" ; in format [<channel>:]<IP>
 
 giClientsCount init 0 ; was 1 for localhost
-giOscPort init 57878 ; v2: 57878
 
 
 ;; channels
@@ -49,9 +48,12 @@ gkRedBlink chnexport "red", 1; duration of a blink
 gkGreenBlink chnexport "green",1
 gkBlueBlink chnexport "blue",1
 gSnotification chnexport "notification",1
-gkInstrument chnexport "channels",1
+gkInstrument chnexport "channels",1 ; TODO: think how to send signals to different instruments, comes from "channels" - replace variable name. MAybe: voices
 gkNewNotification chnexport "new_notification",1
 gkVolume chnexport "volume", 1
+
+; maybe sring channels to communicate...
+
 
 instr 1, tempochange ; change tempo: i 1 0 <duration>|0 <starttempo> <endtempo>|0 <duration_of_change_beats>|0
   	istarttmp=p4
@@ -210,37 +212,23 @@ endin
 
 
 
-instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Files Must be stereo. p4- file name. p5 - start position in second. If p3==999, use file length, otherwise given p3; p6 -  send also timecode (new in v2)
+instr 30, playfile ; plays both sndfile (wav, aif,, oggg etc) and mp3 files. Files Must be stereo. p4- file name. p5 - start position in second. If p3==999, use file length, otherwise given p3
 	Sfilename strget p4
 	
 	; TODO: safety check for non-stereo files!
-	if (filevalid(Sfilename)==1) then
-		;prints Sfilename
-		if (p3==999) then ; 999 signals that use the file length
-			p3 filelen Sfilename 
-		endif
-		iskiptime = p5
-		if (strindex(Sfilename ,".mp3")>0) then
-			aL,aR mp3in Sfilename,iskiptime	
-		else
-			aL,aR soundin Sfilename, iskiptime
-		endif
-		aenv linen gkVolume,0.1,p3,0.1
-		outs aL*aenv,aR*aenv 
-	endif
 	
-	if (p6>0) then ;send timecode
-		if (metro:k(1)==1) then
-			ktime = timeinsts() + iskiptime
-			kseconds = int(ktime % 60)
-			kminutes = int(ktime/60)
-			printf "%d:%d\n", timeinstk(), kminutes, kseconds
-			chnset kseconds, "beat"
-			chnset kminutes, "bar"
-			event "i", "send", 0, 0.1, $BEATBAR, $TUTTI, kminutes, kseconds 
-		endif
-		
+	;prints Sfilename
+	if (p3==999) then ; 999 signals that use the file length
+		p3 filelen Sfilename 
 	endif
+	iskiptime = p5
+	if (strindex(Sfilename ,".mp3")>0) then
+		aL,aR mp3in Sfilename,iskiptime	
+	else
+		aL,aR soundin Sfilename, iskiptime
+	endif
+	aenv linen gkVolume,0.1,p3,0.1
+	outs aL*aenv,aR*aenv 
 endin
 
 instr send ; macroinstrument for sending different OSC messages; p4 -  iwhat, p5 - channels, p6 - param1, p7 -  param 2 
@@ -296,14 +284,14 @@ instr mySendOsc
 	if (strcmp(Stype,"sf")==0) then ; notification
 		Smessage strget p7
 		idur = p8
-				OSCsend 1, Shost, giOscPort,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, Smessage, idur ; liblo OSC seems to be more stable, thoug, internal OSCsend sometimes "Could not create socket" OSCsend if Csound<6.09!!!
 	elseif (strcmp(Stype,"f")==0) then ; tempo
 		itempo = p7
-				OSCsend 1, Shost, giOscPort,Sdestination, Stype, itempo
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, itempo
         else ; beatbar and led send two bumbers
 		ip1 = p7
 		ip2 = p8
-				OSCsend 1, Shost, giOscPort,Sdestination, Stype, ip1, ip2
+                OSCsend_lo 1, Shost, $OSCPORT,Sdestination, Stype, ip1, ip2
 	endif
 		
 endin
@@ -325,3 +313,20 @@ instr 999, test
 	
 endin
 
+<bsbPanel>
+ <label>Widgets</label>
+ <objectName/>
+ <x>0</x>
+ <y>0</y>
+ <width>0</width>
+ <height>0</height>
+ <visible>true</visible>
+ <uuid/>
+ <bgcolor mode="nobackground">
+  <r>255</r>
+  <g>255</g>
+  <b>255</b>
+ </bgcolor>
+</bsbPanel>
+<bsbPresets>
+</bsbPresets>

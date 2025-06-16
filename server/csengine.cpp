@@ -178,11 +178,8 @@ void CsEngine::play(QString scoFile) {
         return;
     }
 
-#ifdef Q_OS_ANDROID
-	cs = new AndroidCsound();
-#else
 	cs = new Csound();
-#endif
+
     Q_ASSERT(cs);
 
 	QString message;
@@ -218,11 +215,13 @@ void CsEngine::play(QString scoFile) {
 	}
 
 	QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
-#ifdef Q_OS_ANDROID
-	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc_android.orc"); // WAS: metro_simple.orc // make it work!
-# else
+
 	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc.orc"); // WAS: metro_simple.orc
-#endif
+    if (!tempOrcFile) {
+        qDebug()<<"Could not create temporary file for orchestra!";
+        return;
+    }
+    qDebug()<<"Temporary file created: "<<tempOrcFile->fileName();
 
 
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );

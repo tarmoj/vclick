@@ -172,24 +172,6 @@ ApplicationWindow {
         return basename
     }
 
-    // necessary for android
-    FilePicker {
-        id: filePicker
-        visible: false //showFileDialog
-        anchors.fill: parent
-        anchors.margins: 10
-        lastFolder: fileDialog.folder
-        //color: "green"
-        z: 10
-
-        onFileSelected: {
-            scoField.text = file
-            fileDialog.folder = getBasename(file)
-            visible = false
-        }
-        onHidePressed: visible = false
-    }
-
 
     Platform.FileDialog {
         id: fileDialog
@@ -782,11 +764,7 @@ ApplicationWindow {
                         id: loadButton
                         text: qsTr("Load")
                         onClicked: {
-                            if (Qt.platform.os==="android" ) {
-                                filePicker.visible = true
-                            } else {
-                                fileDialog.visible=true
-                            }
+                            fileDialog.visible=true
                         }
                     }
 
