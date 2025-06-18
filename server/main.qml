@@ -140,9 +140,9 @@ ApplicationWindow {
         buttons: MessageDialog.Ok
 
         text: `vClick Server ${window.version}
-http://tarmoj.github.io/vclick
-(c) Tarmo Johannes 2016-2025.
-Built using Qt SDK and Csound audio engine.`
+        http://tarmoj.github.io/vclick
+        (c) Tarmo Johannes 2016-2025.
+        Built using Qt SDK and Csound audio engine.`
 
 
         onButtonClicked: function (button, role) { // does not close on Android otherwise
@@ -450,535 +450,534 @@ Built using Qt SDK and Csound audio engine.`
         }
     }
 
+    Item {
+        id: mainRect
 
-
-
-
-    Flickable {
-        id: flickable1
-        contentWidth: 740
-        contentHeight: 820 // how to set it properly?
         anchors.fill: parent
-        anchors.margins: 6
-        clip: true
 
-        Item {
-            id: mainRect
+        //Shortcuts
+        focus: true
+        Keys.onPressed: function(event) { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
+            //console.log(event.key)
+
+            if (event.key === Qt.Key_F1 || ((event.key === Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
+                scoreFilesList.setIndex(0)
+
+            }
+            if (event.key === Qt.Key_F2) {
+                scoreFilesList.setIndex(1)
+            }
+
+            if (event.key === Qt.Key_F3) {
+                scoreFilesList.setIndex(3)
+            }
+
+            if (event.key === Qt.Key_F10)
+                cs.stop()
+
+            if (event.key === Qt.Key_Backspace   || event.key === Qt.Key_Escape ) {
+                stopButton.clicked()
+            }
+        }
+
+        Keys.onEnterPressed: startButton.clicked()
+
+        Keys.onBacktabPressed: consol.log("Backspace")
+
+        Column {
+            id: mainColumn
+            spacing: 10
+            anchors.rightMargin: 5
+            anchors.leftMargin: 5
+            anchors.bottomMargin: 10
+            anchors.topMargin: 5
             anchors.fill: parent
 
-            //Shortcuts
-            focus: true
-            Keys.onPressed: function(event) { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
+            Label {
+                id: ipLabel
+                text: getIpAndPort()
+            }
 
-                //console.log(event.key)
+            Label {
+                id: clientsLabel
+                visible: true //wsCheckBox.checked
+                text: qsTr("WS clients: 0")
+            }
 
-                if (event.key === Qt.Key_F1 || ((event.key === Qt.Key_1) && ( event.modifiers & Qt.ControlModifier) ) ) {
-                    scoreFilesList.setIndex(0)
+            RowLayout {
+                id: sendOptionsRow
+                spacing: 5
+
+                CheckBox {
+                    id: wsCheckBox
+                    //enabled: false
+                    visible: false
+                    text: qsTr("Send WS signals")
+                    checked: false
+                    onCheckedChanged: wsServer.setSendWs(checked);
+                }
+
+                CheckBox {
+                    id: oscCheckBox
+                    //enabled: false
+                    visible: false
+                    text: qsTr("Send server's OSC signals")
+                    checked: false
+                    onCheckedChanged: wsServer.setSendOsc(checked);
 
                 }
-                if (event.key === Qt.Key_F2) {
-                    scoreFilesList.setIndex(1)
+
+            }
+
+
+
+
+
+
+            CheckBox {
+                id: testCheckbox
+                visible: false ; //TODO: make invisible or depending on options
+                text: qsTr("Test regularity")
+                checked: false
+                onCheckedChanged: wsServer.setTesting(checked);
+            }
+
+            RowLayout {
+                id: csOptionsRow
+                width: parent.width
+                spacing: 5
+
+                Label {
+                    //id: oscLabel
+                    text: qsTr("Csound Options: ")
                 }
 
-                if (event.key === Qt.Key_F3) {
-                    scoreFilesList.setIndex(3)
+                TextField {
+                    id: csoundOptions
+                    Layout.preferredWidth: 300
+                    Layout.maximumWidth: 540
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("Csound options")
+                    text: "-odac -+rtaudio=null -d"
+
                 }
 
-                if (event.key === Qt.Key_F10)
-                    cs.stop()
+                Button {
+                    text: "Sound"
+                    onClicked: csoundOptions.text = "-odac -d"
+                }
 
-                if (event.key === Qt.Key_Backspace   || event.key === Qt.Key_Escape ) {
-                    stopButton.clicked()
+                Button {
+                    text: "No sound"
+                    onClicked: csoundOptions.text = "-odac -+rtaudio=null -d"
+                }
+
+                Item {Layout.fillWidth: true}
+
+            }
+
+            RowLayout {
+                id: soundFilesFolderRow
+                width: parent.width
+                spacing: 5
+                visible: volumeLabel.visible // don't show if there is no audio output. volumeLabel checks that
+
+                Label {
+                    text: qsTr("Direcotry of soundfiles (SFDIR): ")
+                }
+
+                TextField {
+                    id: sfdirField
+                    Layout.preferredWidth:  300
+                    Layout.maximumWidth: 600
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("SFDIR for Csound")
+                    text: "./";
+
+                }
+
+                Button {
+                    text: qsTr("Select")
+                    onClicked: { sfdirDialog.visible=true }
+                }
+
+                Item {Layout.fillWidth: true}
+
+            }
+
+
+
+            RowLayout {
+                id: oscRow
+                width: parent.width
+                //height: 30
+                spacing: 5
+
+                Label {
+                    //id: oscLabel
+                    text: qsTr("Clients: ")
+                }
+
+                TextField {
+                    id: oscAddresses
+                    Layout.maximumWidth: 600
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("OSC addresses")
+                    text: wsServer.getOscAddresses();
+
+
+                }
+
+                Button {
+                    id: editOscButton
+                    text: qsTr("Update")
+                    onClicked: wsServer.setOscAddresses(oscAddresses.text);
+                }
+
+                Button {
+                    id: addLocalhostButton
+                    text: qsTr("+ this computer")
+                    //tooltip: qsTr("To send messages to client in the same computer")
+                    onClicked: {
+                        if (oscAddresses.text.indexOf("127.0.0.1")<0 ) {
+                            oscAddresses.text += ",127.0.0.1 ";
+                            wsServer.setOscAddresses(oscAddresses.text)
+                        }
+
+                    }
+                }
+
+                Button {
+                    text: qsTr("Clear")
+                    onClicked: {
+                        oscAddresses.text = "";
+                        wsServer.setOscAddresses("")
+                    }
+                }
+
+                Item {Layout.fillWidth: true}
+            }
+
+            // -----------------------------------------------------------------------
+
+            Item {width: 10; height: 15} // just some extra space
+
+            // CONTROLS -  START /STOP, SCORE/TIME -----------------------------------
+
+            RowLayout {
+                Label {text: qsTr("Use: ")}
+                RadioButton {
+                    id: useScore
+                    text: qsTr("Score")
+                    checked: true
+                }
+                RadioButton {
+                    id: useTime
+                    text: qsTr("Time")
+                }
+
+                Button {
+                    id: startButton
+                    text: qsTr("Start")
+
+                    Timer {
+                        id: setVolumeTimer
+                        repeat: false
+                        interval: 500
+                        onTriggered: cs.setChannel("volume", volumeSlider.value)
+                    }
+
+                    onClicked: {
+                        if (useScore.checked) {
+                            wsServer.sendDawSeekBarCommand(startBarSpinBox.value)
+                            cs.setOscAddresses(oscAddresses.text);
+                            cs.start(scoField.text, startBarSpinBox.value)
+                            messageModel.clear()
+                        }
+                        if (useTime.checked) {
+                            startTimeField.convertToTime(); // text to minutes/seconds
+                            var time=parseFloat(startTimeField.minutes*60+startTimeField.seconds)
+                            wsServer.sendDawSeekTimeCommand(time)
+                            if (playSoundfile.checked && csoundOptions.text.indexOf("null")>=0) {
+                                console.log("Seems that Csound is set to no audio output. Use -odac (or similar) as Csound option")
+                                //TODO: Options
+                            }
+
+                            // TODO: check if rtaudio=null in settings, print warning!
+                            cs.startTime(time, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
+                        }
+
+                        // set volume somewhat later when Csound will be loaded
+                        if (volumeLabel.visible ) {
+                            setVolumeTimer.start()
+                        }
+
+                        if (startCommand.length > 0) {
+                            console.log("executing command: ", startCommand)
+                            wsServer.runSystemCommand(startCommand)
+                        }
+                    }
+                }
+
+                Button {
+                    id: stopButton
+                    text: qsTr("Stop")
+                    onClicked: {
+                        cs.stop()
+                        wsServer.handleNotification("Stop", 2)
+                        if (stopCommand.length > 0) {
+                            console.log("executing command: ", stopCommand)
+                            wsServer.runSystemCommand(stopCommand)
+                        }
+                        wsServer.sendDawStopCommand();
+                    }
+                }
+
+                Label {
+                    id: volumeLabel
+                    text: qsTr("Volume:")
+                    visible: (csoundOptions.text.indexOf("-+rtaudio=null")<0 && csoundOptions.text.indexOf("-n ")<0) // if not containg null or -n then probably sending audio
+                }
+
+                Slider {
+                    width: 100
+                    id: volumeSlider
+                    visible: volumeLabel.visible
+                    value: 1
+                    from: 0
+                    to:  1.5
+                    onValueChanged: cs.setChannel("volume", value)
                 }
             }
 
-            Keys.onEnterPressed: startButton.clicked()
+            Row {
+                id: fileRow
+                width: parent.width
+                //height: 30
+                spacing: 3
+                visible: scoreControls.visible
 
-            Keys.onBacktabPressed: consol.log("Backspace")
-
-            Column {
-                id: mainColumn
-                spacing: 10
-                anchors.rightMargin: 5
-                anchors.leftMargin: 5
-                anchors.bottomMargin: 10
-                anchors.topMargin: 5
-                anchors.fill: parent            
 
                 Label {
-                    id: ipLabel
-                    text: getIpAndPort()
+                    id: fileLabel
+                    text: qsTr("Score: ")
                 }
+
+
+
+                TextField {
+                    id: scoField
+                    width: 200
+                    placeholderText: qsTr("Score file")
+                    text: ":/csound/test.sco";
+
+                }
+
+                Button {
+                    text: qsTr("List")
+                    onClicked: fileListRect.visible = true
+                }
+
+                Button {
+                    visible: false
+                    id: loadButton
+                    text: qsTr("Load")
+                    onClicked: {
+                        fileDialog.visible=true
+                    }
+                }
+
+                Button {
+                    visible: false
+                    id: testScoreButton
+                    text: qsTr("Test-score")
+                    onClicked: scoField.text=":/csound/test.sco"
+                }
+
+                RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
+                RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
+                RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
+                RoundButton { text: "4"; onClicked: scoreFilesList.setIndex(3) }
+
+            }
+
+
+            RowLayout {
+                id: scoreControls
+                visible: useScore.checked
 
                 Label {
-                    id: clientsLabel
-                    visible: true //wsCheckBox.checked
-                    text: qsTr("WS clients: 0")
+                    id: label2
+                    text: qsTr("Start from bar:")
                 }
 
-                RowLayout {
-                    id: sendOptionsRow
-                    spacing: 5
-
-                    CheckBox {
-                        id: wsCheckBox
-                        //enabled: false
-                        visible: false
-                        text: qsTr("Send WS signals")
-                        checked: false
-                        onCheckedChanged: wsServer.setSendWs(checked);
-                    }
-
-                    CheckBox {
-                        id: oscCheckBox
-                        //enabled: false
-                        visible: false
-                        text: qsTr("Send server's OSC signals")
-                        checked: false
-                        onCheckedChanged: wsServer.setSendOsc(checked);
-
-                    }
-
+                SpinBox {
+                    id: startBarSpinBox
+                    editable: true
+                    width: 150
+                    to: 1000000 // to enable very large complex bar numbers like 10101
+                    from: 1
                 }
 
+                Button {
+                    text: qsTr("Reset")
+                    onClicked: startBarSpinBox.value = 1
+                }
+            }
+
+            RowLayout {
+                id: timeRow // if to just show time  like 0:0. 0:1 etc
+                spacing: 5
+                visible: useTime.checked
 
 
+                Label { text: qsTr("Count time from:") }
 
+                TextField {
 
+                    function convertToTime() {
+                        var stringParts = text.split(":")
+                        minutes = stringParts[0]
+                        seconds = stringParts[1]
+                        console.log(minutes, seconds)
+                    }
+
+                    id: startTimeField
+                    property int minutes: 0
+                    property int seconds: 0
+                    inputMask: "09:99"
+                    cursorVisible: true
+                    inputMethodHints: Qt.ImhTime
+                    font.pointSize: 20
+                    text: "00:00"
+                    //validator: RegExpValidator { regExp: /^([0-1\s]?[0-9\s]|2[0-3\s]):([0-5\s][0-9\s])$ / } // seems that it is not need if inputMask is there
+                    onAccepted: {convertToTime()  }
+                }
 
                 CheckBox {
-                    id: testCheckbox
-                    visible: false ; //TODO: make invisible or depending on options
-                    text: qsTr("Test regularity")
-                    checked: false
-                    onCheckedChanged: wsServer.setTesting(checked);
-                }
-
-                RowLayout {
-                    id: csOptionsRow
-                    spacing: 5
-
-                    Label {
-                        //id: oscLabel
-                        text: qsTr("Csound Options: ")
-                    }
-
-                    TextField {
-                        id: csoundOptions
-                        Layout.preferredWidth: 400
-                        placeholderText: qsTr("Csound options")
-                        text: "-odac -+rtaudio=null -d"
-
-                    }
-
-                    Button {
-                        text: "Sound"
-                        onClicked: csoundOptions.text = "-odac -d"
-                    }
-
-                    Button {
-                        text: "No sound"
-                        onClicked: csoundOptions.text = "-odac -+rtaudio=null -d"
-                    }
-
-
-                }
-
-                RowLayout {
-                    id: soundFilesFolderRow
-                    spacing: 5
-                    visible: volumeLabel.visible // don't show if there is no audio output. volumeLabel checks that
-
-                    Label {
-                        text: qsTr("Direcotry of soundfiles (SFDIR): ")
-                    }
-
-                    TextField {
-                        id: sfdirField
-                        Layout.preferredWidth:  300
-                        placeholderText: qsTr("SFDIR for Csound")
-                        text: "./";
-
-                    }
-
-                    Button {
-                        text: qsTr("Select")
-                        onClicked: { sfdirDialog.visible=true }
-                    }
-
+                    id: countdown
+                    checked: true
+                    text: qsTr("Countdown")
                 }
 
 
-
-                RowLayout {
-                    id: oscRow
-                    width: parent.width
-                    //height: 30
-                    spacing: 5
-
-                    Label {
-                        //id: oscLabel
-                        text: qsTr("Clients: ")
-                    }
-
-                    TextField {
-                        id: oscAddresses
-                        Layout.preferredWidth: 400
-                        Layout.fillWidth: true
-                        placeholderText: qsTr("OSC addresses")
-                        text: wsServer.getOscAddresses();
-
-
-                    }
-
-                    Button {
-                        id: editOscButton
-                        text: qsTr("Update")
-                        onClicked: wsServer.setOscAddresses(oscAddresses.text);
-                    }
-
-                    Button {
-                        id: addLocalhostButton
-                        text: qsTr("+ this computer")
-                        //tooltip: qsTr("To send messages to client in the same computer")
-                        onClicked: {
-                            if (oscAddresses.text.indexOf("127.0.0.1")<0 ) {
-                                oscAddresses.text += ",127.0.0.1 ";
-                                wsServer.setOscAddresses(oscAddresses.text)
-                            }
-
-                        }
-                    }
-
-                    Button {
-                        text: qsTr("Clear")
-                        onClicked: {
-                            oscAddresses.text = "";
-                            wsServer.setOscAddresses("")
-                        }
+                Button {
+                    id: resetTimeButton
+                    text: qsTr("Reset")
+                    onClicked: {
+                        startTimeField.text = "00:00"
+                        startTimeField.convertToTime(); // for any case, also done in startButton.onClicked()
                     }
                 }
 
-                // -----------------------------------------------------------------------
+            }
 
-                Item {width: 10; height: 15} // just some extra space
 
-                // CONTROLS -  START /STOP, SCORE/TIME -----------------------------------
+            RowLayout {
+                id: soundFileRow // this belongs to showTime group actually, but easier to hold as sibling, then it is placed nicely to column
+                spacing: 5
+                visible: timeRow.visible
 
-                RowLayout {
-                    Label {text: qsTr("Use: ")}
-                    RadioButton {
-                        id: useScore
-                        text: qsTr("Score")
-                        checked: true
-                    }
-                    RadioButton {
-                        id: useTime
-                        text: qsTr("Time")
-                    }
+                CheckBox {id:playSoundfile; text:qsTr("Play soundfile")}
 
-                    Button {
-                        id: startButton
-                        text: qsTr("Start")
-
-                        Timer {
-                            id: setVolumeTimer
-                            repeat: false
-                            interval: 500
-                            onTriggered: cs.setChannel("volume", volumeSlider.value)
-                        }
-
-                        onClicked: {
-                            if (useScore.checked) {
-                                wsServer.sendDawSeekBarCommand(startBarSpinBox.value)
-                                cs.setOscAddresses(oscAddresses.text);
-                                cs.start(scoField.text, startBarSpinBox.value)
-                                messageModel.clear()
-                            }
-                            if (useTime.checked) {
-                                startTimeField.convertToTime(); // text to minutes/seconds
-                                var time=parseFloat(startTimeField.minutes*60+startTimeField.seconds)
-                                wsServer.sendDawSeekTimeCommand(time)
-                                if (playSoundfile.checked && csoundOptions.text.indexOf("null")>=0) {
-                                    console.log("Seems that Csound is set to no audio output. Use -odac (or similar) as Csound option")
-                                    //TODO: Options
-                                }
-
-                                // TODO: check if rtaudio=null in settings, print warning!
-                                cs.startTime(time, countdown.checked, playSoundfile.checked ?  soundFile.text : "" )
-                            }
-
-                            // set volume somewhat later when Csound will be loaded
-                            if (volumeLabel.visible ) {
-                                setVolumeTimer.start()
-                            }
-
-                            if (startCommand.length > 0) {
-                                console.log("executing command: ", startCommand)
-                                wsServer.runSystemCommand(startCommand)
-                            }
-                        }
-                    }
-
-                    Button {
-                        id: stopButton
-                        text: qsTr("Stop")
-                        onClicked: {
-                            cs.stop()
-                            wsServer.handleNotification("Stop", 2)
-                            if (stopCommand.length > 0) {
-                                console.log("executing command: ", stopCommand)
-                                wsServer.runSystemCommand(stopCommand)
-                            }
-                            wsServer.sendDawStopCommand();
-                        }
-                    }
-
-                    Label {
-                        id: volumeLabel
-                        text: qsTr("Volume:")
-                        visible: (csoundOptions.text.indexOf("-+rtaudio=null")<0 && csoundOptions.text.indexOf("-n ")<0) // if not containg null or -n then probably sending audio
-                    }
-
-                    Slider {
-                        width: 100
-                        id: volumeSlider
-                        visible: volumeLabel.visible
-                        value: 1
-                        from: 0
-                        to:  1.5
-                        onValueChanged: cs.setChannel("volume", value)
-                    }
+                TextField  {
+                    id: soundFile;
+                    enabled: playSoundfile.checked
                 }
 
-                Row {
-                    id: fileRow
-                    width: parent.width
-                    //height: 30
-                    spacing: 3
-                    visible: scoreControls.visible
-
-
-                    Label {
-                        id: fileLabel
-                        text: qsTr("Score: ")
-                    }
-
-
-
-                    TextField {
-                        id: scoField
-                        width: 200
-                        placeholderText: qsTr("Score file")
-                        text: ":/csound/test.sco";
-
-                    }
-
-                    Button {
-                        text: qsTr("List")
-                        onClicked: fileListRect.visible = true
-                    }
-
-                    Button {
-                        visible: false
-                        id: loadButton
-                        text: qsTr("Load")
-                        onClicked: {
-                            fileDialog.visible=true
-                        }
-                    }
-
-                    Button {
-                        visible: false
-                        id: testScoreButton
-                        text: qsTr("Test-score")
-                        onClicked: scoField.text=":/csound/test.sco"
-                    }
-
-                    RoundButton { text: "1"; onClicked: scoreFilesList.setIndex(0) }
-                    RoundButton { text: "2"; onClicked: scoreFilesList.setIndex(1) }
-                    RoundButton { text: "3"; onClicked: scoreFilesList.setIndex(2) }
-                    RoundButton { text: "4"; onClicked: scoreFilesList.setIndex(3) }
-
+                Button {
+                    text: qsTr("Load")
+                    onClicked: soundFileDialog.visible = true
+                    enabled: playSoundfile.checked
                 }
 
-
-                RowLayout {
-                    id: scoreControls
-                    visible: useScore.checked
-
-                    Label {
-                        id: label2
-                        text: qsTr("Start from bar:")
-                    }
-
-                    SpinBox {
-                        id: startBarSpinBox
-                        editable: true
-                        width: 150
-                        to: 1000000 // to enable very large complex bar numbers like 10101
-                        from: 1
-                    }
-
-                    Button {
-                        text: qsTr("Reset")
-                        onClicked: startBarSpinBox.value = 1
-                    }
+                Button {
+                    text: qsTr("Clear")
+                    onClicked: soundFile.text = ""
+                    enabled: playSoundfile.checked
                 }
 
-                RowLayout {
-                    id: timeRow // if to just show time  like 0:0. 0:1 etc
-                    spacing: 5
-                    visible: useTime.checked
+            }
 
+            // -----------------------------------------------------------------------
 
-                    Label { text: qsTr("Count time from:") }
+            Item {width: 10; height: 20} // just some extra space
 
-                    TextField {
+            // SHOW BEAT, BAR, TEMPO
 
-                        function convertToTime() {
-                            var stringParts = text.split(":")
-                            minutes = stringParts[0]
-                            seconds = stringParts[1]
-                            console.log(minutes, seconds)
-                        }
+            Row {
+                id: beatRow
+                width: parent.width
+                height: 60
+                spacing: 20
 
-                        id: startTimeField
-                        property int minutes: 0
-                        property int seconds: 0
-                        inputMask: "09:99"
-                        cursorVisible: true
-                        inputMethodHints: Qt.ImhTime
-                        font.pointSize: 20
-                        text: "00:00"
-                        //validator: RegExpValidator { regExp: /^([0-1\s]?[0-9\s]|2[0-3\s]):([0-5\s][0-9\s])$ / } // seems that it is not need if inputMask is there
-                        onAccepted: {convertToTime()  }
-                    }
-
-                    CheckBox {
-                        id: countdown
-                        checked: true
-                        text: qsTr("Countdown")
-                    }
-
-
-                    Button {
-                        id: resetTimeButton
-                        text: qsTr("Reset")
-                        onClicked: {
-                            startTimeField.text = "00:00"
-                            startTimeField.convertToTime(); // for any case, also done in startButton.onClicked()
-                        }
-                    }
-
-                }
-
-
-                RowLayout {
-                    id: soundFileRow // this belongs to showTime group actually, but easier to hold as sibling, then it is placed nicely to column
-                    spacing: 5
-                    visible: timeRow.visible
-
-                    CheckBox {id:playSoundfile; text:qsTr("Play soundfile")}
-
-                    TextField  {
-                        id: soundFile;
-                        enabled: playSoundfile.checked
-                    }
-
-                    Button {
-                        text: qsTr("Load")
-                        onClicked: soundFileDialog.visible = true
-                        enabled: playSoundfile.checked
-                    }
-
-                    Button {
-                        text: qsTr("Clear")
-                        onClicked: soundFile.text = ""
-                        enabled: playSoundfile.checked
-                    }
-
-                }
-
-                // -----------------------------------------------------------------------
-
-                Item {width: 10; height: 20} // just some extra space
-
-                // SHOW BEAT, BAR, TEMPO
-
-                Row {
-                    id: beatRow
-                    width: parent.width
-                    height: 60
-                    spacing: 20
-
-                    Label {
-                        id: label1
-                        text: qsTr("Bar: ")
-                    }
-
-                    Label {
-                        id: barLabel
-                        text: qsTr("0")
-                        font.pointSize: 32
-                    }
-
-                    Label {
-                        id: label3
-                        text: qsTr("Beat: ")
-                    }
-
-                    Label {
-                        id: beatLabel
-                        text: qsTr("0")
-                        font.pointSize: 32
-                    }
-
-                    Label {
-                        id: label4
-                        text: qsTr("Tempo: ")
-                    }
-
-                    Label {
-                        id: tempoLabel
-                        text: qsTr("0")
-                        //font.pointSize: 16
-                    }
-                }
                 Label {
-                    id: label6
-                    text: qsTr("Csound messages:")
-                    visible: true
+                    id: label1
+                    text: qsTr("Bar: ")
                 }
 
-
-                ListView {
-                    visible: true
-                    id: messageView
-                    height: (mainColumn.y+mainColumn.height)-y
-                    //anchors.bottom: parent.bottom
-                    //anchors.bottomMargin: 6
-                    width: parent.width
-                    clip: true
-
-                    model: ListModel {
-                        id: messageModel
-                        ListElement { line: "Csound console" }
-                    }
-
-                    delegate: Label {
-                        font.pointSize: 8
-                        font.family: "Courier"
-                        text: line
-                    }
-
-                    ScrollBar.vertical: ScrollBar {
-                        active: true
-                    }
-
+                Label {
+                    id: barLabel
+                    text: qsTr("0")
+                    font.pointSize: 32
                 }
+
+                Label {
+                    id: label3
+                    text: qsTr("Beat: ")
+                }
+
+                Label {
+                    id: beatLabel
+                    text: qsTr("0")
+                    font.pointSize: 32
+                }
+
+                Label {
+                    id: label4
+                    text: qsTr("Tempo: ")
+                }
+
+                Label {
+                    id: tempoLabel
+                    text: qsTr("0")
+                    //font.pointSize: 16
+                }
+            }
+            Label {
+                id: label6
+                text: qsTr("Csound messages:")
+                visible: true
+            }
+
+
+            ListView {
+                visible: true
+                id: messageView
+                height: (mainColumn.y+mainColumn.height)-y
+                //anchors.bottom: parent.bottom
+                //anchors.bottomMargin: 6
+                width: parent.width
+                clip: true
+
+                model: ListModel {
+                    id: messageModel
+                    ListElement { line: "Csound console" }
+                }
+
+                delegate: Label {
+                    font.pointSize: 8
+                    font.family: "Courier"
+                    text: line
+                }
+
+                ScrollBar.vertical: ScrollBar {
+                    active: true
+                }
+
             }
         }
     }
+
 }
