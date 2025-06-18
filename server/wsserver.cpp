@@ -40,20 +40,20 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
     m_oscClients(),
     m_dawClient(nullptr),
     userScoreFiles(userScoreFiles),
-    useOsc(!noOsc)
+    useOsc(!noOsc), m_port(0)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
+        m_port = port;
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
         // broadcast
         auto broadcaster = new ServerBroadcaster(port, this);
         Q_UNUSED(broadcaster);
+    } else {
+        qDebug() << "WsServer could not listen on port" << port;
     }
-
-    //temporary: hardcode daw client:
-    //setDawAddress("127.0.0.1", 8000);
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
