@@ -1,0 +1,3 @@
+[submodule "server/path/to/qosc"]
+	path = server/path/to/qosc
+	url = https://github.com/tarmoj/qosc.git
