@@ -21,12 +21,13 @@ ApplicationWindow {
         Button {x: 5; text:"Menu"; onClicked: mainMenu.open()}
         Menu {
             //minimumWidth: 350
-            width: 350
+            width: dawRow.width + 20
             id: mainMenu
             title: qsTr("Menu")
 
             Label { text: qsTr("Clients' OSC port:") }
-            Row { // Not shown with Qt.labs.platform...
+            Row {
+                x: 5
                 spacing: 4
                 SpinBox {
                     id: oscPortSpinbox;
@@ -53,13 +54,74 @@ ApplicationWindow {
                 onCheckedChanged: oscCheckBox.visible = checked
             }
 
+            RowLayout {
+                id: dawRow
+                spacing: 5
+
+                Label {
+                    text: qsTr("OSC for Reaper")
+                }
+
+                TextField {
+                    id: dawIP
+                    Layout.preferredWidth: 150
+                    placeholderText: qsTr("Reaper IP")
+                    text: "127.0.0.1"
+                }
+
+                Label { text: qsTr("port:")}
+
+                SpinBox {
+                    id: dawPortSpinbox;
+                    editable: true
+                    to: 65323
+                    from: 1025
+                    value: 8000
+                }
+
+                Button {
+                    id: updateDawAdressButton
+                    text: qsTr("Update")
+                    onClicked: wsServer.setDawAddress(dawIP.text, dawPortSpinbox.value)
+                }
+            }
+
+            RowLayout {
+                id: jackRow
+                spacing:5
+                visible: (Qt.platform.os === "linux")
+
+                CheckBox {
+                    id: jackCheckBox
+
+                    text: "Read from Jack"
+                    checked: false
+                    onCheckedChanged: {
+                        if (checked) jackReader.start()
+                        // else jackReader.stop()  // NOT good - cannot start again
+                    }
+                }
+
+                CheckBox {
+                    id: timeCodeCheckBox
+                    text: "BBT to timecode hack"
+                    checked: false
+                    onCheckedChanged: jackReader.setZeroHack(checked)
+                }
+
+                Item {Layout.fillWidth: true}
+
+            }
+
             MenuItem {
                 text: qsTr("Update IP address")
-                onTriggered:  ipLabel.text = qsTr("My IP: ")+ wsServer.getLocalAddress()
+                onTriggered:  ipLabel.text = getIpAndPort()
             }
             MenuItem {
                 text: qsTr("About")
-                onTriggered: messageDialog.show(qsTr("<b>vClick server "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK and Csound audio engine."));
+                onTriggered: messageDialog.open() /*messageDialog.show(qsTr("<br> <b>vClick server "+ version +
+                    "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2025<br>
+                    <br>Built using Qt SDK and Csound audio engine."));*/
             }
 
             MenuItem {
@@ -72,11 +134,19 @@ ApplicationWindow {
 
     MessageDialog {
         id: messageDialog
-        //title: qsTr("Message")
+        buttons: MessageDialog.Ok
 
-        function show(caption) {
-            messageDialog.text = caption;
-            messageDialog.open();
+        text: `vClick Server ${window.version}
+http://tarmoj.github.io/vclick
+(c) Tarmo Johannes 2016-2025.
+Built using Qt SDK and Csound audio engine.`
+
+
+        onButtonClicked: function (button, role) { // does not close on Android otherwise
+            switch (button) {
+            case MessageDialog.Ok:
+                messageDialog.close()
+            }
         }
     }
 
@@ -165,6 +235,13 @@ ApplicationWindow {
         basename = basename.slice(0, basename.lastIndexOf("/")+1)
         return basename
     }
+
+
+    function getIpAndPort() {
+        return qsTr("My IP: ") + wsServer.getLocalAddress() + qsTr(" Listening on port: ") + wsServer.geServerPort();
+    }
+
+
 
     // necessary for android
     FilePicker {
@@ -404,7 +481,7 @@ ApplicationWindow {
 
             //Shortcuts
             focus: true
-            Keys.onPressed:  { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
+            Keys.onPressed: function(event) { // hack for playing tanja1.sco on F1 and tanja2.sco on F2 -  TODO: implement dialog window for multiple score files + shortcuts
 
                 //console.log(event.key)
 
@@ -443,13 +520,13 @@ ApplicationWindow {
 
                 Label {
                     id: ipLabel
-                    text: qsTr("My ip: ")+ wsServer.getLocalAddress();
+                    text: getIpAndPort()
                 }
 
                 Label {
                     id: clientsLabel
                     visible: true //wsCheckBox.checked
-                    text: qsTr("WS clients: ")
+                    text: qsTr("WS clients: 0")
                 }
 
                 //            Label {
@@ -500,6 +577,7 @@ ApplicationWindow {
                     }
 
                 }
+
 
                 CheckBox {
                     id: testCheckbox

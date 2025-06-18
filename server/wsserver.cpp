@@ -38,16 +38,19 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
     m_clients(),
     m_oscClients(),
     userScoreFiles(userScoreFiles),
-    useOsc(!noOsc)
+    useOsc(!noOsc), m_port(0)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
+        m_port = port;
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
         // broadcast
         auto broadcaster = new ServerBroadcaster(port, this);
         Q_UNUSED(broadcaster);
+    } else {
+        qDebug() << "WsServer could not listen on port" << port;
     }
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
