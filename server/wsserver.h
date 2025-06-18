@@ -54,6 +54,7 @@ public:
 	Q_INVOKABLE void setOscAddresses(QString addresses);
 	Q_INVOKABLE QString getOscAddresses();
 	Q_INVOKABLE QString getLocalAddress();
+    Q_INVOKABLE quint16 geServerPort() {return m_port;};
 	Q_INVOKABLE void runSystemCommand(QString command);
 
 
@@ -125,6 +126,7 @@ private:
     int startSecond;
     bool countDown;
     bool useOsc;
+    quint16 m_port;
 
 
 };

@@ -24,7 +24,7 @@ no-gui {
 
 
 
-linux|android: INCLUDEPATH += /usr/local/include/csound
+linux: INCLUDEPATH += /usr/local/include/csound
 win32: INCLUDEPATH += "C:/Program Files/Csound6_x64/include/csound"#"$$(PROGRAMFILES)/Csound6/include/csound"
 mac: INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Headers
 
@@ -54,8 +54,7 @@ RESOURCES += qml.qrc \
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
-# Default rules for deployment.
-#include(deployment.pri)
+
 
 HEADERS += \
     serverbroadcaster.h \
@@ -67,10 +66,10 @@ HEADERS += \
 
 
 win32: LIBS += -L"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
-linux:!android: LIBS += -lcsound64
+linux: LIBS += -lcsound64
 win32-msvc: LIBS += csound64.lib
 
-linux:!android:exists(/usr/lib64/libjack.so) {
+linux: exists(/usr/lib64/libjack.so) {
     DEFINES += USE_JACK
     SOURCES += jackreader.cpp
     HEADERS += jackreader.h
@@ -84,30 +83,12 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 
-# android build not fixed to Qt6 yet. Plan to Drop it.
-android {
-  QT += androidextras
-  INCLUDEPATH += /home/tarmo/src/csound6-git/Android/CsoundAndroid/jni/	 #TODO: should have an extra varaible, not hardcoded personal library
-  HEADERS += AndroidCsound.hpp
-  LIBS +=  -L/home/tarmo/src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/ -lcsoundandroid -lsndfile -lc++_shared -loboe
-}
-
-contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-	ANDROID_EXTRA_LIBS = /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libc++_shared.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libcsoundandroid.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/liboboe.so /home/tarmo/tarmo/programm/qt-projects/vClick/server/../../../../../src/csound-android-6.12.0/CsoundForAndroid/CsoundAndroid/src/main/jniLibs/armeabi-v7a/libsndfile.so
-}
 
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
     folder.png \
     winicon.rc \
-    android/AndroidManifest.xml \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/gradlew \
-    android/res/values/libs.xml \
-    android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
 
 
 macx {
@@ -141,5 +122,3 @@ win32 {
     # enne installeri tegemist kopeeri klientist kõik deployga sinna saanud failid serveri bin-i
 	INSTALLS += first
 }
-
-ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
