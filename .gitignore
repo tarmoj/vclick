@@ -13,3 +13,7 @@ client/build/*
 *.qmlc
 temp/*
 installers/*
+client/varia/*
+server/varia/*
+arved
+.directory
