@@ -19,6 +19,7 @@
 	02111-1307 USA
 */
 #include "wsserver.h"
+#include "serverbroadcaster.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -39,17 +40,20 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
     m_oscClients(),
     m_dawClient(nullptr),
     userScoreFiles(userScoreFiles),
-    useOsc(!noOsc)
+    useOsc(!noOsc), m_port(0)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
+        m_port = port;
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
-	}
-
-    //temporary: hardcode daw client:
-    setDawAddress("127.0.0.1", 8000);
+        // broadcast
+        auto broadcaster = new ServerBroadcaster(port, this);
+        Q_UNUSED(broadcaster);
+    } else {
+        qDebug() << "WsServer could not listen on port" << port;
+    }
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
@@ -89,6 +93,26 @@ void WsServer::updateScoreFiles()
 
 }
 
+QString WsServer::getScoreList()
+{
+    QString scoreList = QString("scoreFiles:");
+    for (QString scoreFile: scoreFiles) {
+        QString fileName = scoreFile.trimmed().split('/').last(); // get only the filename;
+        if (fileName.endsWith(".sco", Qt::CaseInsensitive)) {
+            fileName = fileName.chopped(4);
+        }
+        if (!fileName.isEmpty()) {
+            scoreList += fileName + ";";
+        }
+    }
+    if (scoreList.right(1) == ";") {
+        scoreList.chop(1); // remove last semicolon
+    }
+    qDebug() << Q_FUNC_INFO << scoreList;
+    return scoreList;
+
+}
+
 void WsServer::onNewConnection()
 {
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
@@ -121,6 +145,9 @@ void WsServer::processTextMessage(QString message)
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
+
+        // send the score list to client
+        pClient->sendTextMessage(getScoreList());
 
         if (useOsc) {
             QOscClient * target = nullptr;
@@ -335,7 +362,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 	// for testing:
 //	int now, difference=0;
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for(QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
@@ -353,7 +380,7 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/led", data);
@@ -372,7 +399,7 @@ void WsServer::handleNotification(QString message, float duration)
 {
 	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << message << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/notification", data);
@@ -390,7 +417,7 @@ void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
 	//qDebug()<<"Tempo: "<<tempo;
     if (useOsc && sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			target->sendData("/metronome/tempo", tempo);
 		}
 
@@ -472,7 +499,7 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
     int instrument = 0;
     QRegularExpression re("(^[0-9]{1,2}):");
 
-    foreach (QString address, addresses.split(",")) {
+    for (QString address: addresses.split(",")) {
         address = address.simplified();
         if (re.match(address).hasMatch()) {
             instrument = address.split(":")[0].toInt();
@@ -497,7 +524,7 @@ void WsServer::createOscClientsList()
 
     QString joinedString;
 
-    foreach (QString address, m_clientsHash.keys()) {
+    for (QString address: m_clientsHash.keys()) {
         address = address.simplified();
         address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
         if (m_clientsHash[address]==0) {
@@ -549,7 +576,7 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-    foreach (QWebSocket *socket, m_clients) {
+    for (QWebSocket *socket: m_clients) {
 		socket->sendTextMessage(message);
 	}
 }

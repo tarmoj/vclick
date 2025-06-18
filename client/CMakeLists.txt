@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vclick-client VERSION 3.0.2 LANGUAGES C CXX)
+project(vclick-client VERSION 3.1.1 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -26,6 +26,7 @@ qt_add_qml_module(vclick-client
         qtquickcontrols2.conf
     NO_RESOURCE_TARGET_PATH
     OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
+    SOURCES serverdiscovery.h serverdiscovery.cpp
 )
 
 target_compile_definitions(vclick-client PRIVATE
@@ -45,16 +46,16 @@ target_link_libraries(vclick-client PRIVATE
 )
 
 
-# Resources:
-set(vclick-client_resource_files
-    "menu.png"
-    "radio.png"
-    "sounds/sound1.wav"
-    "sounds/sound2.wav"
-    "sounds/sound3.wav"
-    "vclick-client.png"
-    "xmark-solid.png"
-)
+    # Resources:
+    set(vclick-client_resource_files
+        "menu.png"
+        "radio.png"
+        "sounds/sound1.wav"
+        "sounds/sound2.wav"
+        "sounds/sound3.wav"
+        "vclick-client.png"
+        "xmark-solid.png"
+    )
 
 qt_add_resources(vclick-client "vclick-client"
     PREFIX

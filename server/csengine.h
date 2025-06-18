@@ -24,11 +24,8 @@
 #include <QObject>
 #include <QUrl>
 
-#ifdef Q_OS_ANDROID
-	#include "AndroidCsound.hpp"
-#else
-	#include <csound.hpp>
-#endif
+#include <csound.hpp>
+
 
 
 class CsEngine : public QObject
@@ -68,11 +65,8 @@ public slots:
 
 	void startTime(int startSecond, bool countDown = true, QString soundFile = "");
 private:
-#ifdef Q_OS_ANDROID
-	AndroidCsound  *cs ;
-#else
+
 	Csound  *cs;
-#endif
     QString m_sco, m_orc, m_options;
 	bool stopNow, isRunning;
 	QString SFDIR, oscLineToCompile;

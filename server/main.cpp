@@ -33,23 +33,6 @@
 #include <QCommandLineParser>
 
 
-#ifdef Q_OS_ANDROID
-
-#include <QtAndroidExtras/QtAndroid>
-
-bool checkPermission() { // requires >= Qt 5.10
-	QtAndroid::PermissionResult r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
-	if(r == QtAndroid::PermissionResult::Denied) {
-		QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
-		r = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
-		if(r == QtAndroid::PermissionResult::Denied) {
-			 return false;
-		}
-   }
-   return true;
-}
-#endif
-
 #ifdef USE_JACK
 	#include "jackreader.h"
 #endif
@@ -117,13 +100,6 @@ int main(int argc, char *argv[])
     QString env = "OPCODE6DIR64="+QApplication::applicationDirPath() + "/plugins64";
     qDebug()<<"putenv " << env;
     putenv(env.toLocal8Bit() );
-#endif
-
-#ifdef Q_OS_ANDROID
-	checkPermission();
-	QString pluginsPath = QApplication::applicationDirPath() + "/lib/";
-	qDebug()<<" Csound plugins in: " << pluginsPath;
-	setenv("OPCODE6DIR64", pluginsPath.toLocal8Bit() ,1);
 #endif
 
 

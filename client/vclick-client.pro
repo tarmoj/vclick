@@ -4,7 +4,7 @@ TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 3.0.2
+VERSION = 3.1.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 
@@ -28,12 +28,14 @@ SOURCES += main.cpp
 use_osc: {
 
 SOURCES +=     oschandler.cpp \
+        serverdiscovery.cpp \
         qosc/qoscclient.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
 
 HEADERS += \
-          oschandler.h \
+        oschandler.h \
+        serverdiscovery.h \
         qosc/qoscclient.h \
         qosc/qoscserver.h \
         qosc/qosctypes.h \

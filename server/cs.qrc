@@ -2,7 +2,6 @@
     <qresource prefix="/csound">
         <file>test.sco</file>
         <file>metro_sendosc.orc</file>
-        <file>metro_sendosc_android.orc</file>
     </qresource>
     <qresource prefix="/">
         <file>metro_simple.orc</file>
