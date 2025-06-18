@@ -95,23 +95,24 @@ macx {
     first.path = $$PWD
     first.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD # deployment
 
-    second.path = $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks
+    second.path = $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Resources # try moving Csound framework to Resources, since it is not packages correctly for signing under frameworks
     second.files = /Library/Frameworks/CsoundLib64.framework
     #second.commands = rm -rf $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/
     #TODO: remove Resources Java, Luajit, Manual, Opcodes64 enamus...  PD, Python, samples
     # remove lbCsoundAc, võibolla libcsnd6
     #TODO: move libs to Reosurces
-    # install_name_tool -change  @loader_path/../../libs/libsndfile.1.dylib @loader_path/Resources/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
+    #install_name_tool -change  @loader_path/../../libs/libsndfile.1.dylib @loader_path/Resources/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
 
     #TODO: run sign-macos.sh at some point ? at what point to make the dmg? before uploading?
 
     third.path = $$PWD
-    third.commands = install_name_tool -change /Library/Frameworks/CsoundLib64.framework/CsoundLib64 @rpath/CsoundLib64.framework/Versions/6.0/CsoundLib64 $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/MacOS/vclick-server ;
-    third.commands += install_name_tool -change /Library/Frameworks/CsoundLib64.framework/libs/libsndfile.1.dylib @rpath/CsoundLib64.framework/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Frameworks/CsoundLib64.framework/Versions/6.0/CsoundLib64
+    third.commands = install_name_tool -change /Library/Frameworks/CsoundLib64.framework/CsoundLib64 @loader_path/../Resources/CsoundLib64.framework/CsoundLib64 $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/MacOS/vclick-server ;
+    third.commands += install_name_tool -change /Library/Frameworks/CsoundLib64.framework/libs/libsndfile.1.dylib @loader_path/Resources/libs/libsndfile.1.dylib $$OUT_PWD/$$DESTDIR/$${TARGET}.app/Contents/Resources/CsoundLib64.framework/Versions/6.0/CsoundLib64
 
     final.path = $$PWD
-    #final.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD  -sign-for-notarization=\"Developer ID Application: Tarmo Johannes (DRQ77GKK9V)\" -dmg# deployment BETTER: use hdi-util
-    final.commands = hdiutil create -fs HFS+ -srcfolder $$OUT_PWD/$$DESTDIR/$${TARGET}.app -volname \"vClick Server\" $$OUT_PWD/$$DESTDIR/$${TARGET}.dmg
+    #final.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD  -sign-for-notarization=\"Developer ID Application: Tarmo Johannes (DRQ77GKK9V)\" -dmg ;  # deployment BETTER: use hdi-util
+    final.commands += $$PWD/sign-macos.sh
+#final.commands = hdiutil create -fs HFS+ -srcfolder $$OUT_PWD/$$DESTDIR/$${TARGET}.app -volname \"vClick Server\" $$OUT_PWD/$$DESTDIR/$${TARGET}.dmg
 
     INSTALLS += first second third  final #final don't forget second on first compile!!! (later makes sense to remove extra folders from Csound.Frameworks)
 
