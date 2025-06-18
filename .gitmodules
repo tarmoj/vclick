@@ -4,3 +4,6 @@
 [submodule "server/qosc"]
 	path = server/qosc
 	url = https://github.com/tarmoj/qosc.git
+[submodule "client/qosc"]
+	path = client/qosc
+	url = https://github.com/tarmoj/qosc.git
