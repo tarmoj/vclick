@@ -7,6 +7,8 @@ lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 VERSION = 3.1.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+DEFINES += QOSC_STATIC # to use qosc as just source files
+
 
 #!NB use cmake to build for android qt Qt6! (supports multi-abi)
 ANDROID_VERSION_NAME = $$VERSION

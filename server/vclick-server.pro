@@ -5,6 +5,8 @@ TEMPLATE = app
 VERSION = 3.1.3 # v3.1.0  - inroduce sending OSC to  DAW like reaper
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
+DEFINES += QOSC_STATIC # to use qosc as just source files
+
 CONFIG += c++17
 
 #uncomment or add to qmake parameters to build console version of the server
@@ -65,7 +67,7 @@ HEADERS += \
     qosc/qosctypes.h
 
 
-win32: LIBS += -L"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
+win32: LIBS += -L"C:\Program Files\Csound6_x64\lib" #"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
 linux: LIBS += -lcsound64
 win32-msvc: LIBS += csound64.lib
 
