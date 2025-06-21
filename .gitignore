@@ -17,3 +17,5 @@ client/varia/*
 server/varia/*
 arved
 .directory
+.DS_STORE
+.DS_Store

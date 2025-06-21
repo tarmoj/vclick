@@ -35,11 +35,10 @@ QT_USE_NAMESPACE
 WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *parent) :
     QObject(parent),
     m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
-                                            QWebSocketServer::NonSecureMode, this)),
+                                        QWebSocketServer::NonSecureMode, this)),
     m_clients(),
     m_oscClients(),
     m_dawClient(nullptr),
-    userScoreFiles(userScoreFiles),
     useOsc(!noOsc), m_port(0)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
@@ -67,8 +66,9 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *pa
         createOscClientsList(getOscAddresses());
         oscPort = settings->value("oscPort", 57878).toInt();
     }
-    updateScoreFiles();
-    scoreIndex = 0; // or should it come from UI or settings?
+    QString files = userScoreFiles.isEmpty() ? settings->value("scoreFiles", "").toString() : userScoreFiles;
+    updateScoreFiles(files);
+    scoreIndex = 0;
     useTime = false;
     startSecond = 0;
     countDown = true; // in case of useTime
@@ -82,14 +82,16 @@ WsServer::~WsServer()
     qDeleteAll(m_clients.begin(), m_clients.end());
 }
 
-void WsServer::updateScoreFiles()
+
+void WsServer::updateScoreFiles(QString scoreList) // ';'-separated list of scorefiles
 {
-    if (userScoreFiles.isEmpty()) {
-        scoreFiles = settings->value("scoreFiles", "").toString().split(";");
-    } else {
-        scoreFiles = userScoreFiles.split(";");
-    }
-    //qDebug() << Q_FUNC_INFO << scoreFiles;
+    // if (scoreList.isEmpty()) {
+    //     scoreFiles = settings->value("scoreFiles", "").toString().split(";");
+    // } else {
+    //     scoreFiles = userScoreFiles.split(";");
+    // }
+    scoreFiles = scoreList.simplified().split(';');
+    qDebug() << Q_FUNC_INFO << scoreFiles;
 
 }
 
@@ -193,7 +195,7 @@ void WsServer::processTextMessage(QString message)
 
 	if (messageParts[0]=="start") {
 		qDebug()<<"Remote call to start vClick";
-        updateScoreFiles();
+        //updateScoreFiles(); // not needed since the list is updated from UI or non-gui, it should not change
 		QString scoreFile;
 		if (messageParts.length()>1) {
             scoreFile = messageParts[1].trimmed(); // for future

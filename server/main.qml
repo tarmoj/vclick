@@ -369,6 +369,7 @@ ApplicationWindow {
                     text: "+"
                     onClicked: {
                         scoreFilesModel.append({"url":":/csound/test.sco"});
+                        wsServer.updateScoreFiles(scoreFilesModel.scoreFiles);
                     }
                 }
 
@@ -414,13 +415,6 @@ ApplicationWindow {
                             fileListDialog.open()
                         }
 
-                    }
-
-                    RoundButton {
-                        text: qsTr("\u2a2f") // remove
-                        onClicked: scoreFilesModel.remove(index)
-
-
                         Platform.FileDialog { // FileDialog here causes binding loop warning. Ingore it.
                             id: fileListDialog
                             title: qsTr("Please choose score for metronome")
@@ -430,13 +424,22 @@ ApplicationWindow {
                                 urlField.text = file
                                 scoreFilesList.lastFolder = getBasename(file)
                                 url = file.toString()
-                                console.log("index: ", index, "url", url)
+                                console.log("index: ", index, "url", url);
+                                wsServer.updateScoreFiles(scoreFilesModel.scoreFiles);
                             }
                             onRejected: {
                                 visible = false;
                             }
                         }
 
+                    }
+
+                    RoundButton {
+                        text: qsTr("\u2a2f") // remove
+                        onClicked: {
+                            scoreFilesModel.remove(index)
+                            wsServer.updateScoreFiles(scoreFilesModel.scoreFiles);
+                        }
                     }
 
                     Item {Layout.fillWidth: true} // does not seem to do the job...

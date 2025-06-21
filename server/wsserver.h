@@ -55,10 +55,9 @@ public:
 	Q_INVOKABLE QString getOscAddresses();
 	Q_INVOKABLE QString getLocalAddress();
     Q_INVOKABLE quint16 geServerPort() {return m_port;};
-	Q_INVOKABLE void runSystemCommand(QString command);
+    Q_INVOKABLE void runSystemCommand(QString command);
+    Q_INVOKABLE void updateScoreFiles(QString scoreList);
 
-
-    void updateScoreFiles();
     QString getScoreList();
 
 Q_SIGNALS:
@@ -116,7 +115,7 @@ private:
 	void createOscClientsList(QString addresses);
     void createOscClientsList(); // takes data from m_clientsHash
 	QStringList scoreFiles;
-    QString userScoreFiles; // set by command line option
+    // QString userScoreFiles; // set by command line option
 
 	QFile logFile;
 	QTime time;
