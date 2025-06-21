@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2016-2023 Tarmo Johannes
+    Copyright (C) 2016-2025 Tarmo Johannes
     trmjhnns@gmail.com
 
     This file is part of vClick.
@@ -154,7 +154,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("About")
                 onTriggered: {
-                    messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2023<br><br>Built using Qt SDK" );
+                    messageDialog.text = qsTr("<b>vClick client "+ version + "</b><br>http://tarmoj.github.io/vclick<br><br>(c) Tarmo Johannes 2016-2025<br><br>Built using Qt SDK" );
                     messageDialog.open()
                     mainMenu.close()
                 }

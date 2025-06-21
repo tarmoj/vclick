@@ -10,14 +10,14 @@
 
 
 BINARY="vclick-server"
-BUILD_DIR="../build-vclick-server-Desktop_Qt_6_5_1_GCC_64bit-Release/bin/"
+BUILD_DIR="./build/Desktop_Qt_6_5_2_GCC_64bit-Release/bin"
 # EXECUTABLE="$BUILD_DIR/bin/$BINARY"
 EXECUTABLE="$BUILD_DIR/$BINARY"
-VERSION="3.1.0"
+VERSION="3.1.3"
 CSOUND_PREFIX="/usr/local"
 CSOUND_PLUGINS_DIR="$CSOUND_PREFIX/lib/csound/plugins64-6.0" 
 BUNDLE_CSOUND=true # for now: always bundle Csound
-SRC_DIR=".." 
+SRC_DIR="./" 
 LIB_DIR="/usr/lib"
 APP_DIR="AppDir" # "$BUILD_DIR/AppDir"
 
@@ -34,20 +34,14 @@ LINUXDEPLOY="$HOME/bin/linuxdeploy-x86_64.AppImage"
 #1 export necessary environment variables
 export VERSION=$VERSION 
 export QML_SOURCES_PATHS="$SRC_DIR"; 
-export QMAKE=/home/tarmo/src/Qt/6.5.1/gcc_64/bin/qmake # for Qt6
+export QMAKE=/home/tarmo/src/Qt/6.5.2/gcc_64/bin/qmake # for Qt6
 
-# correct desktop file -  instead of csoundqt as command use the actual binary name
-#TODO: desktop file path should be changed somehow! Not sure if it matters however...
-#sed "s/Exec=csoundqt/Exec=$BINARY/g" $SRC_DIR/csoundqt.desktop > csoundqt.desktop
-
-# 2 create initial AppDir with linuxdeploy
-# TODO: cannot blacklist csound libs.blacklist nor -blacklist flag work...
-#LIBPORTMIDI=$(locate --limit 1 libportmidi.so)
-
+export LD_LIBRARY_PATH=/home/tarmo/src/Qt/6.5.2/gcc_64/lib:$LD_LIBRARY_PATH
+export APPIMAGELAUNCHER_DISABLE=1
 
 $LINUXDEPLOY --appdir $APP_DIR --executable=$EXECUTABLE --desktop-file=vclick-server.desktop  --icon-file=vclick-server.png 
 
-linuxdeploy-plugin-qt-x86_64.AppImage --appdir AppDir # QT business. Forr Qt6 does not work as --plugin=qt
+$HOME/bin/linuxdeploy-plugin-qt-x86_64.AppImage --appdir AppDir # QT business. For Qt6 does not work as --plugin=qt
 
 
 # copy Csound binary, plugins and and Csound Manual - probably copied by default
