@@ -126,13 +126,13 @@ void CsEngine::start(QUrl scoFile, int startBar) // TODO - ühenda kohe QML sign
 
 		}
 
+
         // NB! Experimental -  add a line to notify about start (for signalling a DAW)
         int advanceIndex = contents.indexOf(";ADVANCE");
         if (advanceIndex>=0) {
             contents.insert(advanceIndex, "i \"start\" 0 0.1 \n"  ); // instr "start" set channel "start" to 1 so that vClick server can read it
         }
-
-		if (startBar>1) {
+        if (startBar>1 && startTime>0) {
 			QString tempo = "#TEMPO1#";
 			QString replaceString = "a 0 0 "+ QString::number(startTime - 0.01) + "\n";
 
@@ -178,11 +178,8 @@ void CsEngine::play(QString scoFile) {
         return;
     }
 
-#ifdef Q_OS_ANDROID
-	cs = new AndroidCsound();
-#else
 	cs = new Csound();
-#endif
+
     Q_ASSERT(cs);
 
 	QString message;
@@ -218,11 +215,13 @@ void CsEngine::play(QString scoFile) {
 	}
 
 	QTemporaryFile * tempOrcFile;// now a file with name server.XXX is created... not deleted.... (QDir::tempPath()+"/XXXXXX.orc");
-#ifdef Q_OS_ANDROID
-	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc_android.orc"); // WAS: metro_simple.orc // make it work!
-# else
+
 	tempOrcFile = QTemporaryFile::createNativeFile(":/csound/metro_sendosc.orc"); // WAS: metro_simple.orc
-#endif
+    if (!tempOrcFile) {
+        qDebug()<<"Could not create temporary file for orchestra!";
+        return;
+    }
+    qDebug()<<"Temporary file created: "<<tempOrcFile->fileName();
 
 
 	int result = cs->Compile(tempOrcFile->fileName().toLocal8Bit().data(), scoFile.toLocal8Bit().data() );

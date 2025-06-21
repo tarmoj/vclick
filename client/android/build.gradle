@@ -5,9 +5,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.android.tools.build:gradle:8.5.0'
     }
 }
+
+
+// about updating android for abi 33/35: https://medium.com/@shmilysyg/set-android-target-sdk-level-33-in-qt-38bb9049924c
+// use gradle plugin 8.5.0
+
 
 repositories {
     google()
@@ -21,6 +26,10 @@ dependencies {
 }
 
 android {
+
+    // add namespace 
+    namespace "org.vclick.client2"
+
     /*******************************************************
      * The following variables:
      * - androidBuildToolsVersion,
@@ -74,8 +83,8 @@ android {
 
     defaultConfig {
         resConfig "en"
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdkVersion qtMinSdkVersion
+        targetSdkVersion 35
         ndk.abiFilters = qtTargetAbiList.split(",")
     }
 }

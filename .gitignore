@@ -1,3 +1,4 @@
+shorts/*
 build-*
 *.backup
 *.pro.user
@@ -6,5 +7,15 @@ build-*
 *.copy
 client/for-google-play
 client/ic_launcher-icons
+client/android/.gradle/*
+client/build/*
 *.old
-
+*.qmlc
+temp/*
+installers/*
+client/varia/*
+server/varia/*
+arved
+.directory
+.DS_STORE
+.DS_Store

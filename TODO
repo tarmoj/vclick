@@ -1,3 +1,18 @@
+Juuni 2025
+
+"Failed" on start -  Done
+ScoreList -  Done
+Find Server -  Done
+Server layout (fit better)
+Client -  volume slider in menu?
+qOSC - get rid of warnings, move to separate repo (use as submodule)
+Check Reaper connection -  documentation to web page? maybe not, temporary
+Longer Demo video?
+Builds: Win, MacOS, Webassembly, AppImage, iOS 
+webassembly build
+Release notes, web page news
+
+----
 23.07.23
 
 - kontrolli, kas Time - helifaili mängimine töötab

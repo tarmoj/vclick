@@ -4,13 +4,15 @@ TEMPLATE = app
 
 lessThan(QT_MAJOR_VERSION,6): error("Qt6 is required for this build.")
 
-VERSION = 3.0.1
+VERSION = 3.1.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+
+DEFINES += QOSC_STATIC # to use qosc as just source files
 
 
 #!NB use cmake to build for android qt Qt6! (supports multi-abi)
 ANDROID_VERSION_NAME = $$VERSION
-ANDROID_VERSION_CODE = 24 # build number
+ANDROID_VERSION_CODE = 25 # build number
 #ANDROID_APP_NAME = "vClick Client"
 
 
@@ -28,12 +30,14 @@ SOURCES += main.cpp
 use_osc: {
 
 SOURCES +=     oschandler.cpp \
+        serverdiscovery.cpp \
         qosc/qoscclient.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
 
 HEADERS += \
-          oschandler.h \
+        oschandler.h \
+        serverdiscovery.h \
         qosc/qoscclient.h \
         qosc/qoscserver.h \
         qosc/qosctypes.h \
@@ -135,11 +139,16 @@ ios {
 
 macx {
     installer.path = $$PWD
-    #installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0  -codesign=\"Mac Developer: Tarmo Johannes (ND7C9HZ522)\" -dmg # deployment
-    installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0  -dmg # deployment
+    installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=2   -sign-for-notarization=\"Developer ID Application: Tarmo Johannes (DRQ77GKK9V)\" -dmg # deployment
+    #installer.commands = $$[QT_INSTALL_PREFIX]/bin/macdeployqt $$OUT_PWD/$$DESTDIR/$${TARGET}.app -qmldir=$$PWD -verbose=0 -dmg # deployment
     INSTALLS += installer
 
 }
+
+#MAC notarize:
+# App  Specific password for vClickClient rwjw-dnen-sklo-zrtu
+# xcrun notarytool submit --apple-id <id-email> --password <password> --team-id "DRQ77GKK9V" --wait
+#staple: xcrun stapler staple vclick-client.dmg
 
 win32 {
     first.path = $$PWD

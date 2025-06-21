@@ -19,6 +19,7 @@
 	02111-1307 USA
 */
 #include "wsserver.h"
+#include "serverbroadcaster.h"
 #include "QtWebSockets/qwebsocketserver.h"
 #include "QtWebSockets/qwebsocket.h"
 #include <QtCore/QDebug>
@@ -31,23 +32,27 @@ QT_USE_NAMESPACE
 
 
 
-WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
+WsServer::WsServer(quint16 port, QString userScoreFiles, bool noOsc, QObject *parent) :
     QObject(parent),
     m_pWebSocketServer(new QWebSocketServer(QStringLiteral("vClickServer"),
-                                            QWebSocketServer::NonSecureMode, this)),
+                                        QWebSocketServer::NonSecureMode, this)),
     m_clients(),
     m_oscClients(),
-    m_dawClient(nullptr), userScoreFiles(userScoreFiles)
+    m_dawClient(nullptr),
+    useOsc(!noOsc), m_port(0)
 {
     if (m_pWebSocketServer->listen(QHostAddress::Any, port)) {
         qDebug() << "WsServer listening on port" << port;
+        m_port = port;
         connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
                 this, &WsServer::onNewConnection);
         connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &WsServer::closed);
-	}
-
-    //temporary: hardcode daw client:
-    setDawAddress("127.0.0.1", 8000);
+        // broadcast
+        auto broadcaster = new ServerBroadcaster(port, this);
+        Q_UNUSED(broadcaster);
+    } else {
+        qDebug() << "WsServer could not listen on port" << port;
+    }
 
 	settings = new QSettings("vclick","server"); // TODO platform independent
 	sendOsc = settings->value("sendOsc", false).toBool(); //false; // might be necessary to set to true only if driven by external ws-messages or sent from jack client
@@ -57,10 +62,13 @@ WsServer::WsServer(quint16 port, QString userScoreFiles, QObject *parent) :
 #else
 	sendWs = settings->value("sendWs", false).toBool();
 #endif
-	createOscClientsList(getOscAddresses());
-	oscPort = settings->value("oscPort", 57878).toInt();
-    updateScoreFiles();
-    scoreIndex = 0; // or should it come from UI or settings?
+    if (useOsc) {
+        createOscClientsList(getOscAddresses());
+        oscPort = settings->value("oscPort", 57878).toInt();
+    }
+    QString files = userScoreFiles.isEmpty() ? settings->value("scoreFiles", "").toString() : userScoreFiles;
+    updateScoreFiles(files);
+    scoreIndex = 0;
     useTime = false;
     startSecond = 0;
     countDown = true; // in case of useTime
@@ -74,14 +82,30 @@ WsServer::~WsServer()
     qDeleteAll(m_clients.begin(), m_clients.end());
 }
 
-void WsServer::updateScoreFiles()
+
+void WsServer::updateScoreFiles(QString scoreList) // ';'-separated list of scorefiles
 {
-    if (userScoreFiles.isEmpty()) {
-        scoreFiles = settings->value("scoreFiles", "").toString().split(";");
-    } else {
-        scoreFiles = userScoreFiles.split(";");
+    scoreFiles = scoreList.simplified().split(';');
+    // qDebug() << Q_FUNC_INFO << scoreFiles;
+}
+
+QString WsServer::getScoreList()
+{
+    QString scoreList = QString("scoreFiles:");
+    for (QString scoreFile: scoreFiles) {
+        QString fileName = scoreFile.trimmed().split('/').last(); // get only the filename;
+        if (fileName.endsWith(".sco", Qt::CaseInsensitive)) {
+            fileName = fileName.chopped(4);
+        }
+        if (!fileName.isEmpty()) {
+            scoreList += fileName + ";";
+        }
     }
-    //qDebug() << Q_FUNC_INFO << scoreFiles;
+    if (scoreList.right(1) == ";") {
+        scoreList.chop(1); // remove last semicolon
+    }
+    qDebug() << Q_FUNC_INFO << scoreList;
+    return scoreList;
 
 }
 
@@ -117,53 +141,55 @@ void WsServer::processTextMessage(QString message)
 		}
 		QString senderUrl = pClient->peerAddress().toString();
 		senderUrl.remove("::ffff:"); // if connected via websocket, this is added to beginning
-		QOscClient * target = nullptr;
-        if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
 
-            //TODO: maybe later remove all OSC business from here, since handled in csd. Not good, if server is driven by websocket messages.
-			target = new QOscClient(pClient->peerAddress(),oscPort,this); // what if localhost, does it work then?
-            if (target) {
-                if (!oscAddresses.contains(senderUrl)) {
-                    oscAddresses<<senderUrl; // probably not necessary to keep that variable.
-                    //emit updateOscAddresses(oscAddresses.join(","));
-                    m_oscClients << target;
-                    //target->sendData("/metronome/notification", "Got you!" );
+        // send the score list to client
+        pClient->sendTextMessage(getScoreList());
+
+        if (useOsc) {
+            QOscClient * target = nullptr;
+            if (!senderUrl.isEmpty()) { // append to oscAddresses and send confirmation
+
+                target = new QOscClient(pClient->peerAddress(),oscPort,this); // what if localhost, does it work then?
+                if (target) {
+                    if (!oscAddresses.contains(senderUrl)) {
+                        oscAddresses<<senderUrl; // probably not necessary to keep that variable.
+                        //emit updateOscAddresses(oscAddresses.join(","));
+                        m_oscClients << target;
+                        //target->sendData("/metronome/notification", "Got you!" );
+                    } else {
+                        qDebug()<<"Adress already registered: "<<senderUrl;
+                        //target->sendData("/metronome/notification", "All fine" );
+                    }
                 } else {
-                    qDebug()<<"Adress already registered: "<<senderUrl;
-                    //target->sendData("/metronome/notification", "All fine" );
+                    qDebug()<<"Could not create OSC address to "<<senderUrl;
+                }
+            }
+
+            if (m_clientsHash.contains(senderUrl) && m_clientsHash[senderUrl]==instrument  ) {
+                qDebug()<<"The IP address " << senderUrl << " is already connected" ;
+                if (target) {
+                    target->sendData("/metronome/notification", "All fine!" );
                 }
             } else {
-                qDebug()<<"Could not create OSC address to "<<senderUrl;
+                qDebug()<<"Something new (either IP, instrument no or both): "<< senderUrl << instrument ;
+                if (!senderUrl.isEmpty()) {
+                    m_clientsHash[senderUrl] = instrument; // overwrites, if new instrument, otherwise inserts
+                    createOscClientsList();
+                } else {
+                    qDebug()<<"SenderUrl empty.";
+                }
+                if (target) {
+                    target->sendData("/metronome/notification", "Got you!" );
+                }
             }
         }
-
-        if (m_clientsHash.contains(senderUrl) && m_clientsHash[senderUrl]==instrument  ) {
-            qDebug()<<"The IP address " << senderUrl << " is already connected" ;
-            if (target) {
-                target->sendData("/metronome/notification", "All fine!" );
-            }
-        } else {
-            qDebug()<<"Something new (either IP, instrument no or both): "<< senderUrl << instrument ;
-            if (!senderUrl.isEmpty()) {
-                m_clientsHash[senderUrl] = instrument; // overwrites, if new instrument, otherwise inserts
-                createOscClientsList();
-            } else {
-				qDebug()<<"SenderUrl empty.";
-            }
-            if (target) {
-                target->sendData("/metronome/notification", "Got you!" );
-            }
-        }
-
-
 		// pClient->close(QWebSocketProtocol::CloseCodeNormal); // do not close for remote control
-
 	}
 
 
 	if (messageParts[0]=="start") {
 		qDebug()<<"Remote call to start vClick";
-        updateScoreFiles();
+        //updateScoreFiles(); // not needed since the list is updated from UI or non-gui, it should not change
 		QString scoreFile;
 		if (messageParts.length()>1) {
             scoreFile = messageParts[1].trimmed(); // for future
@@ -173,9 +199,10 @@ void WsServer::processTextMessage(QString message)
         qDebug() << "scoreFile: " << scoreFile << scoreIndex;
 
 #ifdef CONSOLE_APP
-		emit newOscPort(oscPort);
-
-		createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
+        if (useOsc) {
+            emit newOscPort(oscPort);
+            createOscClientsList(); // this should update te oscaddresses in CsEngine. Which order? Need sleep?
+        }
 #endif
 
         if (!useTime) {
@@ -331,7 +358,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 	// for testing:
 //	int now, difference=0;
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for(QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << bar << beat;
 			target->sendData("/metronome/beatbar", data);
@@ -349,7 +376,7 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	qDebug()<<"Led: "<<ledNumber<<" duration: "<<duration;
 	emit newLed(ledNumber,duration);
 	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << ledNumber << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/led", data);
@@ -367,8 +394,8 @@ void WsServer::handleLed(int ledNumber, float duration) {
 void WsServer::handleNotification(QString message, float duration)
 {
 	qDebug()<<"Notification: "<<message <<" for " << duration << "seconds.";
-	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+    if (useOsc && sendOsc) {
+        for (QOscClient * target: m_oscClients) {
 			QList<QVariant> data;
 			data << message << (double)duration; // QOsc types does not recognise float...
 			target->sendData("/metronome/notification", data);
@@ -385,8 +412,8 @@ void WsServer::handleNotification(QString message, float duration)
 void WsServer::handleTempo(double tempo) // TODO: change to double, not string
 {
 	//qDebug()<<"Tempo: "<<tempo;
-	if (sendOsc) {
-		foreach(QOscClient * target, m_oscClients) {
+    if (useOsc && sendOsc) {
+        for (QOscClient * target: m_oscClients) {
 			target->sendData("/metronome/tempo", tempo);
 		}
 
@@ -444,7 +471,7 @@ void WsServer::setOscPort(quint16 port) {
     oscPort = port;
     qDebug() << Q_FUNC_INFO << port;
 #ifdef CONSOLE_APP
-	if (settings) { // not needed any more -  value stored in qml
+    if (settings) {
 		settings->setValue("oscPort", oscPort);
 	}
 #endif
@@ -468,7 +495,7 @@ void WsServer::createOscClientsList(QString addresses) // info from string to ha
     int instrument = 0;
     QRegularExpression re("(^[0-9]{1,2}):");
 
-    foreach (QString address, addresses.split(",")) {
+    for (QString address: addresses.split(",")) {
         address = address.simplified();
         if (re.match(address).hasMatch()) {
             instrument = address.split(":")[0].toInt();
@@ -493,7 +520,7 @@ void WsServer::createOscClientsList()
 
     QString joinedString;
 
-    foreach (QString address, m_clientsHash.keys()) {
+    for (QString address: m_clientsHash.keys()) {
         address = address.simplified();
         address = (address=="localhost") ? "127.0.0.1" : address; // does not like "localhost" as string
         if (m_clientsHash[address]==0) {
@@ -545,7 +572,7 @@ void WsServer::sendMessage(QWebSocket *socket, QString message )
 
 void WsServer::send2all(QString message)
 {
-    foreach (QWebSocket *socket, m_clients) {
+    for (QWebSocket *socket: m_clients) {
 		socket->sendTextMessage(message);
 	}
 }
