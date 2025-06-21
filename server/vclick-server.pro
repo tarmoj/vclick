@@ -12,6 +12,9 @@ CONFIG += c++17
 #uncomment or add to qmake parameters to build console version of the server
 #CONFIG += no-gui
 
+#NB! in version 3.1.3 QOsc moved to separate repo and used as submodule. To update:
+# git submodule update --init --recursive
+
 no-gui {
     QT += core network websockets
     CONFIG += c++11 console
@@ -56,7 +59,8 @@ RESOURCES += qml.qrc \
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
-
+# Default rules for deployment.
+#include(deployment.pri)
 
 HEADERS += \
     serverbroadcaster.h \
@@ -67,11 +71,12 @@ HEADERS += \
     qosc/qosctypes.h
 
 
-win32: LIBS += -L"C:\Program Files\Csound6_x64\lib" #"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
-linux: LIBS += -lcsound64
-win32-msvc: LIBS += csound64.lib
 
-linux: exists(/usr/lib64/libjack.so) {
+win32: LIBS += -L"C:\Program Files\Csound6_x64\lib" #"$$PWD/winlibs" #"C:/Program Files/Csound6_x64/bin" put csound64.lib there
+win32-msvc: LIBS += csound64.lib
+linux: LIBS += -lcsound64
+
+linux:exists(/usr/lib64/libjack.so) {
     DEFINES += USE_JACK
     SOURCES += jackreader.cpp
     HEADERS += jackreader.h
@@ -85,12 +90,18 @@ INCLUDEPATH += /Library/Frameworks/CsoundLib64.framework/Versions/6.0/Headers
 }
 
 
-
 message("libraries: "$$LIBS "Headers: " $$INCLUDEPATH "Defines: " $$DEFINES "Target:" $$TARGET)
 
 DISTFILES += \
     folder.png \
     winicon.rc \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
 
 
 macx {
