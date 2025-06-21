@@ -85,14 +85,8 @@ WsServer::~WsServer()
 
 void WsServer::updateScoreFiles(QString scoreList) // ';'-separated list of scorefiles
 {
-    // if (scoreList.isEmpty()) {
-    //     scoreFiles = settings->value("scoreFiles", "").toString().split(";");
-    // } else {
-    //     scoreFiles = userScoreFiles.split(";");
-    // }
     scoreFiles = scoreList.simplified().split(';');
-    qDebug() << Q_FUNC_INFO << scoreFiles;
-
+    // qDebug() << Q_FUNC_INFO << scoreFiles;
 }
 
 QString WsServer::getScoreList()
