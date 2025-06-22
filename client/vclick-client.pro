@@ -19,25 +19,26 @@ ANDROID_VERSION_CODE = 25 # build number
 QT += qml quick widgets websockets multimedia
 android: QT += core-private quickcontrols2
 
-# comment out for build without OSC support (QML only)
-# for webassembly compile with command (in terminal):
-# /home/tarmo/src/Qt/5.15.2/wasm_32/bin/qmake && make -j8
+# comment out for build without OSC support (QML only, server discovery does not work)
+# make sure to use correct emsdk version related to the Qt version https://doc.qt.io/qt-6/wasm.html
 
 CONFIG += use_osc
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    serverdiscovery.cpp \
+
+HEADERS +=  serverdiscovery.h \
+
 
 use_osc: {
 
 SOURCES +=     oschandler.cpp \
-        serverdiscovery.cpp \
         qosc/qoscclient.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
 
 HEADERS += \
         oschandler.h \
-        serverdiscovery.h \
         qosc/qoscclient.h \
         qosc/qoscserver.h \
         qosc/qosctypes.h \
