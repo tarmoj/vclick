@@ -5,13 +5,13 @@
 
 #define MyAppName "vClick Server"
 #define MyApp2Name "vClick Cient"
-#define MyAppVersion "3.0.0"
+#define MyAppVersion "3.1.3"
 #define MyAppPublisher "Tarmo Johannes"
 #define MyAppURL "http://tarmoj.github.io/vclick/"
 #define MyAppExeName "vclick-server.exe"
 #define MyApp2ExeName "vclick-client.exe"
-#define ServerDir ".\build-vclick-server-Desktop_Qt_6_5_2_MSVC2019_64bit-Release\bin"
-#define ClientDir   ".\build-vclick-client-Desktop_Qt_6_5_2_MSVC2019_64bit-Release\bin"
+#define ServerDir ".\build-vclick-server-Desktop_Qt_6_8_1_MSVC2022_64bit-Release\bin"
+#define ClientDir   ".\build-vclick-client-Desktop_Qt_6_8_1_MSVC2022_64bit-Release\bin"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
