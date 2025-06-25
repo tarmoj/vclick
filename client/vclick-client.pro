@@ -130,11 +130,11 @@ DESTDIR=bin #Target file directory
 
 ios {
     QMAKE_INFO_PLIST = ios/Info.plist
-    ios_icon.files = $$files($$PWD/ios/icons/AppIcon.appiconset/*.png)
-    ios_icon.files += $$files($$PWD/ios/icons/Itunes*.png)
-    QMAKE_BUNDLE_DATA += ios_icon
-    app_launch_images.files = $$PWD/ios/Launch.storyboard #$$files($$PWD/ios/launchimages/LaunchImage*.png) #$$PWD/ios/Launch.xib
-    QMAKE_BUNDLE_DATA += app_launch_images
+
+    QMAKE_ASSET_CATALOGS += ios/Assets.xcassets
+    QMAKE_ASSET_CATALOGS_APP_ICON = AppIcon
+
+    QMAKE_IOS_LAUNCH_SCREEN = ios/Launch.storyboard
 
 }
 
