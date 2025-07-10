@@ -1,54 +1,45 @@
 ## vClick v3.1.3 released
- 
- 
- DRAFT
- 
-vClick 3.1.3 is next public release after 3.0.0 in 2023. 
 
-Although the version code has changes a little, much work has been done. See below.
+vClick 3.1.3 is the next public release after 3.0.0 (2023).
 
+Although the version number has changed only slightly, a lot of work has gone into this release. See below for details.
 
+Downloads: <https://github.com/tarmoj/vclick/releases/tag/v3.1.3>
 
-*NB! Due the Qt6 requirements, v3.x requires at least MacOS 11 on Mac. If you have an older OS, you can use the binaries from  <https://github.com/tarmoj/vclick/releases/tag/v2.2.0>*
+The vClick Client for **Android** is also available on [Google Play](https://play.google.com/store/apps/details?id=org.vclick.client2).
 
+The vClick Client for **iOS** is available on the [App Store](https://apps.apple.com/us/app/vclick-client/id1247820434).
 
-Downloads: <https://github.com/tarmoj/vclick/releases/tag/v3.1.3>.
-
-vClick CLient for **Android** can be installed also from [Google Play](https://play.google.com/store/apps/details?id=org.vclick.client2).
-
-vClick CLient for **iOS**-  LINK
-
+> **NB!** Due to Qt6 requirements, v3.x requires at least macOS 11. If you're using an older OS, you can download binaries from: <https://github.com/tarmoj/vclick/releases/tag/v2.2.0>
 
 <br>
 
-### New in version 3.0.0:
+### New in version 3.1.3:
 
-* Basic integrationo with Reaper via OSC messages - ....
-
-* Search Server button on Client
-
- *  Server sends score list to Client, so the piece can be chosen from drop-down menu with file names on the Client (Remote Control -> Score).
-
-* Cleaner and better spaced layout on Server
-
-
+* Basic integration with Reaper via OSC messages — seek to vClick’s start bar (or starting second in Time mode), start, and stop.
+* **Search Server** button in the Client — automatically finds and connects to the server on the same network.
+* The server sends the score list to the client, allowing selection of the piece from a drop-down menu by file name (Remote Control → Score).
+* Cleaner and better-spaced layout on the server.
+* Signed binaries on macOS.
+* Removed Android support from the server.
+* Moved QOsc to a separate repository; use a Git submodule to include it. The QOsc code was also polished for Qt6. https://github.com/tarmoj/qosc
 
 <br>
-
 
 ### Fixes
 
-* Use QOsc as separate library, ironed out many warnings (finished porting to Qt6)
-* ....
+* QOsc is now used as a separate library; many warnings were resolved (completing the Qt6 port).
+* Fixed handling of complex bars in `test.sco`.
+* Set status bar color for Android in the client.
+* Closed temporary score file properly.
 
 <br>
 
 ### Known problems
 
-* WebAssembly version - no sound (due WA restrictions), entering bar number, starting second and similar from keyboard may not work.
-* Server sends both OSC and WS messages, if both are enabled and Client is connected. This is usually not a problem, maybe only when the sound is on, the double event can be heard.
-* Setting different instruments  and delay time works only for OSC connections.
+* WebAssembly version — no sound (due to WA restrictions). Entering bar numbers, starting seconds, and similar values via keyboard may not work.
+* The server sends both OSC and WS messages if both are enabled and the client is connected. This is usually not a problem, but if sound is on, double events may be heard.
+* Setting different instruments and delay times works only with OSC connections.
 
-
-Tarmo Johannes <trmjhnns@gmail.com>
-
+Tarmo Johannes  
+<trmjhnns@gmail.com>
