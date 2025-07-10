@@ -19,25 +19,26 @@ ANDROID_VERSION_CODE = 25 # build number
 QT += qml quick widgets websockets multimedia
 android: QT += core-private quickcontrols2
 
-# comment out for build without OSC support (QML only)
-# for webassembly compile with command (in terminal):
-# /home/tarmo/src/Qt/5.15.2/wasm_32/bin/qmake && make -j8
+# comment out for build without OSC support (QML only, server discovery does not work)
+# make sure to use correct emsdk version related to the Qt version https://doc.qt.io/qt-6/wasm.html
 
 CONFIG += use_osc
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    serverdiscovery.cpp \
+
+HEADERS +=  serverdiscovery.h \
+
 
 use_osc: {
 
 SOURCES +=     oschandler.cpp \
-        serverdiscovery.cpp \
         qosc/qoscclient.cpp \
         qosc/qoscserver.cpp \
         qosc/qosctypes.cpp \
 
 HEADERS += \
         oschandler.h \
-        serverdiscovery.h \
         qosc/qoscclient.h \
         qosc/qoscserver.h \
         qosc/qosctypes.h \
@@ -129,11 +130,11 @@ DESTDIR=bin #Target file directory
 
 ios {
     QMAKE_INFO_PLIST = ios/Info.plist
-    ios_icon.files = $$files($$PWD/ios/icons/AppIcon.appiconset/*.png)
-    ios_icon.files += $$files($$PWD/ios/icons/Itunes*.png)
-    QMAKE_BUNDLE_DATA += ios_icon
-    app_launch_images.files = $$PWD/ios/Launch.storyboard #$$files($$PWD/ios/launchimages/LaunchImage*.png) #$$PWD/ios/Launch.xib
-    QMAKE_BUNDLE_DATA += app_launch_images
+
+    QMAKE_ASSET_CATALOGS += ios/Assets.xcassets
+    QMAKE_ASSET_CATALOGS_APP_ICON = AppIcon
+
+    QMAKE_IOS_LAUNCH_SCREEN = ios/Launch.storyboard
 
 }
 
