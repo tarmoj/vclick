@@ -3,7 +3,7 @@ Date: 2016-05-31 10:20
 sortorder: 6
 Category: Pages
 
-##Test-Report-Test
+## Test-Report-Test
 
 The best support to the project is to give feed-back. I appreciate highly the time you put into writing bug repports or just emaling me.
 
@@ -25,10 +25,9 @@ Please let know **ALWAYS** :
 - try to describe the problem as exactly as you can, avoid messages in style "my vClick system does not work".
 <br>
 
-##Donations
+## Donations
 
 If you find the project useful and want to keep it developing, please consider making a donation.
 
-<small>
-```Heh, have not figured out yet, how to do the dontaion link... ```
-</small>
+via 
+[Paypal](paypal.me/tarmojohannes) or  [Ko-fi](https://ko-fi.com/tarmojohannes)
