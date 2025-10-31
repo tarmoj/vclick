@@ -243,8 +243,9 @@ ApplicationWindow {
         triggeredOnStart: false
         interval: 4000
         onTriggered: {
+            notificationRect.visible = false;
             notificationLabel.text = "";
-            notificationRect.color = "transparent";
+            //notificationRect.color = "transparent";
         }
     }
 
@@ -260,9 +261,10 @@ ApplicationWindow {
     }
 
     function notification(message, duration) {
-        //console.log("notification in qml ", message, duration)
+        console.log("notification in qml ", message, duration)
         notificationLabel.text = message;
-        notificationRect.color = "darkblue";
+        notificationRect.visible = true;
+        //notificationRect.color = "darkblue";
         clearNotification.interval = duration*1000; // into milliseconds
         clearNotification.start();
     }
@@ -323,7 +325,6 @@ ApplicationWindow {
                 }
 
                 if (led===2) {
-
                     blueAnimation.restart()
                     if (soundCheckBox.checked) {
                         sound2.play();
@@ -1216,7 +1217,8 @@ ApplicationWindow {
 
         Rectangle {
             id: notificationRect
-            color: "transparent"
+            color: "darkblue"
+            visible: false
             gradient: Gradient {
                 GradientStop {
                     position: 0.00;

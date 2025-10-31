@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(vclick-client VERSION 3.1.3 LANGUAGES C CXX)
+project(vclick-client VERSION 3.1.4 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -12,6 +12,9 @@ qt_standard_project_setup()
 
 SET(use_osc TRUE)
 
+if(ANDROID) # for 16 bit page. must be before add_executable
+    add_link_options("-Wl,-z,max-page-size=65536")
+endif()
 
 qt_add_executable(vclick-client WIN32 MACOSX_BUNDLE
     main.cpp
@@ -81,7 +84,7 @@ if(ANDROID)
 #set_property(TARGET vclick-client APPEND PROPERTY QT_ANDROID_VERSION_CODE 22)
 
 set_target_properties(vclick-client PROPERTIES
-            QT_ANDROID_VERSION_CODE 26
+            QT_ANDROID_VERSION_CODE 30
             QT_ANDROID_BUILD_ALL_ABIS true
             QT_ANDROID_VERSION_NAME ${PROJECT_VERSION}
         )
