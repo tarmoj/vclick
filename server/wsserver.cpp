@@ -374,8 +374,7 @@ void WsServer::handleBeatBar(int bar, int beat)
 		}
 	}
 	if (sendWs) {
-		QString message;
-		message.sprintf("b %d %d", bar, beat); // short form to send out for javascript and app
+        QString message = QString("b %1 %2").arg(bar).arg(beat);
 		send2all(message);
 	}
 
@@ -394,8 +393,8 @@ void WsServer::handleLed(int ledNumber, float duration) {
 	}
 
 	if (sendWs) {
-		QString message;
-		message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
+        QString message = QString("l %1 %2").arg(ledNumber).arg(duration);
+        //message.sprintf("l %d %f", ledNumber, duration); // short form to send out for javascript and app
 		send2all(message);
 	}
 
@@ -573,9 +572,9 @@ QString WsServer::getOscAddresses()
 {
 	if (settings) {
 		QVariant value = settings->value("oscaddresses");
-		if (value.type()==QMetaType::QString)
+        if (value.type()==QVariant::String)
 			return value.toString();
-		else if (value.type()==QMetaType::QStringList)
+        else if (value.type()==QVariant::StringList)
 			return value.toStringList().join(",");
 		else
 			return QString();

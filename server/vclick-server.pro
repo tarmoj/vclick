@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-VERSION = 2.2.4
+VERSION = 3.0.0
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++17
