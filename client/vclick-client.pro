@@ -60,10 +60,12 @@ win32: RC_FILE =  winicon.rc # for windows icon
 
 ios {
 CONFIG -= bitcode
+CONFIG += add_ios_ffmpeg_libraries
 HEADERS += ios-screen.h
 OBJECTIVE_SOURCES += \
     ios-screen.mm
 LIBS += -framework UIKit # maybe not necessary, maybe done automatically by Qt...
+
 
 }
 
@@ -129,6 +131,7 @@ DESTDIR=bin #Target file directory
 
 
 ios {
+
     QMAKE_INFO_PLIST = ios/Info.plist
 
     QMAKE_ASSET_CATALOGS += ios/Assets.xcassets

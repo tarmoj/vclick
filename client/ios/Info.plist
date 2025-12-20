@@ -13,7 +13,7 @@
 	<key>CFBundleIconName</key>
 	<string>Icon-App</string>
 	<key>CFBundleIdentifier</key>
-	<string>client.vclick</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleName</key>
 	<string>vclick-client</string>
 	<key>CFBundlePackageType</key>

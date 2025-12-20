@@ -3,9 +3,9 @@ project(vclick-client VERSION 3.1.4 LANGUAGES C CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Gui Multimedia Qml Quick WebSockets Widgets)
-find_package(Qt${QT_VERSION_MAJOR} OPTIONAL_COMPONENTS QuickControls2)
+find_package(Qt6 REQUIRED COMPONENTS Core CorePrivate)
+find_package(Qt6 REQUIRED COMPONENTS Gui Multimedia Qml Quick WebSockets Widgets)
+find_package(Qt6 OPTIONAL_COMPONENTS QuickControls2)
 
 qt_standard_project_setup()
 
@@ -127,7 +127,8 @@ install(TARGETS vclick-client
 
 qt_generate_deploy_qml_app_script(
     TARGET vclick-client
-    FILENAME_VARIABLE deploy_script
+    #FILENAME_VARIABLE deploy_script
+    OUTPUT_SCRIPT deploy_script
     NO_UNSUPPORTED_PLATFORM_ERROR
     DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
     MACOS_BUNDLE_POST_BUILD
