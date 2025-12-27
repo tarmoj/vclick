@@ -46,6 +46,31 @@ ApplicationWindow {
     property int instrument: 0
     property string version: Qt.application.version
 
+    color: "lightblue"
+
+    background: Rectangle {
+        gradient: Gradient {
+            GradientStop {
+                position: 0.00;
+                color: "#a5c9db";
+            }
+            GradientStop {
+                position: 0.26;
+                color: "#000000";
+            }
+            GradientStop {
+                position: 0.84;
+                color: "#000000";
+            }
+            GradientStop {
+                position: 1.00;
+                color: "#a5c9db";
+            }
+        }
+    }
+
+    flags: Qt.ExpandedClientAreaHint | Qt.NoTitleBarBackgroundHint
+
     Menu {
         id: mainMenu
         title: qsTr("Menu")
@@ -458,24 +483,9 @@ ApplicationWindow {
 
     Rectangle {
         id: mainRect
-        gradient: Gradient {
-            GradientStop {
-                position: 0.00;
-                color: "#a5c9db";
-            }
-            GradientStop {
-                position: 0.26;
-                color: "#000000";
-            }
-            GradientStop {
-                position: 0.84;
-                color: "#000000";
-            }
-            GradientStop {
-                position: 1.00;
-                color: "#a5c9db";
-            }
-        }
+
+        color:  "transparent"
+
         anchors.fill: parent
         property string semitransparent: "#0FF5F5F5"
 
