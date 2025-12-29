@@ -68,13 +68,14 @@ int main(int argc, char *argv[])
 			window.callMethod<void>("addFlags", "(I)V", FLAG_KEEP_SCREEN_ON);
 		}
 
-        window.callMethod<void>("addFlags", "(I)V", 0x80000000);
-        window.callMethod<void>("clearFlags", "(I)V", 0x04000000);
-        window.callMethod<void>("setStatusBarColor", "(I)V", 0xa5c9db); // hardcoded color for now. later try to get via QML engine Material.background
-        QJniObject decorView = window.callObjectMethod("getDecorView", "()Landroid/view/View;");
-        decorView.callMethod<void>("setSystemUiVisibility", "(I)V", 0x00002000);
+        // seems that this is not necessarty any more on Android 13/14
+        // window.callMethod<void>("addFlags", "(I)V", 0x80000000);
+        // window.callMethod<void>("clearFlags", "(I)V", 0x04000000);
+        // window.callMethod<void>("setStatusBarColor", "(I)V", 0xa5c9db); // hardcoded color for now. later try to get via QML engine Material.background
+        // QJniObject decorView = window.callObjectMethod("getDecorView", "()Landroid/view/View;");
+        // decorView.callMethod<void>("setSystemUiVisibility", "(I)V", 0x00002000);
 
-        QJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
+        // QJniEnvironment env; if (env->ExceptionCheck()) { env->ExceptionClear(); } //Clear any possible pending exceptions.
 	}
 #endif
 
