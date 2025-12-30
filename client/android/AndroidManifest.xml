@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.vclick.client2" android:installLocation="auto" android:versionCode="31" android:versionName="3.1.4">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.vclick.client2" android:installLocation="auto" android:versionCode="33" android:versionName="3.1.4">
     <!-- %%INSERT_PERMISSIONS -->
     <!-- %%INSERT_FEATURES -->
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
