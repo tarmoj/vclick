@@ -195,9 +195,6 @@ ApplicationWindow {
                 onTriggered: Qt.quit();
             }
         }
-
-
-
     }
 
     Timer {

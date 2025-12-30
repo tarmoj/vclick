@@ -13,7 +13,7 @@ qt_standard_project_setup()
 SET(use_osc TRUE)
 
 if(ANDROID) # for 16 bit page. must be before add_executable
-    add_link_options("-Wl,-z,max-page-size=65536")
+    add_link_options("-Wl,-z,max-page-size=16384")
 endif()
 
 qt_add_executable(vclick-client WIN32 MACOSX_BUNDLE
