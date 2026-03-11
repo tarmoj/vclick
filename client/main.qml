@@ -728,6 +728,27 @@ ApplicationWindow {
                     }
 
                     Item { Layout.fillWidth: true}
+
+                    ToolButton {
+                        text: "OK?"
+                        onClicked: {
+                             if (socket.status === WebSocket.Open) {
+                                socket.sendTextMessage("notification OK?");
+                            }
+                        }
+                    }
+
+                    ToolButton {
+                        text: "OK!!"
+                        onClicked: {
+                             if (socket.status === WebSocket.Open) {
+                                socket.sendTextMessage("notification OK!!");
+                            }
+                        }
+
+                    }
+
+                    Item { Layout.fillWidth: true}
                 }
 
                 RowLayout {
