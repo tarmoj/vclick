@@ -727,8 +727,6 @@ ApplicationWindow {
 
                     }
 
-                    Item { Layout.fillWidth: true}
-
                     ToolButton {
                         text: "OK?"
                         onClicked: {
@@ -748,7 +746,8 @@ ApplicationWindow {
 
                     }
 
-                    Item { Layout.fillWidth: true}
+                    // has no influence in Flow
+                    //Item { Layout.fillWidth: true}
                 }
 
                 RowLayout {
